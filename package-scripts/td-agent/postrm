@@ -1,0 +1,9 @@
+#!/bin/bash
+#
+# Perform necessary td-agent removal steps
+# after package is uninstalled.
+#
+
+echo "td-agent has been uninstalled!"
+
+exit 0
