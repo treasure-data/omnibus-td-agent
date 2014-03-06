@@ -1,0 +1,117 @@
+#!/bin/bash
+#
+# /etc/rc.d/init.d/td-agent
+#
+# chkconfig: - 80 20
+# description: td-agent
+# processname: td-agent
+# pidfile: /var/run/td-agent/td-agent.pid
+#
+### BEGIN INIT INFO
+# Provides:          td-agent
+# Default-Stop:      0 1 6
+# Required-Start:    $local_fs
+# Required-Stop:     $local_fs
+# Short-Description: td-agent's init script
+# Description:       td-agent is a data collector
+### END INIT INFO
+
+# Source function library.
+. /etc/init.d/functions
+
+name="td-agent"
+prog="td-agent"
+td_agent=/opt/td-agent/embedded/bin/ruby
+
+if [ -f /etc/sysconfig/$prog ]; then
+	. /etc/sysconfig/$prog
+fi
+PIDFILE=${PIDFILE-/var/run/td-agent/$prog.pid}
+DAEMON_ARGS=${DAEMON_ARGS---user td-agent}
+TD_AGENT_ARGS="${TD_AGENT_ARGS-/usr/sbin/td-agent --group td-agent --log /var/log/td-agent/td-agent.log}"
+
+if [ -n "${PIDFILE}" ]; then
+	mkdir -p $(dirname ${PIDFILE})
+	chown -R td-agent:td-agent $(dirname ${PIDFILE})
+	TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
+fi
+
+# 2012/04/17 Kazuki Ohta <k@treasure-data.com>
+# use jemalloc to avoid fragmentation
+if [ -f "/usr/lib/fluent/jemalloc/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD=/usr/lib/fluent/jemalloc/lib/libjemalloc.so
+fi
+if [ -f "/usr/lib64/fluent/jemalloc/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD=/usr/lib64/fluent/jemalloc/lib/libjemalloc.so
+fi
+
+RETVAL=0
+
+start() {
+	echo -n "Starting $name: "
+	daemon --pidfile=$PIDFILE $DAEMON_ARGS $td_agent "$TD_AGENT_ARGS"
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+	return $RETVAL
+}
+
+stop() {
+	echo -n "Shutting down $name: "
+	if [ -e "${PIDFILE}" ]; then
+		killproc -p ${PIDFILE} || killproc $prog
+	else
+		killproc $prog
+	fi
+	RETVAL=$?
+	echo
+	[ $RETVAL -eq 0 ] && rm -f $PIDFILE && rm -f /var/lock/subsys/$prog
+	return $RETVAL
+}
+
+restart() {
+	configtest || return $?
+	stop
+	start
+}
+
+reload() {
+	configtest || return $?
+	echo -n "Reloading $name: "
+	killproc $td_agent -HUP
+	RETVAL=$?
+	echo
+}
+
+configtest() {
+	/usr/sbin/td-agent --user td-agent --group td-agent --dry-run -q
+}
+
+case "$1" in
+    start)
+	start
+	;;
+    stop)
+	stop
+	;;
+    restart)
+	restart
+	;;
+    reload)
+	reload
+	;;
+    condrestart)
+	[ -f /var/lock/subsys/$prog ] && restart || :
+	;;
+    configtest)
+        configtest
+        ;;
+    status)
+	status -p $PIDFILE 'td-agent'
+	;;
+    *)
+	echo "Usage: $prog {start|stop|reload|restart|condrestart|status|configtest}"
+	exit 1
+	;;
+esac
+exit $?
