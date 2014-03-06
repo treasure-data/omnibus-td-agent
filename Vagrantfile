@@ -20,7 +20,9 @@ Vagrant.configure('2') do |config|
     ubuntu-11.04
     ubuntu-12.04
     centos-5.10
+    centos-5.10-i386
     centos-6.5
+    centos-6.5-i386
   }.each do |platform|
 
     config.vm.define platform do |c|
