@@ -1,7 +1,0 @@
-#!/bin/bash
-#
-# Perform necessary td-agent setup steps
-# before package is installed.
-#
-
-echo "You're about to install td-agent!"
