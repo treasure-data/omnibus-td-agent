@@ -1,4 +1,4 @@
-dir 'score_gems'
+dir 'core_gems'
 download "bundler", "1.2.5"
 download "json", "1.7.7"
 download "msgpack", "0.4.7"
