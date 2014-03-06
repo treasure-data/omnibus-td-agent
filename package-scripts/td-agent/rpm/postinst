@@ -2,13 +2,16 @@
 
 set -e
 
-td_agent_dir=/opt/td-agent
+td_agent_dir=/usr/lib/fluent
+if [ -f "/usr/lib64/fluent/ruby/bin/ruby" ]; then
+        td_agent_dir=/usr/lib64/fluent
+fi
 
 echo "adding 'td-agent' group..."
 getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
 echo "adding 'td-agent' user..."
 getent passwd td-agent >/dev/null || \
-  /usr/sbin/useradd -r -g td-agent -d %{_localstatedir}/lib/td-agent -s /sbin/nologin -c 'td-agent' td-agent
+  /usr/sbin/useradd -r -g td-agent -d /var/lib/td-agent -s /sbin/nologin -c 'td-agent' td-agent
 
 if [ ! -d "/var/log/%{name}" ]; then
   mkdir /var/log/%{name}
@@ -17,20 +20,21 @@ fi
 chown -R td-agent:td-agent /var/log/%{name}
 
 if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
-  echo "Installing default conffile $CONFFILE ..."
+  echo "Installing default conffile..."
   mkdir -p /etc/td-agent
   cp -f ${td_agent_dir}/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
 fi
 
-# Make
+# Emulate spec files section
+cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
 cat > /usr/sbin/td-agent <<EOF
-#!${td_agent_dir}/embedded/bin/ruby
-ENV["GEM_HOME"]="${td_agent_dir}/embedded/lib/ruby/gems/1.9.1/"
-ENV["GEM_PATH"]="${td_agent_dir}/embedded/lib/ruby/gems/1.9.1/"
+#!${td_agent_dir}/ruby/bin/ruby
+ENV["GEM_HOME"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
+ENV["GEM_PATH"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
 ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
 ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
 ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
-load "${td_agent_dir}/embedded/bin/fluentd"
+load "${td_agent_dir}/ruby/bin/fluentd"
 EOF
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
@@ -61,6 +65,8 @@ fi
 if [ -d "/tmp/fluent/" ]; then
   chown -R td-agent:td-agent /tmp/fluent/
 fi
+
+
 
 echo "Configure td-agent to start, when booting up the OS..."
 /sbin/chkconfig --add td-agent

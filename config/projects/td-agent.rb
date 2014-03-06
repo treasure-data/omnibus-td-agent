@@ -4,9 +4,16 @@ name "td-agent"
 maintainer "Treasure Data, Inc"
 homepage "treasuredata.com"
 
+pkg_type = package_types.first
+install_path_dir = if machine == 'x86_64' && pkg_type == 'rpm' # keep backward compatibility
+                     '/usr/lib64/fluent'
+                   else
+                     '/usr/lib/fluent'
+                   end
+
 replaces        "td-agent"
-install_path    "/opt/td-agent"
-build_version   Omnibus::BuildVersion.new.semver
+install_path    install_path_dir
+build_version   "1.1.19"
 build_iteration 1
 
 # creates required build directories
@@ -19,7 +26,6 @@ dependency "td-agent"
 dependency "version-manifest"
 
 # copy pre/post scripts into omnibus path
-pkg_type = package_types.first
 Dir.glob(File.join(package_scripts_path, pkg_type, '*')).each { |f|
   FileUtils.copy(f, package_scripts_path)
 }

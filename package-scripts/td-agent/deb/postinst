@@ -2,7 +2,7 @@
 
 set -e
 
-td_agent_dir=/opt/td-agent
+td_agent_dir=/usr/lib/fluent
 
 prevver="$2"
 

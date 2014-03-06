@@ -23,7 +23,7 @@ USER=td-agent                   # Running user
 GROUP=td-agent                  # Running group
 DESC=td-agent                   # Introduce a short description here
 PIDFILE=/var/run/$NAME/$NAME.pid
-DAEMON=/opt/td-agent/embedded/bin/ruby # Introduce the server's location here
+DAEMON=/usr/lib/fluent/ruby/bin/ruby # Introduce the server's location here
 # Arguments to run the daemon with
 DAEMON_ARGS="/usr/sbin/td-agent $DAEMON_ARGS --daemon $PIDFILE --log /var/log/td-agent/td-agent.log"
 SCRIPTNAME=/etc/init.d/$NAME

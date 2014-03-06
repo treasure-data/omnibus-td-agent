@@ -18,8 +18,9 @@
 name "bundler"
 version "1.3.5"
 
-dependency "rubygems" unless platform == 'windows'
+#dependency "rubygems" unless platform == 'windows'
 
 build do
-  gem "install bundler --no-rdoc --no-ri -v '#{version}'"
+  # Use 'command' instead of 'gem' to keep  previous td-agent directory structure
+  command "sudo #{install_dir}/ruby/bin/gem install bundler --no-rdoc --no-ri -v '#{version}'"
 end

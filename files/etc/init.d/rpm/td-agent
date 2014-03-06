@@ -21,7 +21,10 @@
 
 name="td-agent"
 prog="td-agent"
-td_agent=/opt/td-agent/embedded/bin/ruby
+td_agent=/usr/lib/fluent/ruby/bin/ruby
+if [ -f "/usr/lib64/fluent/ruby/bin/ruby" ]; then
+        td_agent=/usr/lib64/fluent/ruby/bin/ruby
+fi
 
 if [ -f /etc/sysconfig/$prog ]; then
 	. /etc/sysconfig/$prog
