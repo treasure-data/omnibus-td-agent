@@ -1,0 +1,14 @@
+#! /bin/sh
+
+# 2011/02/21 Kazuki Ohta <k@treasure-data.com>
+# Just leave this file, because this line could delete td-agent.conf in a
+# *UPGRADE* process :-(
+# if [ -e "/etc/prelink.conf.d/td-agent-ruby.conf" ]; then
+#   echo "Uninstalling /etc/prelink.conf.d/td-agent-ruby.conf ..."
+#   rm -f /etc/prelink.conf.d/td-agent-ruby.conf
+# fi
+if [ $1 = 0 ] ; then
+  echo "Stopping td-agent ..."
+  /sbin/service td-agent stop >/dev/null 2>&1 || :
+  /sbin/chkconfig --del td-agent
+fi

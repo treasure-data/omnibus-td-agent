@@ -1,0 +1,74 @@
+#! /bin/sh
+
+set -e
+
+td_agent_dir=/opt/td-agent
+
+echo "adding 'td-agent' group..."
+getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
+echo "adding 'td-agent' user..."
+getent passwd td-agent >/dev/null || \
+  /usr/sbin/useradd -r -g td-agent -d %{_localstatedir}/lib/td-agent -s /sbin/nologin -c 'td-agent' td-agent
+
+if [ ! -d "/var/log/%{name}" ]; then
+  mkdir /var/log/%{name}
+  mkdir /var/log/%{name}/buffer
+fi
+chown -R td-agent:td-agent /var/log/%{name}
+
+if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
+  echo "Installing default conffile $CONFFILE ..."
+  mkdir -p /etc/td-agent
+  cp -f ${td_agent_dir}/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+fi
+
+# Make
+cat > /usr/sbin/td-agent <<EOF
+#!${td_agent_dir}/embedded/bin/ruby
+ENV["GEM_HOME"]="${td_agent_dir}/embedded/lib/ruby/gems/1.9.1/"
+ENV["GEM_PATH"]="${td_agent_dir}/embedded/lib/ruby/gems/1.9.1/"
+ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
+ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
+ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
+load "${td_agent_dir}/embedded/bin/fluentd"
+EOF
+
+# 2011/11/13 Kazuki Ohta <k@treasure-data.com>
+# This prevents prelink, to break the Ruby intepreter.
+if [ -d "/etc/prelink.conf.d/" ]; then
+  echo "prelink detected. Installing /etc/prelink.conf.d/td-agent-ruby.conf ..."
+  cp -f ${td_agent_dir}/etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
+elif [ -f "/etc/prelink.conf" ]; then
+  if [ $(grep '\-b /usr/lib{,64}/fluent/ruby/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
+    echo "prelink detected, but /etc/prelink.conf.d/ dosen't exist. Adding /etc/prelink.conf ..."
+    echo "-b /usr/lib{,64}/fluent/ruby/bin/ruby" >> /etc/prelink.conf
+  fi
+fi
+
+# 2013/03/04 Kazuki Ohta <k@treasure-data.com>
+# Install log rotation script.
+if [ -d "/etc/logrotate.d/" ]; then
+  cp -f ${td_agent_dir}/etc/td-agent/logrotate.d/td-agent.logrotate /etc/logrotate.d/td-agent
+fi
+
+# 2011/11/13 Kazuki Ohta <k@treasure-data.com>
+# Before td-agent v1.1.0, fluentd has a bug of loading plugin before changing
+# to the right user. Then, these directories were created with root permission.
+# The following lines fix that problem.
+if [ -d "/var/log/td-agent/buffer/" ]; then
+  chown -R td-agent:td-agent /var/log/td-agent/buffer/
+fi
+if [ -d "/tmp/fluent/" ]; then
+  chown -R td-agent:td-agent /tmp/fluent/
+fi
+
+echo "Configure td-agent to start, when booting up the OS..."
+/sbin/chkconfig --add td-agent
+
+# 2011/03/24 Kazuki Ohta <k@treasure-data.com>
+# When upgrade, restart agent if it's launched
+if [ "$1" = "2" ]; then
+  /sbin/service td-agent condrestart >/dev/null 2>&1 || :
+fi
+
+#DEBHELPER#
