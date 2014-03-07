@@ -18,7 +18,14 @@ $ bundle install --binstubs
 
 ### Build
 
-You create a platform-specific package using the `build project` command:
+At first, you should download dependent gems using downloder. This is for avoding broken gem download and reduce the build time on Vagrant.
+
+```shell
+$ bin/gem_downloader core_gems.rb
+$ bin/gem_downloader plugin_gems.rb
+```
+
+After that, you create a platform-specific package using the `build project` command:
 
 ```shell
 $ bin/omnibus build project td-agent
@@ -102,5 +109,11 @@ If you would like to build a package for a single platform the command looks lik
 $ vagrant up PLATFORM
 ```
 
-The complete list of valid platform names can be viewed with the
-`vagrant status` command.
+The complete list of valid platform names can be viewed with the `vagrant status` command.
+
+### NOTE
+
+Vagrant syncs current directory in each platform. Downloaded gems are also installed automatically.
+
+And you should not use `rbenv local` in project root because Ruby environment is built on top of rbenv in Vagrant.
+So if you set different Ruby verion in `.ruby-version`, running ruby code will fail during pacakging process. 
