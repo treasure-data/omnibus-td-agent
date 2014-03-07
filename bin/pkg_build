@@ -1,0 +1,28 @@
+#!/usr/bin/env ruby
+
+platforms = %w{
+  ubuntu-10.04
+  ubuntu-10.04-i386
+  ubuntu-12.04
+  ubuntu-12.04-i386
+  centos-5.10
+  centos-6.5
+  centos-5.10-i386
+  centos-6.5-i386
+}
+
+def get_env(platform)
+  f, v, _ = platform.split('-')
+  "#{f}-#{v}"
+end
+
+`rm -rf ./built_pkg; mkdir built_pkg`
+
+platforms.each { |platform|
+  `vagrant up #{platform}`
+  if File.exist?('./pkg')
+    `mkdir -p ./built_pkg/#{get_env(platform)}`
+    `cp -rf ./pkg/* ./built_pkg/#{get_env([platform)}`
+  end
+  `vagrant halt #{platform}`
+}
