@@ -19,7 +19,12 @@ Dir.mkdir(gp.target_dir)
 Dir.chdir(gp.target_dir) {
   gp.target_files.each { |n, v, an|
     path = sprintf(file_format, index, n, v)
-    `curl -o #{path} -L http://rubygems.org/downloads/#{n}-#{v}.gem`
+    loop {
+      `curl -o #{path} -L http://rubygems.org/downloads/#{n}-#{v}.gem`
+      `gem install --explain #{path} --no-ri --no-rdoc`
+      break if $?.success?
+      sleep 1
+    }
     index += 1
   }
 }
