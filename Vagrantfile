@@ -17,27 +17,62 @@ Vagrant.configure('2') do |config|
 
   %w{
     ubuntu-10.04
-    ubuntu-11.04
+    ubuntu-10.04-i386
     ubuntu-12.04
-    centos-5.10
+    ubuntu-12.04-i386
     centos-5.10-i386
-    centos-6.5
     centos-6.5-i386
   }.each do |platform|
 
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-    end
+      c.vm.provision :chef_solo do |chef|
+        chef.json = {
+          'omnibus' => {
+            'build_user' => 'vagrant',
+            'build_dir' => guest_project_path,
+            'install_dir' => "/usr/lib/fluent"
+          }
+        }
 
+        chef.run_list = [
+          'recipe[omnibus::default]'
+        ]
+      end
+    end
+  end
+
+  %w{
+    centos-5.10
+    centos-6.5
+  }.each do |platform|
+    config.vm.define platform do |c|
+      c.vm.box = "opscode-#{platform}"
+      c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
+      c.vm.provision :chef_solo do |chef|
+        chef.json = {
+          'omnibus' => {
+            'build_user' => 'vagrant',
+            'build_dir' => guest_project_path,
+            'install_dir' => "/usr/lib64/fluent"
+          }
+        }
+
+        chef.run_list = [
+          'recipe[omnibus::default]'
+        ]
+      end
+    end
   end
 
   config.vm.provider :virtualbox do |vb|
     # Give enough horsepower to build without taking all day.
     vb.customize [
       'modifyvm', :id,
-      '--memory', '1536',
-      '--cpus', '2'
+      '--memory', '2048',
+      '--cpus', '2',
+      "--ioapic", "on"
     ]
   end
 
@@ -52,21 +87,6 @@ Vagrant.configure('2') do |config|
   guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 
   config.vm.synced_folder host_project_path, guest_project_path
-
-  # prepare VM to be an Omnibus builder
-  config.vm.provision :chef_solo do |chef|
-    chef.json = {
-      'omnibus' => {
-        'build_user' => 'vagrant',
-        'build_dir' => guest_project_path,
-        'install_dir' => "/opt/#{project_name}"
-      }
-    }
-
-    chef.run_list = [
-      'recipe[omnibus::default]'
-    ]
-  end
 
   config.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
     export PATH=/usr/local/bin:$PATH
