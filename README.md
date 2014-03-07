@@ -1,12 +1,14 @@
-# td-agent Omnibus project
+# About
 
-This project creates full-stack platform-specific packages for
-`td-agent`!
+The event collector daemon, for Treasure Data. This daemon collects various types of logs/events via various way, and transfer them to the cloud. For more about Treasure Data, see the [homepage](http://treasuredata.com/), and the [documentation](http://docs.treasuredata.com/).
+
+td-agent is open sourced as [Fluentd project](http://github.com/fluent/). In other words, td-agent is a distribution package of Fluentd.
+
+td-agent package is based on [Omnibus-ruby](https://github.com/opscode/omnibus-ruby)
 
 ## Installation
 
-We'll assume you have Ruby 1.9+ and Bundler installed. First ensure all
-required gems are installed and ready to use:
+We'll assume you have Ruby 1.9+ and Bundler installed. First ensure all required gems are installed and ready to use:
 
 ```shell
 $ bundle install --binstubs
@@ -55,15 +57,17 @@ $ bin/omnibus help
 
 ## Vagrant-based Virtualized Build Lab
 
-Every Omnibus project ships will a project-specific
-[Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
+td-agent omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
 that will allow you to build your projects on the following platforms:
 
 * CentOS 5 64-bit
+* CentOS 5 32-bit
 * CentOS 6 64-bit
+* CentOS 6 32-bit
 * Ubuntu 10.04 64-bit
-* Ubuntu 11.04 64-bit
+* Ubuntu 10.04 32-bit
 * Ubuntu 12.04 64-bit
+* Ubuntu 12.04 32-bit
 
 Please note this build-lab is only meant to get you up and running quickly;
 there's nothing inherent in Omnibus that restricts you to just building CentOS
