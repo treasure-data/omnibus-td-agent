@@ -11,7 +11,7 @@ host_project_path = File.expand_path('..', __FILE__)
 guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 project_name = 'td-agent'
 
-def setup_common_vm_parameter(c)
+def setup_common_vm_parameter(c, project_name, guest_project_path)
   # Ensure a recent version of the Chef Omnibus packages are installed
   c.omnibus.chef_version = '11.6.2'
 
@@ -41,7 +41,7 @@ Vagrant.configure('2') do |config|
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c)
+      setup_common_vm_parameter(c, project_name, guest_project_path)
 
       c.vm.provision :chef_solo do |chef|
         chef.json = {
@@ -67,7 +67,7 @@ Vagrant.configure('2') do |config|
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c)
+      setup_common_vm_parameter(c, project_name, guest_project_path)
 
       c.vm.provision :chef_solo do |chef|
         chef.json = {
@@ -93,7 +93,7 @@ Vagrant.configure('2') do |config|
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c)
+      setup_common_vm_parameter(c, project_name, guest_project_path)
 
       c.vm.provision :chef_solo do |chef|
         chef.json = {
