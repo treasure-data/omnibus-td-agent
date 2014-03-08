@@ -19,10 +19,11 @@ end
 `rm -rf ./built_pkg; mkdir built_pkg`
 
 platforms.each { |platform|
-  `vagrant up #{platform}`
+  `rm -rf ./pkg`
+  system("vagrant up #{platform}")
   if File.exist?('./pkg')
     `mkdir -p ./built_pkg/#{get_env(platform)}`
     `cp -rf ./pkg/* ./built_pkg/#{get_env(platform)}`
   end
-  `vagrant halt #{platform}`
+  system "vagrant halt #{platform}"
 }
