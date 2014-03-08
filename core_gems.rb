@@ -1,6 +1,6 @@
 dir 'core_gems'
 download "bundler", "1.2.5"
-download "json", "1.7.7"
+download "json", "1.8.1"
 download "msgpack", "0.4.7"
 download "iobuffer", "1.1.2"
 download "cool.io", "1.1.1"
