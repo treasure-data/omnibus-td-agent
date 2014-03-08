@@ -11,20 +11,13 @@ host_project_path = File.expand_path('..', __FILE__)
 guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 project_name = 'td-agent'
 
-def setup_common_vm_parameter(c, project_name, guest_project_path)
+def setup_common_parameter(c)
   # Ensure a recent version of the Chef Omnibus packages are installed
   c.omnibus.chef_version = '11.6.2'
 
   # Enable the berkshelf-vagrant plugin
   c.berkshelf.enabled = true
   c.ssh.forward_agent = true
-
-  c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
-    export PATH=/usr/local/bin:$PATH
-    cd #{guest_project_path}
-    su vagrant -c "bundle install --binstubs"
-    su vagrant -c "bin/omnibus build project #{project_name}"
-  OMNIBUS_BUILD
 end
 
 Vagrant.configure('2') do |config|
@@ -41,7 +34,7 @@ Vagrant.configure('2') do |config|
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c, project_name, guest_project_path)
+      setup_common_parameter(c)
 
       c.vm.provision :chef_solo do |chef|
         chef.json = {
@@ -56,6 +49,14 @@ Vagrant.configure('2') do |config|
           'recipe[omnibus::default]'
         ]
       end
+
+      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
+    export PATH=/usr/local/bin:$PATH
+    rm -rf /var/cache/omnibus/{build,pkg}
+    cd #{guest_project_path}
+    su vagrant -c "bundle install --binstubs"
+    su vagrant -c "bin/omnibus build project #{project_name}"
+  OMNIBUS_BUILD
     end
   end
 
@@ -63,37 +64,10 @@ Vagrant.configure('2') do |config|
     centos-5.10-i386
     centos-6.5-i386
   }.each do |platform|
-
     config.vm.define platform do |c|
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c, project_name, guest_project_path)
-
-      c.vm.provision :chef_solo do |chef|
-        chef.json = {
-          'omnibus' => {
-            'build_user' => 'vagrant',
-            'build_dir' => guest_project_path,
-            'install_dir' => "/usr/lib/fluent"
-          }
-        }
-
-        chef.run_list = [
-          'recipe[yum-epel::default]',
-          'recipe[omnibus::default]'
-        ]
-      end
-    end
-  end
-
-  %w{
-    centos-5.10
-    centos-6.5
-  }.each do |platform|
-    config.vm.define platform do |c|
-      c.vm.box = "opscode-#{platform}"
-      c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_vm_parameter(c, project_name, guest_project_path)
+      setup_common_parameter(c)
 
       c.vm.provision :chef_solo do |chef|
         chef.json = {
@@ -109,6 +83,48 @@ Vagrant.configure('2') do |config|
           'recipe[omnibus::default]'
         ]
       end
+
+      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
+    export PATH=/usr/local/bin:$PATH
+    rm -rf /var/cache/omnibus/{build,pkg}
+    cd #{guest_project_path}
+    su vagrant -c "bundle install --binstubs"
+    su vagrant -c "bin/omnibus build project #{project_name}"
+  OMNIBUS_BUILD
+    end
+  end
+
+  %w{
+    centos-5.10
+    centos-6.5
+  }.each do |platform|
+    config.vm.define platform do |c|
+      c.vm.box = "opscode-#{platform}"
+      c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
+      setup_common_parameter(c)
+
+      c.vm.provision :chef_solo do |chef|
+        chef.json = {
+          'omnibus' => {
+            'build_user' => 'vagrant',
+            'build_dir' => guest_project_path,
+            'install_dir' => "/usr/lib64/fluent"
+          }
+        }
+
+        chef.run_list = [
+          'recipe[yum-epel::default]',
+          'recipe[omnibus::default]'
+        ]
+      end
+
+      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
+    export PATH=/usr/local/bin:$PATH
+    rm -rf /var/cache/omnibus/{build,pkg}
+    cd #{guest_project_path}
+    su vagrant -c "bundle install --binstubs"
+    su vagrant -c "bin/omnibus build project #{project_name}"
+  OMNIBUS_BUILD
     end
   end
 
