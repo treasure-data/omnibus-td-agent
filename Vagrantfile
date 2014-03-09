@@ -74,7 +74,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => 'vagrant',
             'build_dir' => guest_project_path,
-            'install_dir' => "/usr/lib64/fluent"
+            'install_dir' => "/usr/lib/fluent"
           }
         }
 
