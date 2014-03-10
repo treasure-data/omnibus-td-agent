@@ -90,6 +90,13 @@ ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
 load "${td_agent_dir}/ruby/bin/fluentd"
 EOF
 chmod 755 /usr/sbin/td-agent
+cat > /usr/bin/td <<EOF
+#!/bin/sh
+export GEM_HOME="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
+export GEM_PATH="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
+${td_agent_dir}/ruby/bin/td "$@"
+EOF
+chmod 755 /usr/bin/td
 
 if [ ! -e "/etc/default/td-agent" ]; then
   cat > /etc/default/td-agent <<EOF
