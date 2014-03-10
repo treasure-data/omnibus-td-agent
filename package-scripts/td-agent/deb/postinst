@@ -89,6 +89,7 @@ ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
 ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
 load "${td_agent_dir}/ruby/bin/fluentd"
 EOF
+chmod 755 /usr/sbin/td-agent
 
 if [ ! -e "/etc/default/td-agent" ]; then
   cat > /etc/default/td-agent <<EOF

@@ -36,6 +36,7 @@ ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
 ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
 load "${td_agent_dir}/ruby/bin/fluentd"
 EOF
+chmod 755 /usr/sbin/td-agent
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
 # This prevents prelink, to break the Ruby intepreter.
