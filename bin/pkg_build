@@ -1,5 +1,10 @@
 #!/usr/bin/env ruby
 
+arg = ''
+if ARGV.include?('--with-provision')
+  arg << '--provision'
+end
+
 platforms = %w{
   ubuntu-10.04
   ubuntu-10.04-i386
@@ -20,7 +25,7 @@ end
 
 platforms.each { |platform|
   `rm -rf ./pkg`
-  system("vagrant up #{platform}")
+  system("vagrant up #{platform} #{arg}")
   if File.exist?('./pkg')
     `mkdir -p ./built_pkg/#{get_env(platform)}`
     `cp -rf ./pkg/* ./built_pkg/#{get_env(platform)}`
