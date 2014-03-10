@@ -26,16 +26,18 @@ dependency "td-agent"
 dependency "version-manifest"
 
 # copy pre/post scripts into omnibus path
+FileUtils.mkdir_p(package_scripts_path)
 Dir.glob(File.join(package_scripts_path, '*')).each { |f|
   FileUtils.rm_f(f) if File.file?(f)
 }
-Dir.glob(File.join(package_scripts_path, pkg_type, '*')).each { |f|
+Dir.glob(File.join('templates', 'package-scripts', 'td-agent', pkg_type, '*')).each { |f|
   FileUtils.copy(f, package_scripts_path)
 }
 
 # copy init.d file
 initd_path = File.join(files_path, 'etc', 'init.d')
-FileUtils.copy(File.join(initd_path, pkg_type, 'td-agent'), initd_path)
+FileUtils.mkdir_p(initd_path)
+FileUtils.copy(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'), initd_path)
 
 # fpm doesn't support missingok yet?
 #config_file "#{install_path}/etc/td-agent/td-agent.conf"
