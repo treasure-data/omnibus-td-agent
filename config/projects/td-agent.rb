@@ -26,6 +26,9 @@ dependency "td-agent"
 dependency "version-manifest"
 
 # copy pre/post scripts into omnibus path
+Dir.glob(File.join(package_scripts_path, '*')).each { |f|
+  FileUtils.rm_f(f) if File.file?(f)
+}
 Dir.glob(File.join(package_scripts_path, pkg_type, '*')).each { |f|
   FileUtils.copy(f, package_scripts_path)
 }
