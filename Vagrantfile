@@ -84,10 +84,13 @@ Vagrant.configure('2') do |config|
         ]
       end
 
+      # usermod and chmod are needed for overwriting fpm's rpm.erb
       c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
     export PATH=/usr/local/bin:$PATH
     rm -rf /var/cache/omnibus/{build,pkg}
     cd #{guest_project_path}
+    usermod -G vagrant,rbenv vagrant
+    find /opt/rbenv -name '*.erb' -type f -print | xargs chmod 664
     su vagrant -c "bundle install --binstubs"
     su vagrant -c "bin/omnibus build project #{project_name}"
   OMNIBUS_BUILD
@@ -121,6 +124,8 @@ Vagrant.configure('2') do |config|
       c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
     export PATH=/usr/local/bin:$PATH
     rm -rf /var/cache/omnibus/{build,pkg}
+    usermod -G vagrant,rbenv vagrant
+    find /opt/rbenv -name '*.erb' -type f -print | xargs chmod 664
     cd #{guest_project_path}
     su vagrant -c "bundle install --binstubs"
     su vagrant -c "bin/omnibus build project #{project_name}"

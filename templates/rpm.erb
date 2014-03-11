@@ -101,6 +101,7 @@ Obsoletes: <%= repl %>
 # noop
 
 %install
+rm -rf $RPM_BUILD_ROOT
 mkdir -p %buildroot/usr/%{_lib}
 cp -rf /usr/%{_lib}/fluent %buildroot/usr/%{_lib}
 rm -rf %buildroot/usr/%{_lib}/fluent/bin
