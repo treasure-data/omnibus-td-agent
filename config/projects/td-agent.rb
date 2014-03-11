@@ -1,3 +1,4 @@
+require 'erb'
 require 'fileutils'
 require 'rubygems'
 
@@ -41,12 +42,25 @@ initd_path = File.join(files_path, 'etc', 'init.d')
 FileUtils.mkdir_p(initd_path)
 FileUtils.copy(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'), initd_path)
 
-# fpm doesn't support missingok yet?
-#config_file "#{install_path}/etc/td-agent/td-agent.conf"
-extra_package_file "#{install_path}/etc/td-agent/td-agent.conf.tmpl"
-extra_package_file "#{install_path}/etc/td-agent/prelink.conf.d/td-agent.prelink.conf"
-extra_package_file "#{install_path}/etc/td-agent/logrotate.d/td-agent.logrotate"
-extra_package_file "#{install_path}/etc/init.d/td-agent"
+# monck.patch for rpm.erb
+case pkg_type
+when 'rpm'
+  old_template = File.join(File.expand_path(File.join(Gem.bin_path('fpm', 'fpm'), '..', '..', 'templates')), 'rpm.erb')
+  FileUtils.copy(File.join('templates', 'rpm.erb'), old_template)
+end
+
+# setup td and td-agent scripts
+td_bin_path = File.join(install_path_dir, 'usr', 'bin', 'td')
+FileUtils.mkdir_p(File.dirname(td_bin_path))
+File.open(td_bin_path, 'w', 0755) { |f|
+  f.write(ERB.new(File.read(File.join('templates', 'usr', 'bin', 'td.erb'))).result(binding))
+}
+
+td_agent_sbin_path = File.join(install_path_dir, 'usr', 'sbin', 'td-agent')
+FileUtils.mkdir_p(File.dirname(td_agent_sbin_path))
+File.open(td_agent_sbin_path, 'w', 0755) { |f|
+  f.write(ERB.new(File.read(File.join('templates', 'usr', 'sbin', 'td-agent.erb'))).result(binding))
+}
 
 exclude "\.git*"
 exclude "bundler\/git"

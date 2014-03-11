@@ -1,7 +1,3 @@
-#! /bin/sh
-
-set -e
-
 td_agent_dir=/usr/lib/fluent
 if [ -f "/usr/lib64/fluent/ruby/bin/ruby" ]; then
         td_agent_dir=/usr/lib64/fluent
@@ -12,44 +8,17 @@ getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
 echo "adding 'td-agent' user..."
 getent passwd td-agent >/dev/null || \
   /usr/sbin/useradd -r -g td-agent -d /var/lib/td-agent -s /sbin/nologin -c 'td-agent' td-agent
-
-if [ ! -d "/var/log/%{name}" ]; then
-  mkdir /var/log/%{name}
-  mkdir /var/log/%{name}/buffer
-fi
 chown -R td-agent:td-agent /var/log/%{name}
-
 if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
   echo "Installing default conffile..."
-  mkdir -p /etc/td-agent
-  cp -f ${td_agent_dir}/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+  cp -f /etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
 fi
-
-# Emulate spec files section
-cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
-cat > /usr/sbin/td-agent <<EOF
-#!${td_agent_dir}/ruby/bin/ruby
-ENV["GEM_HOME"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-ENV["GEM_PATH"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
-ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
-ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
-load "${td_agent_dir}/ruby/bin/fluentd"
-EOF
-chmod 755 /usr/sbin/td-agent
-cat > /usr/bin/td <<EOF
-#!/bin/sh
-export GEM_HOME="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-export GEM_PATH="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-${td_agent_dir}/ruby/bin/td "$@"
-EOF
-chmod 755 /usr/bin/td
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
 # This prevents prelink, to break the Ruby intepreter.
 if [ -d "/etc/prelink.conf.d/" ]; then
   echo "prelink detected. Installing /etc/prelink.conf.d/td-agent-ruby.conf ..."
-  cp -f ${td_agent_dir}/etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
+  cp -f /etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
 elif [ -f "/etc/prelink.conf" ]; then
   if [ $(grep '\-b /usr/lib{,64}/fluent/ruby/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
     echo "prelink detected, but /etc/prelink.conf.d/ dosen't exist. Adding /etc/prelink.conf ..."
@@ -60,7 +29,7 @@ fi
 # 2013/03/04 Kazuki Ohta <k@treasure-data.com>
 # Install log rotation script.
 if [ -d "/etc/logrotate.d/" ]; then
-  cp -f ${td_agent_dir}/etc/td-agent/logrotate.d/td-agent.logrotate /etc/logrotate.d/td-agent
+  cp -f /etc/td-agent/logrotate.d/td-agent.logrotate /etc/logrotate.d/td-agent
 fi
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
@@ -84,5 +53,3 @@ echo "Configure td-agent to start, when booting up the OS..."
 if [ "$1" = "2" ]; then
   /sbin/service td-agent condrestart >/dev/null 2>&1 || :
 fi
-
-#DEBHELPER#
