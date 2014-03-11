@@ -1,8 +1,10 @@
 require 'fileutils'
+require 'rubygems'
 
 name "td-agent"
 maintainer "Treasure Data, Inc"
-homepage "treasuredata.com"
+homepage "http://treasuredata.com"
+description "td-agent"
 
 pkg_type = package_types.first
 install_path_dir = if machine == 'x86_64' && pkg_type == 'rpm' # keep backward compatibility
@@ -14,7 +16,7 @@ install_path_dir = if machine == 'x86_64' && pkg_type == 'rpm' # keep backward c
 replaces        "td-agent"
 install_path    install_path_dir
 build_version   "1.1.19"
-build_iteration 1
+build_iteration 0
 
 # creates required build directories
 dependency "preparation"
