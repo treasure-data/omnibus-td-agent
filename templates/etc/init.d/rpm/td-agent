@@ -21,7 +21,7 @@
 
 name="td-agent"
 prog="td-agent"
-td_agent=<%= install_path %>/ruby/bin/ruby
+td_agent=<%= install_path %>/embedded/bin/ruby
 
 if [ -f /etc/sysconfig/$prog ]; then
 	. /etc/sysconfig/$prog
@@ -38,8 +38,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "<%= install_path %>/jemalloc/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD=<%= install_path %>/jemalloc/lib/libjemalloc.so
+if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
 fi
 
 RETVAL=0

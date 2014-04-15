@@ -108,7 +108,6 @@ build do
                        #"--enable-shared",
                        "--enable-libedit",
                        "--with-ext=psych",
-                       "--with-out-ext=fiddle",
                        "--with-out-ext=gdbm",
                        "--with-out-ext=probe",
                        "--with-out-ext=racc",

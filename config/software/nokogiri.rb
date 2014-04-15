@@ -39,8 +39,8 @@ env = {
 }
 
 build do
-  command [
-    "sudo #{install_dir}/ruby/bin/gem install --no-ri --no-rdoc",
+  gem [
+    "install --no-ri --no-rdoc",
     "nokogiri",
     "-v #{version}",
     "--",
@@ -53,4 +53,3 @@ build do
     "--with-iconv-lib=#{install_dir}/embedded/lib"
   ].join(" "), :env => env
 end
-

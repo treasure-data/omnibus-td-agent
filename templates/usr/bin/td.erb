@@ -1,4 +1,4 @@
 #!/bin/sh
-export GEM_HOME="<%= install_path %>/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
-export GEM_PATH="<%= install_path %>/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
-<%= install_path %>/ruby/bin/td "$@"
+export GEM_HOME="<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+export GEM_PATH="<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+<%= install_path %>/embedded/bin/td "$@"

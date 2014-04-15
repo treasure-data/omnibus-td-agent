@@ -1,7 +1,7 @@
-#!<%= install_path %>/ruby/bin/ruby
-ENV["GEM_HOME"]="<%= install_path %>/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
-ENV["GEM_PATH"]="<%= install_path %>/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
+#!<%= install_path %>/embedded/bin/ruby
+ENV["GEM_HOME"]="<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+ENV["GEM_PATH"]="<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
 ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
 ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
 ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
-load "<%= install_path %>/ruby/bin/fluentd"
+load "<%= install_path %>/embedded/bin/fluentd"

@@ -1,24 +1,17 @@
 GIT
   remote: git://github.com/opscode/omnibus-software.git
-  revision: ffa555ff5007cb6db55025a9fec37ca965a38beb
+  revision: 4cf76f78a0b238557c19cbefbe83cddfe4a4d7d2
   branch: master
   specs:
     omnibus-software (0.0.1)
 
-GEM
-  remote: https://rubygems.org/
+GIT
+  remote: git://github.com/repeatedly/fpm.git
+  revision: e3e9313d066b82b3ae15b6c105369fb7710aacc4
+  branch: add-package-tempalte-dir
   specs:
-    addressable (2.3.5)
-    arr-pm (0.0.9)
-      cabin (> 0)
-    backports (3.6.0)
-    cabin (0.6.1)
-    childprocess (0.5.1)
-      ffi (~> 1.0, >= 1.0.11)
-    clamp (0.6.3)
-    ffi (1.9.3)
-    fpm (1.0.2)
-      arr-pm (~> 0.0.8)
+    fpm (1.1.0)
+      arr-pm (~> 0.0.9)
       backports (>= 2.6.2)
       cabin (>= 0.6.0)
       childprocess
@@ -26,6 +19,34 @@ GEM
       ffi
       ftw (~> 0.0.30)
       json (>= 1.7.7)
+
+GIT
+  remote: git://github.com/repeatedly/omnibus-ruby.git
+  revision: 1720381ffbec16be3fbd359139d4b43c7a5da296
+  branch: add-templates-path
+  specs:
+    omnibus (3.0.0)
+      chef-sugar (~> 1.2)
+      fpm
+      mixlib-config (~> 2.1)
+      mixlib-shellout (~> 1.3)
+      ohai (~> 6.12)
+      thor (>= 0.16.0)
+      uber-s3
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    addressable (2.3.6)
+    arr-pm (0.0.9)
+      cabin (> 0)
+    backports (3.6.0)
+    cabin (0.6.1)
+    chef-sugar (1.2.6)
+    childprocess (0.5.2)
+      ffi (~> 1.0, >= 1.0.11)
+    clamp (0.6.3)
+    ffi (1.9.3)
     ftw (0.0.39)
       addressable
       backports (>= 2.6.2)
@@ -38,8 +59,8 @@ GEM
     mixlib-cli (1.4.0)
     mixlib-config (2.1.0)
     mixlib-log (1.6.0)
-    mixlib-shellout (1.3.0)
-    ohai (6.20.0)
+    mixlib-shellout (1.4.0)
+    ohai (6.22.0)
       ipaddress
       mixlib-cli
       mixlib-config
@@ -47,17 +68,8 @@ GEM
       mixlib-shellout
       systemu (~> 2.5.2)
       yajl-ruby
-    omnibus (2.0.0.rc1)
-      fpm (~> 1.0.0)
-      mixlib-config (~> 2.1)
-      mixlib-shellout (~> 1.3)
-      ohai (~> 6.12)
-      rake
-      thor (>= 0.16.0)
-      uber-s3
-    rake (10.1.1)
     systemu (2.5.2)
-    thor (0.18.1)
+    thor (0.19.1)
     uber-s3 (0.2.4)
       mime-types (~> 1.17)
     yajl-ruby (1.2.0)
@@ -66,5 +78,6 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  omnibus (= 2.0.0.rc1)
+  fpm!
+  omnibus!
   omnibus-software!

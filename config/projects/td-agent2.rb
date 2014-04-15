@@ -2,7 +2,7 @@ require 'erb'
 require 'fileutils'
 require 'rubygems'
 
-name "td-agent"
+name "td-agent2"
 maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "td-agent"
@@ -11,6 +11,7 @@ replaces        "td-agent"
 install_path    "/opt/td-agent"
 build_version   "1.1.19"
 build_iteration 0
+templates_path "#{Omnibus.project_root}/templates"
 
 # creates required build directories
 dependency "preparation"
@@ -30,13 +31,18 @@ Dir.glob(File.join(package_scripts_path, '*')).each { |f|
   FileUtils.rm_f(f) if File.file?(f)
 }
 Dir.glob(File.join('templates', 'package-scripts', 'td-agent', pkg_type, '*')).each { |f|
-  FileUtils.copy(f, package_scripts_path)
+  package_script = File.join(package_scripts_path, File.basename(f))
+  File.open(package_script, 'w', 0755) { |f|
+    f.write(ERB.new(File.read(f)).result(binding))
+  }
 }
 
 # copy init.d file
 initd_path = File.join(files_path, 'etc', 'init.d')
 FileUtils.mkdir_p(initd_path)
-FileUtils.copy(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'), initd_path)
+File.open(File.join(initd_path, 'td-agent'), 'w', 0755) { |f|
+  f.write(ERB.new(File.read(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'))).result(binding))
+}
 
 # setup td and td-agent scripts
 td_bin_path = File.join(install_path, 'usr', 'bin', 'td')

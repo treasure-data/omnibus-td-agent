@@ -1,4 +1,5 @@
 source 'https://rubygems.org'
 
-gem 'omnibus', '2.0.0.rc1'
+gem 'fpm', :git => 'git://github.com/repeatedly/fpm.git', :branch => 'add-package-tempalte-dir'
+gem 'omnibus', :git => 'git://github.com/repeatedly/omnibus-ruby.git', :branch => 'add-templates-path'
 gem 'omnibus-software', :git => 'git://github.com/opscode/omnibus-software.git', :branch => 'master'

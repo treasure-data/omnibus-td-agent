@@ -1,7 +1,4 @@
-td_agent_dir=/usr/lib/fluent
-if [ -f "/usr/lib64/fluent/ruby/bin/ruby" ]; then
-        td_agent_dir=/usr/lib64/fluent
-fi
+td_agent_dir=/opt/td-agent
 
 echo "adding 'td-agent' group..."
 getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
@@ -20,9 +17,9 @@ if [ -d "/etc/prelink.conf.d/" ]; then
   echo "prelink detected. Installing /etc/prelink.conf.d/td-agent-ruby.conf ..."
   cp -f /etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
 elif [ -f "/etc/prelink.conf" ]; then
-  if [ $(grep '\-b /usr/lib{,64}/fluent/ruby/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
+  if [ $(grep '\-b /opt/td-agent/embedded/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
     echo "prelink detected, but /etc/prelink.conf.d/ dosen't exist. Adding /etc/prelink.conf ..."
-    echo "-b /usr/lib{,64}/fluent/ruby/bin/ruby" >> /etc/prelink.conf
+    echo "-b /opt/td-agent/embedded/bin/ruby" >> /etc/prelink.conf
   fi
 fi
 
