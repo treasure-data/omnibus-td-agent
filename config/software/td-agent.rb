@@ -2,7 +2,7 @@ name "td-agent"
 #version '' # git ref
 
 dependency "ruby"
-dependency "bundler"
+#dependency "bundler"
 dependency "jemalloc"
 dependency "fluentd"
 dependency "nokogiri"

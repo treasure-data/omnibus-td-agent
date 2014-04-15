@@ -41,7 +41,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => 'vagrant',
             'build_dir' => guest_project_path,
-            'install_dir' => "/usr/lib/fluent"
+            'install_dir' => "/opt/td-agent"
           }
         }
 
@@ -63,41 +63,6 @@ Vagrant.configure('2') do |config|
   %w{
     centos-5.10-i386
     centos-6.5-i386
-  }.each do |platform|
-    config.vm.define platform do |c|
-      c.vm.box = "opscode-#{platform}"
-      c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_parameter(c)
-
-      c.vm.provision :chef_solo do |chef|
-        chef.json = {
-          'omnibus' => {
-            'build_user' => 'vagrant',
-            'build_dir' => guest_project_path,
-            'install_dir' => "/usr/lib/fluent"
-          }
-        }
-
-        chef.run_list = [
-          'recipe[yum-epel::default]',
-          'recipe[omnibus::default]'
-        ]
-      end
-
-      # usermod and chmod are needed for overwriting fpm's rpm.erb
-      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
-    export PATH=/usr/local/bin:$PATH
-    rm -rf /var/cache/omnibus/{build,pkg}
-    cd #{guest_project_path}
-    usermod -G vagrant,rbenv vagrant
-    find /opt/rbenv -name '*.erb' -type f -print | xargs chmod 664
-    su vagrant -c "bundle install --binstubs"
-    su vagrant -c "bin/omnibus build project #{project_name}"
-  OMNIBUS_BUILD
-    end
-  end
-
-  %w{
     centos-5.10
     centos-6.5
   }.each do |platform|
@@ -111,7 +76,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => 'vagrant',
             'build_dir' => guest_project_path,
-            'install_dir' => "/usr/lib64/fluent"
+            'install_dir' => "/opt/td-agent"
           }
         }
 
@@ -124,8 +89,6 @@ Vagrant.configure('2') do |config|
       c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
     export PATH=/usr/local/bin:$PATH
     rm -rf /var/cache/omnibus/{build,pkg}
-    usermod -G vagrant,rbenv vagrant
-    find /opt/rbenv -name '*.erb' -type f -print | xargs chmod 664
     cd #{guest_project_path}
     su vagrant -c "bundle install --binstubs"
     su vagrant -c "bin/omnibus build project #{project_name}"

@@ -1,9 +1,18 @@
 name "jemalloc"
-default_version "2.2.5"
+default_version "3.6.0"
 
-source :url => "http://www.canonware.com/download/jemalloc/jemalloc-2.2.5.tar.bz2", :md5 => 'a5c4332705ed0e3fff1ac73cfe975640'
+# for td-agent
+version "2.2.5" do
+  :md5 => 'a5c4332705ed0e3fff1ac73cfe975640'
+end
 
-relative_path "jemalloc-2.2.5"
+version "3.6.0" do
+  :md5 => 'e76665b63a8fddf4c9f26d2fa67afdf2'
+end
+
+source :url => "http://www.canonware.com/download/jemalloc/jemalloc-#{version}.tar.bz2", 
+
+relative_path "jemalloc-#{version}"
 
 env = {
   "CFLAGS" => "-L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include"

@@ -21,10 +21,7 @@
 
 name="td-agent"
 prog="td-agent"
-td_agent=/usr/lib/fluent/ruby/bin/ruby
-if [ -f "/usr/lib64/fluent/ruby/bin/ruby" ]; then
-        td_agent=/usr/lib64/fluent/ruby/bin/ruby
-fi
+td_agent=<%= install_path %>/ruby/bin/ruby
 
 if [ -f /etc/sysconfig/$prog ]; then
 	. /etc/sysconfig/$prog
@@ -41,11 +38,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "/usr/lib/fluent/jemalloc/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD=/usr/lib/fluent/jemalloc/lib/libjemalloc.so
-fi
-if [ -f "/usr/lib64/fluent/jemalloc/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD=/usr/lib64/fluent/jemalloc/lib/libjemalloc.so
+if [ -f "<%= install_path %>/jemalloc/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD=<%= install_path %>/jemalloc/lib/libjemalloc.so
 fi
 
 RETVAL=0

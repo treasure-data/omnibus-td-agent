@@ -2,7 +2,7 @@
 
 set -e
 
-td_agent_dir=/usr/lib/fluent
+td_agent_dir=<%= install_path %>
 
 prevver="$2"
 
@@ -82,8 +82,8 @@ esac
 cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
 cat > /usr/sbin/td-agent <<EOF
 #!${td_agent_dir}/ruby/bin/ruby
-ENV["GEM_HOME"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-ENV["GEM_PATH"]="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
+ENV["GEM_HOME"]="${td_agent_dir}/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
+ENV["GEM_PATH"]="${td_agent_dir}/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
 ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
 ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
 ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
@@ -92,8 +92,8 @@ EOF
 chmod 755 /usr/sbin/td-agent
 cat > /usr/bin/td <<EOF
 #!/bin/sh
-export GEM_HOME="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
-export GEM_PATH="${td_agent_dir}/ruby/lib/ruby/gems/1.9.1/"
+export GEM_HOME="${td_agent_dir}/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
+export GEM_PATH="${td_agent_dir}/ruby/lib/ruby/gems/<%= gem_dir_version %>/"
 ${td_agent_dir}/ruby/bin/td "$@"
 EOF
 chmod 755 /usr/bin/td

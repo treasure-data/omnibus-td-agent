@@ -1,8 +1,7 @@
 dir 'core_gems'
-download "bundler", "1.2.5"
+download "bundler", "1.6.1"
 download "json", "1.8.1"
-download "msgpack", "0.4.7"
-download "iobuffer", "1.1.2"
-download "cool.io", "1.1.1"
-download "http_parser.rb", "0.5.1"
-download "yajl-ruby", "1.1.0"
+download "msgpack", "0.5.8"
+download "cool.io", "1.2.1"
+download "http_parser.rb", "0.6.0"
+download "yajl-ruby", "1.2.0"

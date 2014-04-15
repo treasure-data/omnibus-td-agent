@@ -16,7 +16,7 @@
 #
 
 name "ruby"
-default_version "1.9.3-p484"
+default_version "2.1.1"
 
 dependency "zlib"
 dependency "ncurses"
@@ -24,7 +24,7 @@ dependency "libedit"
 dependency "openssl"
 dependency "libyaml"
 dependency "libiconv"
-#dependency "gdbm" if (platform == "mac_os_x" or platform == "freebsd" or platform == "aix")
+dependency "gdbm"
 dependency "libgcc" if (platform == "solaris2" and Omnibus.config.solaris_compiler == "gcc")
 
 version "1.9.3-p484" do
@@ -35,7 +35,7 @@ version "2.1.1" do
   source md5: 'e57fdbb8ed56e70c43f39c79da1654b2'
 end
 
-source url: "http://ftp.ruby-lang.org/pub/ruby/#{version.match(/^(\d+\.\d+)/)[0]}/ruby-#{version}.tar.gz"
+source url: "http://cache.ruby-lang.org/pub/ruby/#{version.match(/^(\d+\.\d+)/)[0]}/ruby-#{version}.tar.gz"
 
 relative_path "ruby-#{version}"
 
@@ -43,8 +43,14 @@ env =
   case platform
   when "mac_os_x"
     {
-      "CFLAGS" => "-arch x86_64 -m64 -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include -I#{install_dir}/embedded/include/ncurses -O3 -g -pipe",
-      "LDFLAGS" => "-arch x86_64 -R#{install_dir}/embedded/lib -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include -I#{install_dir}/embedded/include/ncurses"
+      # -Qunused-arguments suppresses "argument unused during compilation"
+      # warnings. These can be produced if you compile a program that doesn't
+      # link to anything in a path given with -Lextra-libs. Normally these
+      # would be harmless, except that autoconf treats any output to stderr as
+      # a failure when it makes a test program to check your CFLAGS (regardless
+      # of the actual exit code from the compiler).
+      "CFLAGS" => "-arch x86_64 -m64 -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include -I#{install_dir}/embedded/include/ncurses -O3 -g -pipe -Qunused-arguments",
+      "LDFLAGS" => "-arch x86_64 -L#{install_dir}/embedded/lib -I#{install_dir}/embedded/include -I#{install_dir}/embedded/include/ncurses"
     }
   when "solaris2"
     {
@@ -97,10 +103,11 @@ env =
 
 build do
   configure_command = ["./configure",
-                       "--prefix=#{install_dir}/ruby",
+                       "--prefix=#{install_dir}/embedded",
+                       "--with-out-ext=fiddle,dbm",
+                       #"--enable-shared",
                        "--enable-libedit",
-                       "--with-out-ext=fiddle",
-                       "--with-out-ext=dbm",
+                       "--with-ext=psych",
                        "--with-out-ext=fiddle",
                        "--with-out-ext=gdbm",
                        "--with-out-ext=probe",
@@ -108,7 +115,7 @@ build do
                        "--with-out-ext=ripper",
                        "--with-out-ext=sdbm",
                        "--with-out-ext=tk",
-                       "--with-libyaml-dir=#{install_dir}/embedded",
+                       #"--with-libyaml-dir=#{install_dir}/embedded",
                        "--disable-install-doc"]
 
   case platform
@@ -161,4 +168,3 @@ build do
   command "#{make_binary} -j #{max_build_jobs}", :env => env
   command "#{make_binary} -j #{max_build_jobs} install", :env => env
 end
-

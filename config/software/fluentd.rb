@@ -1,5 +1,5 @@
 name "fluentd"
-default_version '098fea17aedab0ebf58aa55ace76d14ad0889262'
+default_version '9fea4bd69420daf86411937addc6000dfcc6043b'
 #version '1229278fe48ddc449ad501aa9c114b4597a794da' # git ref
 
 dependency "ruby"
