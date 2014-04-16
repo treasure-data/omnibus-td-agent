@@ -80,22 +80,9 @@ case "$1" in
 esac
 
 cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
-cat > /usr/sbin/td-agent <<EOF
-#!${td_agent_dir}/embedded/bin/ruby
-ENV["GEM_HOME"]="${td_agent_dir}/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
-ENV["GEM_PATH"]="${td_agent_dir}/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
-ENV["FLUENT_CONF"]="/etc/td-agent/td-agent.conf"
-ENV["FLUENT_PLUGIN"]="/etc/td-agent/plugin"
-ENV["FLUENT_SOCKET"]="/var/run/td-agent/td-agent.sock"
-load "${td_agent_dir}/embedded/bin/fluentd"
-EOF
+cp -f ${td_agent_dir}/usr/sbin/td-agent /usr/sbin/td-agent
 chmod 755 /usr/sbin/td-agent
-cat > /usr/bin/td <<EOF
-#!/bin/sh
-export GEM_HOME="${td_agent_dir}/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
-export GEM_PATH="${td_agent_dir}/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
-${td_agent_dir}/embedded/bin/td "$@"
-EOF
+cp -f ${td_agent_dir}/usr/bin/td /usr/bin/td
 chmod 755 /usr/bin/td
 
 if [ ! -e "/etc/default/td-agent" ]; then

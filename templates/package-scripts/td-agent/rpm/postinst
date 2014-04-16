@@ -1,4 +1,4 @@
-td_agent_dir=/opt/td-agent
+td_agent_dir=<%= install_path %>
 
 echo "adding 'td-agent' group..."
 getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
@@ -8,25 +8,25 @@ getent passwd td-agent >/dev/null || \
 chown -R td-agent:td-agent /var/log/%{name}
 if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
   echo "Installing default conffile..."
-  cp -f /etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+  cp -f ${td_agent_dir}/embedded/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
 fi
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
 # This prevents prelink, to break the Ruby intepreter.
 if [ -d "/etc/prelink.conf.d/" ]; then
   echo "prelink detected. Installing /etc/prelink.conf.d/td-agent-ruby.conf ..."
-  cp -f /etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
+  cp -f ${td_agent_dir}/etc/td-agent/prelink.conf.d/td-agent.conf /etc/prelink.conf.d/td-agent-ruby.conf
 elif [ -f "/etc/prelink.conf" ]; then
-  if [ $(grep '\-b /opt/td-agent/embedded/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
+  if [ $(grep '\-b ${td_agent_dir}/embedded/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
     echo "prelink detected, but /etc/prelink.conf.d/ dosen't exist. Adding /etc/prelink.conf ..."
-    echo "-b /opt/td-agent/embedded/bin/ruby" >> /etc/prelink.conf
+    echo "-b ${td_agent_dir}/embedded/bin/ruby" >> /etc/prelink.conf
   fi
 fi
 
 # 2013/03/04 Kazuki Ohta <k@treasure-data.com>
 # Install log rotation script.
 if [ -d "/etc/logrotate.d/" ]; then
-  cp -f /etc/td-agent/logrotate.d/td-agent.logrotate /etc/logrotate.d/td-agent
+  cp -f ${td_agent_dir}/etc/td-agent/logrotate.d/td-agent.logrotate /etc/logrotate.d/td-agent
 fi
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
@@ -40,7 +40,11 @@ if [ -d "/tmp/fluent/" ]; then
   chown -R td-agent:td-agent /tmp/fluent/
 fi
 
-
+cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
+cp -f ${td_agent_dir}/usr/sbin/td-agent /usr/sbin/td-agent
+chmod 755 /usr/sbin/td-agent
+cp -f ${td_agent_dir}/usr/bin/td /usr/bin/td
+chmod 755 /usr/bin/td
 
 echo "Configure td-agent to start, when booting up the OS..."
 /sbin/chkconfig --add td-agent
