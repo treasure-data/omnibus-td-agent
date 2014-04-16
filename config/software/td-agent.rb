@@ -3,14 +3,10 @@ name "td-agent"
 
 dependency "jemalloc"
 dependency "ruby"
-#dependency "bundler"
 dependency "fluentd"
 dependency "nokogiri"
 
-env = {
-  #"GEM_PATH" => nil,
-  #"GEM_HOME" => nil
-}
+env = {}
 
 build do
   Dir.glob(File.expand_path(File.join(project_root, 'plugin_gems', '*.gem'))).sort.each { |gem_path|
