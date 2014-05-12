@@ -25,6 +25,14 @@ $ bin/gem_downloader core_gems.rb
 $ bin/gem_downloader plugin_gems.rb
 ```
 
+Create required directory and add permission
+
+```shell
+$ sudo mkdir -p /opt/td-agent /var/cache/omnibus
+$ sudo chown [USER] /opt/td-agent
+$ sudo chown [USER] /var/cache/omnibus
+```
+
 After that, you create a platform-specific package using the `build project` command:
 
 ```shell
