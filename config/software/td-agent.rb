@@ -3,8 +3,8 @@ name "td-agent"
 
 dependency "jemalloc"
 dependency "ruby"
-dependency "fluentd"
 dependency "nokogiri"
+dependency "fluentd"
 
 env = {}
 
