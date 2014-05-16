@@ -15,6 +15,7 @@ add_system_user() {
 add_directories() {
     mkdir -p /var/run/td-agent
     mkdir -p /etc/td-agent
+    mkdir -p /etc/td-agent/plugin
     mkdir -p /var/log/td-agent
 }
 
@@ -58,8 +59,8 @@ update_conffile() {
     if [ -d "/var/log/td-agent/buffer/" ]; then
         chown -R td-agent:td-agent /var/log/td-agent/buffer/
     fi
-    if [ -d "/tmp/fluent/" ]; then
-        chown -R td-agent:td-agent /tmp/fluent/
+    if [ -d "/tmp/td-agent/" ]; then
+        chown -R td-agent:td-agent /tmp/td-agent/
     fi
 }
 

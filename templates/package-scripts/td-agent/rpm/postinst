@@ -5,10 +5,19 @@ getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent
 echo "adding 'td-agent' user..."
 getent passwd td-agent >/dev/null || \
   /usr/sbin/useradd -r -g td-agent -d /var/lib/td-agent -s /sbin/nologin -c 'td-agent' td-agent
-chown -R td-agent:td-agent /var/log/%{name}
+
+if [ ! -e "/var/log/td-agent/" ]; then
+  mkdir -p /var/log/td-agent/
+fi
+chown -R td-agent:td-agent /var/log/td-agent/
+
+if [ ! -e "/etc/td-agent/" ]; then
+  mkdir -p /etc/td-agent/
+  mkdir -p /etc/td-agent/plugin
+fi
 if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
   echo "Installing default conffile..."
-  cp -f ${td_agent_dir}/embedded/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+  cp -f ${td_agent_dir}/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
 fi
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
@@ -33,11 +42,17 @@ fi
 # Before td-agent v1.1.0, fluentd has a bug of loading plugin before changing
 # to the right user. Then, these directories were created with root permission.
 # The following lines fix that problem.
+if [ ! -e "/var/log/td-agent/buffer/" ]; then
+  mkdir -p /var/log/td-agent/buffer/
+fi
 if [ -d "/var/log/td-agent/buffer/" ]; then
   chown -R td-agent:td-agent /var/log/td-agent/buffer/
 fi
-if [ -d "/tmp/fluent/" ]; then
-  chown -R td-agent:td-agent /tmp/fluent/
+if [ ! -e "/tmp/td-agent/" ]; then
+  mkdir -p /tmp/td-agent/
+fi
+if [ -d "/tmp/td-agent/" ]; then
+  chown -R td-agent:td-agent /tmp/td-agent/
 fi
 
 cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
