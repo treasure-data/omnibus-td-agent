@@ -1,5 +1,5 @@
 dir 'plugin_gems'
-download "td-client", "0.8.58"
+download "td-client", "0.8.60"
 download "td", "0.10.99"
 download "fluent-plugin-td", "0.10.18"
 download "thrift", "0.8.0"
