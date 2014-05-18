@@ -108,16 +108,10 @@ env =
 build do
   configure_command = ["./configure",
                        "--prefix=#{install_dir}/embedded",
-                       "--with-out-ext=fiddle,dbm",
+                       "--with-out-ext=fiddle,dbm,gdbm,probe,racc,ripper,sdbm,tk",
                        "--enable-shared",
                        "--enable-libedit",
                        "--with-ext=psych",
-                       "--with-out-ext=gdbm",
-                       "--with-out-ext=probe",
-                       "--with-out-ext=racc",
-                       "--with-out-ext=ripper",
-                       "--with-out-ext=sdbm",
-                       "--with-out-ext=tk",
                        #"--with-libyaml-dir=#{install_dir}/embedded",
                        "--disable-install-doc"]
 
