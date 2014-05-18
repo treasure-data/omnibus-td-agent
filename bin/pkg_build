@@ -7,21 +7,21 @@ end
 
 platforms = []
 unless ARGV.include?('--without-deb')
-  platforms += %w{
-  ubuntu-10.04
-  ubuntu-12.04
-  ubuntu-10.04-i386
-  ubuntu-12.04-i386
-}
+  platforms += [
+    "ubuntu-10.04",
+    "ubuntu-12.04",
+    "ubuntu-10.04-i386",
+    "ubuntu-12.04-i386"
+  ]
 end
 
 unless ARGV.include?('--without-rpm')
-  platforms += %w{
-  centos-5.10
-  centos-6.5
-  centos-5.10-i386
-  centos-6.5-i386
-}
+  platforms += [
+    "centos-5.10",
+    "centos-6.5",
+    "centos-5.10-i386",
+    "centos-6.5-i386"
+  ]
 end
 
 def get_env(platform)
@@ -38,5 +38,5 @@ platforms.each { |platform|
     `mkdir -p ./built_pkg/#{get_env(platform)}`
     `cp -rf ./pkg/* ./built_pkg/#{get_env(platform)}`
   end
-  system "vagrant halt #{platform}"
+  system "vagrant halt #{platform}" # should be destroy?
 }
