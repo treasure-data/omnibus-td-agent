@@ -3,110 +3,112 @@
 
 require 'vagrant'
 
-if Vagrant::VERSION < '1.2.1'
-  raise 'The Omnibus Build Lab is only compatible with Vagrant 1.2.1+'
+if Vagrant::VERSION.to_f < 1.5
+  raise "The Omnibus Build Lab only supports Vagrant >= 1.5.0"
 end
 
 host_project_path = File.expand_path('..', __FILE__)
 guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 project_name = 'td-agent'
-
-def setup_common_parameter(c)
-  # Ensure a recent version of the Chef Omnibus packages are installed
-  c.omnibus.chef_version = '11.6.2'
-
-  # Enable the berkshelf-vagrant plugin
-  c.berkshelf.enabled = true
-  c.ssh.forward_agent = true
-end
+host_name = "#{project_name}-omnibus-build-lab"
+bootstrap_chef_version = '11.12.4'
 
 Vagrant.configure('2') do |config|
-
-  config.vm.hostname = "#{project_name}-omnibus-build-lab"
+  #config.vm.hostname = "#{project_name}-omnibus-build-lab"
 
   %w{
     ubuntu-10.04
     ubuntu-10.04-i386
     ubuntu-12.04
     ubuntu-12.04-i386
-  }.each do |platform|
-
-    config.vm.define platform do |c|
-      c.vm.box = "opscode-#{platform}"
-      c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_parameter(c)
-
-      c.vm.provision :chef_solo do |chef|
-        chef.json = {
-          'omnibus' => {
-            'build_user' => 'vagrant',
-            'build_dir' => guest_project_path,
-            'install_dir' => "/opt/td-agent"
-          }
-        }
-
-        chef.run_list = [
-          'recipe[omnibus::default]'
-        ]
-      end
-
-      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
-    export PATH=/usr/local/bin:$PATH
-    rm -rf /var/cache/omnibus/{build,pkg}
-    cd #{guest_project_path}
-    su vagrant -c "bundle install --binstubs"
-    su vagrant -c "bin/omnibus build project #{project_name}"
-  OMNIBUS_BUILD
-    end
-  end
-
-  %w{
-    centos-5.10-i386
-    centos-6.5-i386
     centos-5.10
+    centos-5.10-i386
     centos-6.5
-  }.each do |platform|
+    centos-6.5-i386
+  }.each_with_index do |platform, index|
+    use_nfs = false
+    chef_version = bootstrap_chef_version
+
     config.vm.define platform do |c|
+      chef_run_list = []
+
+      case platform
+      when /^freebsd/
+        raise "Not supported yet: FreeBSD"
+      when /^ubuntu/
+        chef_run_list << 'recipe[apt::default]'
+      when /^centos/
+        chef_run_list << 'recipe[yum-epel::default]'
+      else
+        raise "Unknown platform: #{platform}"
+      end
+
       c.vm.box = "opscode-#{platform}"
       c.vm.box_url = "http://opscode-vm-bento.s3.amazonaws.com/vagrant/virtualbox/opscode_#{platform}_chef-provisionerless.box"
-      setup_common_parameter(c)
+      c.omnibus.chef_version = chef_version
+      c.vm.provider :virtualbox do |vb|
+        # Give enough horsepower to build without taking all day.
+        vb.customize [
+          'modifyvm', :id,
+          '--memory', '4096',
+          '--cpus', '2'
+        ]
+      end
+
+      # Shared configuraiton
+
+      chef_run_list << 'recipe[omnibus::default]'
+
+      config.berkshelf.enabled = true
+      config.ssh.forward_agent = true
+      config.vm.synced_folder '.', '/vagrant', :id => 'vagrant-root', :nfs => use_nfs
+      config.vm.synced_folder host_project_path, guest_project_path, :nfs => use_nfs
 
       c.vm.provision :chef_solo do |chef|
+        chef.synced_folder_type = "nfs" if use_nfs
         chef.json = {
           'omnibus' => {
             'build_user' => 'vagrant',
             'build_dir' => guest_project_path,
-            'install_dir' => "/opt/td-agent"
+            'install_dir' => "/opt/#{project_name}"
           }
         }
 
-        chef.run_list = [
-          'recipe[yum-epel::default]',
-          'recipe[omnibus::default]'
-        ]
+        chef.run_list = chef_run_list
       end
 
-      c.vm.provision :shell, :inline => <<-OMNIBUS_BUILD
-    export PATH=/usr/local/bin:$PATH
-    rm -rf /var/cache/omnibus/{build,pkg}
-    cd #{guest_project_path}
-    su vagrant -c "bundle install --binstubs"
-    su vagrant -c "bin/omnibus build project #{project_name}"
-  OMNIBUS_BUILD
-    end
-  end
+      # We have to nuke any chef omnibus packages (used during provisioning) before
+      # we build new chef omnibus packages!
+      c.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_OMNIBUS
+        if command -v dpkg &>/dev/null; then
+          dpkg -P #{project_name} || true
+        elif command -v rpm &>/dev/null; then
+          rpm -ev #{project_name} || true
+        fi
+        rm -rf /opt/#{project_name} || true
+      REMOVE_OMNIBUS
 
-  config.vm.provider :virtualbox do |vb|
-    # Give enough horsepower to build without taking all day.
-    vb.customize [
-      'modifyvm', :id,
-      '--memory', '2048',
-      '--cpus', '2',
-      "--ioapic", "on"
-    ]
-  end
+      if platform.start_with?('centos-5.10')
+        c.vm.provision :shell, :privileged => true, :inline => <<-UPDATE_GCC
+        yum install gcc44 gcc44-c++
+      UPDATE_GCC
 
-  host_project_path = File.expand_path('..', __FILE__)
-  guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
-  config.vm.synced_folder host_project_path, guest_project_path
-end
+        export_gcc = <<-GCC_EXPORT
+        export CC="gcc44"
+        export CXX="g++44"
+      GCC_EXPORT
+      else
+        export_gcc = ''
+      end
+
+      c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
+        #{export_gcc}
+        sudo mkdir -p /opt/#{project_name}
+        sudo chown vagrant /opt/#{project_name}
+        cd #{guest_project_path}
+        bundle install --path=/home/vagrant/.bundler
+        bundle exec omnibus build project #{project_name}2
+      OMNIBUS_BUILD
+    end # config.vm.define.platform
+  end # each_with_index
+end # Vagrant.configure
