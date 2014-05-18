@@ -100,7 +100,6 @@ The [vagrant-berkshelf](https://github.com/RiotGames/vagrant-berkshelf) and
 are also required and can be installed easily with the following commands:
 
 ```shell
-# $ vagrant plugin install vagrant-berkshelf
 $ vagrant plugin install vagrant-berkshelf --plugin-version = 2.0.1
 $ vagrant plugin install vagrant-omnibus
 ```
