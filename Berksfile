@@ -2,8 +2,8 @@ source 'https://api.berkshelf.com'
 
 # The apt cookbook is required to bring the apt cache up-to-date on Ubuntu
 # systems, since the cache can become stale on older boxes.
-cookbook 'apt', '~> 2.0'
-cookbook 'yum-epel'
+cookbook 'apt', '~> 2.3'
+cookbook 'yum-epel', '~> 0.3'
 
 cookbook 'omnibus'
 
