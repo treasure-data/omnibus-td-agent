@@ -70,6 +70,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => 'vagrant',
             'build_dir' => guest_project_path,
+            'ruby_version' => '2.1.2',
             'install_dir' => "/opt/#{project_name}"
           }
         }
