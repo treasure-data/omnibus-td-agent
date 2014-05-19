@@ -5,7 +5,7 @@ require 'rubygems'
 name "td-agent2"
 maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
-description "td-agent"
+description "Treasure Agent: A data collector for Treasure Data"
 
 replaces        "td-agent"
 install_path    "/opt/td-agent"
