@@ -21,6 +21,8 @@ Vagrant.configure('2') do |config|
     ubuntu-10.04-i386
     ubuntu-12.04
     ubuntu-12.04-i386
+    debian-6.0.8
+    debian-7.2.0
     centos-5.10
     centos-5.10-i386
     centos-6.5
@@ -35,7 +37,7 @@ Vagrant.configure('2') do |config|
       case platform
       when /^freebsd/
         raise "Not supported yet: FreeBSD"
-      when /^ubuntu/
+      when /^ubuntu/, /^debian/
         chef_run_list << 'recipe[apt::default]'
       when /^centos/
         chef_run_list << 'recipe[yum-epel::default]'
@@ -51,7 +53,7 @@ Vagrant.configure('2') do |config|
         vb.customize [
           'modifyvm', :id,
           '--memory', '4096',
-          '--cpus', '2'
+          '--cpus', '4'
         ]
       end
 
