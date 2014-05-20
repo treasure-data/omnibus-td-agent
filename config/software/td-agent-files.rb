@@ -15,7 +15,7 @@ build do
     install_path = project.install_path # for ERB
     gem_dir_version = "2.1.0"
 
-    # copy pre/post scripts into omnibus path
+    # copy pre/post scripts into omnibus path (./package-scripts/td-agentN)
     FileUtils.mkdir_p(project.package_scripts_path)
     Dir.glob(File.join(project.package_scripts_path, '*')).each { |f|
       FileUtils.rm_f(f) if File.file?(f)
@@ -27,12 +27,19 @@ build do
       }
     }
 
-    # copy init.d file
-    initd_path = File.join(project.files_path, 'etc', 'init.d')
-    FileUtils.mkdir_p(initd_path)
-    File.open(File.join(initd_path, 'td-agent'), 'w', 0755) { |fw|
-      fw.write(ERB.new(File.read(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'))).result(binding))
-    }
+    # setup plist / init.d file
+    if ['mac_pkg', 'mac_dmg'].include?(pkg_type)
+      td_agent_plist_path = File.join(install_path, 'td-agent.plist')
+      File.open(td_agent_plist_path, 'w', 0755) { |f|
+        f.write(ERB.new(File.read(File.join('templates', 'td-agent.plist.erb'))).result(binding))
+      }
+    else
+      initd_path = File.join(project.files_path, 'etc', 'init.d')
+      FileUtils.mkdir_p(initd_path)
+      File.open(File.join(initd_path, 'td-agent'), 'w', 0755) { |fw|
+        fw.write(ERB.new(File.read(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'))).result(binding))
+      }
+    end
 
     # setup td and td-agent scripts
     td_bin_path = File.join(install_path, 'usr', 'bin', 'td')

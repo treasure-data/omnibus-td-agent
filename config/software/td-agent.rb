@@ -10,6 +10,11 @@ env = {}
 
 build do
   Dir.glob(File.expand_path(File.join(project_root, 'plugin_gems', '*.gem'))).sort.each { |gem_path|
-    gem "install --no-ri --no-rdoc #{gem_path}", :env => env
+    args = ''
+    if project.platform_family == 'mac_os_x' && gem_path.include?('-thrift-')
+      # See: https://issues.apache.org/jira/browse/THRIFT-2219
+      args << " -- --with-cppflags='-D_FORTIFY_SOURCE=0'"
+    end
+    gem "install --no-ri --no-rdoc #{gem_path} #{args}", :env => env
   }
 end

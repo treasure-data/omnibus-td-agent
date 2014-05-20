@@ -1,0 +1,35 @@
+#!/bin/bash
+#
+# Install a full td-agent
+#
+
+td_agent_dir=<%= install_path %>
+
+# Create td-agent related directories and files
+
+if [ ! -e "/var/log/td-agent/" ]; then
+  mkdir -p /var/log/td-agent/
+  mkdir -p /var/log/td-agent/buffer/
+fi
+if [ ! -e "/var/run/td-agent/" ]; then
+  mkdir -p /var/run/td-agent/
+fi
+if [ ! -e "/etc/td-agent/" ]; then
+  mkdir -p /etc/td-agent/
+  mkdir -p /etc/td-agent/plugin
+fi
+if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
+  echo "Installing default conffile..."
+  cp -f $td_agent_dir/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+fi
+if [ ! -e "/tmp/td-agent/" ]; then
+  mkdir -p /tmp/td-agent/
+fi
+
+cp -f $td_agent_dir/usr/sbin/td-agent /usr/sbin/td-agent
+chmod 755 /usr/sbin/td-agent
+cp -f $td_agent_dir/usr/bin/td /usr/bin/td
+chmod 755 /usr/bin/td
+cp -f $td_agent_dir/td-agent.plist /Library/LaunchDaemons/
+
+exit 0
