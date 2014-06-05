@@ -2,8 +2,18 @@ This will install Treasure Agent on your Mac.
 
 --------------------------------------------------
 
-This is a basic welcome message that is generated for every Omnibus project. You should customize this message by editing the file at files/mac_pkg/welcome.html.
+Thank you for trying Treasure Agent! Have a fantastic day!
 
-If you are not the developer of td-agent, the presence of this message is likely a bug and should be reported to the creator.
+You can start / stop Treasure Agent via launchctl command.
 
-Thank you for choosing Omnibus! Have a fantastic day!
+- start td-agent
+
+% sudo launchctl load /Library/LaunchDaemons/td-agent.plist
+
+- stop td-agent
+
+% sudo launchctl unload /Library/LaunchDaemons/td-agent.plist
+
+If you have a question, please ask it on Fluentd ML
+
+https://groups.google.com/forum/#!forum/fluentd
