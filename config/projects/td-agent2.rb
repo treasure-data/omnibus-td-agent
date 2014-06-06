@@ -2,7 +2,8 @@ require 'erb'
 require 'fileutils'
 require 'rubygems'
 
-name "td-agent"
+name "td-agent2"
+package_name "td-agent"
 maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
