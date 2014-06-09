@@ -24,12 +24,21 @@ unless ARGV.include?('--without-rpm')
   ]
 end
 
+unless ARGV.include?('--without-debian')
+  platforms += [
+    "debian-6.0.8",
+    "debian-7.4"
+  ]
+end
+
 def get_env(platform)
   f, v, _ = platform.split('-')
   "#{f}-#{v}"
 end
 
 `rm -rf ./td-agent2-pkg; mkdir td-agent2-pkg`
+
+puts "Build packages: #{platforms.join(', ')}"
 
 platforms.each { |platform|
   `rm -rf ./pkg`
