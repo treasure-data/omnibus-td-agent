@@ -130,7 +130,7 @@ do_reload() {
 }
 
 do_configtest() {
-  /usr/sbin/td-agent --user $USER --group $GROUP --dry-run -q
+  /usr/sbin/td-agent --user $USER --group $GROUP --dry-run -q --use-v1-config
 }
 
 case "$1" in
