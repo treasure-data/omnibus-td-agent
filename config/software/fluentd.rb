@@ -1,5 +1,5 @@
 name "fluentd"
-default_version 'a8ec325bbdf13c2c8cd9839abb566811dab4418c'
+default_version '88262c4d8244a1afff73bcbe3727a3da938f93c2'
 
 dependency "ruby"
 #dependency "bundler"
