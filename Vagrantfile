@@ -21,6 +21,7 @@ Vagrant.configure('2') do |config|
     ubuntu-10.04-i386
     ubuntu-12.04
     ubuntu-12.04-i386
+    ubuntu-14.04
     debian-6.0.8
     debian-7.4
     centos-5.10
