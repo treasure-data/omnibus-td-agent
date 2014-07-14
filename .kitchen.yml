@@ -2,7 +2,7 @@ driver:
   name: vagrant
   customize:
     cpus: 2
-    memory: 4098
+    memory: 4096
   synced_folders:
     - ['.', '/home/vagrant/td-agent']
   #vagrantfile_erb: Vagrantfile.erb
@@ -12,8 +12,8 @@ provisioner:
 
 platforms:
   # converge failed on 14.04 because libcurl4-gnutls-dev causes an error.
-  #- name: ubuntu-14.04
-  #  run_list: apt::default
+  - name: ubuntu-14.04
+    run_list: apt::default
   - name: ubuntu-12.04
     run_list: apt::default
   - name: ubuntu-10.04
@@ -31,4 +31,4 @@ suites:
         build_user:  vagrant
         build_dir:   /home/vagrant/td-agent
         install_dir: /opt/td-agent
-
+        ruby_version: 2.1.2
