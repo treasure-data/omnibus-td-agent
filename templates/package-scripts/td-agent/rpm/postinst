@@ -1,4 +1,4 @@
-td_agent_dir=<%= install_path %>
+td_agent_dir=/opt/td-agent
 
 echo "adding 'td-agent' group..."
 getent group td-agent >/dev/null || /usr/sbin/groupadd -r td-agent

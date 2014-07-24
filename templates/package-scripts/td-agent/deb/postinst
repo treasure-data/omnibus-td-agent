@@ -2,7 +2,7 @@
 
 set -e
 
-td_agent_dir=<%= install_path %>
+td_agent_dir=/opt/td-agent
 
 prevver="$2"
 

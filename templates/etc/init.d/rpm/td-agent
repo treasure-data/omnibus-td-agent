@@ -21,7 +21,7 @@
 
 name="td-agent"
 prog="td-agent"
-td_agent=<%= install_path %>/embedded/bin/ruby
+td_agent=/opt/td-agent/embedded/bin/ruby
 
 # timeout can be overridden from /etc/sysconfig/td-agent
 STOPTIMEOUT=60
@@ -41,8 +41,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
+if [ -f "/opt/td-agent/embedded/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD=/opt/td-agent/embedded/lib/libjemalloc.so
 fi
 
 RETVAL=0

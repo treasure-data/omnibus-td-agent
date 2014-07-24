@@ -3,7 +3,7 @@
 # Install a full td-agent
 #
 
-td_agent_dir=<%= install_path %>
+td_agent_dir=/opt/td-agent
 
 # Create td-agent related directories and files
 

@@ -23,7 +23,7 @@ USER=td-agent                   # Running user
 GROUP=td-agent                  # Running group
 DESC=td-agent                   # Introduce a short description here
 PIDFILE=/var/run/$NAME/$NAME.pid
-DAEMON=<%= install_path %>/embedded/bin/ruby # Introduce the server's location here
+DAEMON=/opt/td-agent/embedded/bin/ruby # Introduce the server's location here
 # Arguments to run the daemon with
 DAEMON_ARGS="/usr/sbin/td-agent $DAEMON_ARGS --daemon $PIDFILE --log /var/log/td-agent/td-agent.log --use-v1-config"
 SCRIPTNAME=/etc/init.d/$NAME
@@ -62,8 +62,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # Use jemalloc to avoid memory fragmentation
-if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
-	export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
+if [ -f "/opt/td-agent/embedded/lib/libjemalloc.so" ]; then
+	export LD_PRELOAD=/opt/td-agent/embedded/lib/libjemalloc.so
 fi
 
 #
