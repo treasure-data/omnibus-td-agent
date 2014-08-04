@@ -36,7 +36,7 @@ $ sudo chown [USER] /var/cache/omnibus
 After that, you create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build project td-agent2
+$ bin/omnibus build td-agent2
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -100,7 +100,7 @@ The [vagrant-berkshelf](https://github.com/RiotGames/vagrant-berkshelf) and
 are also required and can be installed easily with the following commands:
 
 ```shell
-$ vagrant plugin install vagrant-berkshelf --plugin-version = 2.0.1
+$ vagrant plugin install vagrant-berkshelf --plugin-version=2.0.1
 $ vagrant plugin install vagrant-omnibus
 ```
 
@@ -181,18 +181,18 @@ liking, you can bring up an individual build environment using the `kitchen`
 command.
 
 ```shell
-$ bundle exec kitchen converge ubuntu-12.04
+$ bundle exec kitchen converge default-ubuntu-1204
 ```
 
 Then login to the instance and build the project as described in the Usage
 section:
 
 ```shell
-$ bundle exec kitchen login ubuntu-12.04
-[vagrant@ubuntu...] $ cd test-om
+$ bundle exec kitchen login default-ubuntu-1204
+[vagrant@ubuntu...] $ cd td-agent
 [vagrant@ubuntu...] $ bundle install
 [vagrant@ubuntu...] $ ...
-[vagrant@ubuntu...] $ ./bin/omnibus build project test-om
+[vagrant@ubuntu...] $ ./bin/omnibus build td-agent2
 ```
 
 For a complete list of all commands and platforms, run `kitchen list` or
