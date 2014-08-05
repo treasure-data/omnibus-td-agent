@@ -48,10 +48,12 @@ build do
       f.write(ERB.new(File.read(File.join('templates', 'usr', 'bin', 'td.erb'))).result(binding))
     }
 
-    td_agent_sbin_path = File.join(install_path, 'usr', 'sbin', 'td-agent')
-    FileUtils.mkdir_p(File.dirname(td_agent_sbin_path))
-    File.open(td_agent_sbin_path, 'w', 0755) { |f|
-      f.write(ERB.new(File.read(File.join('templates', 'usr', 'sbin', 'td-agent.erb'))).result(binding))
+    ['td-agent', 'td-agent-gem'].each { |command|
+      td_agent_sbin_path = File.join(install_path, 'usr', 'sbin', command)
+      FileUtils.mkdir_p(File.dirname(td_agent_sbin_path))
+      File.open(td_agent_sbin_path, 'w', 0755) { |f|
+        f.write(ERB.new(File.read(File.join('templates', 'usr', 'sbin', "#{command}.erb"))).result(binding))
+      }
     }
 
     FileUtils.remove_entry_secure(File.join(install_path, 'etc'), true)

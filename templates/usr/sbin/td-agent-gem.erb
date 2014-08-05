@@ -1,0 +1,4 @@
+#!/bin/sh
+export GEM_HOME="/opt/td-agent/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+export GEM_PATH="/opt/td-agent/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+/opt/td-agent/embedded/bin/fluent-gem "$@"
