@@ -7,8 +7,8 @@ pkg/*
 bin/*
 .vagrant
 files/**/cache/
+resources/**/cache/
 vendor/cookbooks
-
 
 # td-agent specific package
 core_gems/*
@@ -19,3 +19,4 @@ package-scripts/td-agent/postrm
 package-scripts/td-agent/preinst
 package-scripts/td-agent/prerm
 files/etc/init.d/td-agent
+resources/td-agent/etc/init.d/td-agent

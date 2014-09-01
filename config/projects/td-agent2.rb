@@ -2,14 +2,13 @@ require 'erb'
 require 'fileutils'
 require 'rubygems'
 
-name "td-agent2"
-package_name "td-agent"
+name "td-agent"
 maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
-install_path    "/opt/td-agent"
-build_version   "2.0.4"
+install_dir     "/opt/td-agent"
+build_version   "2.1.0"
 build_iteration 0
 
 # creates required build directories

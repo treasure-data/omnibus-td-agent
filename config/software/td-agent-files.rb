@@ -11,8 +11,8 @@ always_build true
 build do
   block do
     # setup related files
-    pkg_type = project.package_types.first
-    install_path = project.install_path # for ERB
+    pkg_type = project.packager.id.to_s
+    install_path = project.install_dir # for ERB
     gem_dir_version = "2.1.0"
 
     # copy pre/post scripts into omnibus path (./package-scripts/td-agentN)
@@ -34,7 +34,7 @@ build do
         f.write(ERB.new(File.read(File.join('templates', 'td-agent.plist.erb'))).result(binding))
       }
     else
-      initd_path = File.join(project.files_path, 'etc', 'init.d')
+      initd_path = File.join(project.resources_path, 'etc', 'init.d')
       FileUtils.mkdir_p(initd_path)
       File.open(File.join(initd_path, 'td-agent'), 'w', 0755) { |fw|
         fw.write(ERB.new(File.read(File.join('templates', 'etc', 'init.d', pkg_type, 'td-agent'))).result(binding))
@@ -57,6 +57,6 @@ build do
     }
 
     FileUtils.remove_entry_secure(File.join(install_path, 'etc'), true)
-    FileUtils.cp_r(File.join(project.files_path, 'etc'), install_path)
+    FileUtils.cp_r(File.join(project.resources_path, 'etc'), install_path)
   end
 end
