@@ -105,6 +105,12 @@ Vagrant.configure('2') do |config|
         export_gcc = ''
       end
 
+      if platform.start_with?('centos')
+        c.vm.provision :shell, :privileged => true, :inline => <<-INSTALL_FAKEROOT
+        yum install -y fakeroot
+      INSTALL_FAKEROOT
+      end
+
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
         sudo mkdir -p /opt/#{project_name}
