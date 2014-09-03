@@ -83,6 +83,8 @@ esac
 cp -f ${td_agent_dir}/etc/init.d/td-agent /etc/init.d/td-agent
 cp -f ${td_agent_dir}/usr/sbin/td-agent /usr/sbin/td-agent
 chmod 755 /usr/sbin/td-agent
+cp -f ${td_agent_dir}/usr/sbin/td-agent-gem /usr/sbin/td-agent-gem
+chmod 755 /usr/sbin/td-agent-gem
 cp -f ${td_agent_dir}/usr/bin/td /usr/bin/td
 chmod 755 /usr/bin/td
 
