@@ -92,6 +92,7 @@ Vagrant.configure('2') do |config|
         rm -rf /opt/#{project_name} || true
       REMOVE_OMNIBUS
 
+      # it will be resolved after new omnibus cookbook released, 2.3.1 or later.
       if platform.start_with?('centos-5.10')
         c.vm.provision :shell, :privileged => true, :inline => <<-UPDATE_GCC
         yum install gcc44 gcc44-c++
@@ -103,12 +104,6 @@ Vagrant.configure('2') do |config|
       GCC_EXPORT
       else
         export_gcc = ''
-      end
-
-      if platform.start_with?('centos')
-        c.vm.provision :shell, :privileged => true, :inline => <<-INSTALL_FAKEROOT
-        yum install -y fakeroot
-      INSTALL_FAKEROOT
       end
 
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
