@@ -3,8 +3,6 @@ name "td-agent-files"
 
 dependency "td-agent"
 
-always_build true
-
 # This software setup td-agent related files, e.g. etc files.
 # Separating file into td-agent.rb and td-agent-files.rb is for speed up package building
 

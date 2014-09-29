@@ -4,8 +4,6 @@ default_version 'b5dca056378257820c3ce675fa04e34d94349fa9'
 dependency "ruby"
 #dependency "bundler"
 
-always_build true
-
 source :git => 'https://github.com/fluent/fluentd.git'
 relative_path "fluentd"
 
