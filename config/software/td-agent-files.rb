@@ -2,6 +2,7 @@ name "td-agent-files"
 #version '' # git ref
 
 dependency "td-agent"
+dependency "fluentd-ui"
 
 # This software setup td-agent related files, e.g. etc files.
 # Separating file into td-agent.rb and td-agent-files.rb is for speed up package building
@@ -46,7 +47,9 @@ build do
       f.write(ERB.new(File.read(File.join('templates', 'usr', 'bin', 'td.erb'))).result(binding))
     }
 
-    ['td-agent', 'td-agent-gem'].each { |command|
+    td_commands = ['td-agent', 'td-agent-gem']
+    td_commands << 'td-agent-ui' if File.exist?(File.expand_path(File.join(Omnibus::Config.project_root, 'ui_gems')))
+    td_commands.each { |command|
       td_agent_sbin_path = File.join(install_path, 'usr', 'sbin', command)
       FileUtils.mkdir_p(File.dirname(td_agent_sbin_path))
       File.open(td_agent_sbin_path, 'w', 0755) { |f|

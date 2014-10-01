@@ -1,0 +1,11 @@
+#!/bin/sh
+export GEM_HOME="/opt/td-agent/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+export GEM_PATH="/opt/td-agent/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+export FLUENTD_UI_TITLE="Treasure Agent UI"
+export FLUENTD_UI_BRAND="Treasure Agent"
+export FLUENTD_UI_LOG_PATH="/var/log/td-agent/td-agent-ui.log"
+export FLUENTD_UI_DATA_DIR="/opt/td-agent/data"
+export FLUENTD_UI_TD_AGENT=true
+export FLUENTD_UI_EXEC_COMMAND="/opt/td-agent/embedded/bin/td_agent_ui_ruby /opt/td-agent/embedded/bin/rackup"
+export PATH=/opt/td-agent/embedded/bin:$PATH
+/opt/td-agent/embedded/bin/td_agent_ui_ruby /opt/td-agent/embedded/bin/fluentd-ui "$@" --pidfile /var/run/td-agent/td-agent-ui.pid
