@@ -24,7 +24,7 @@ prog="td-agent"
 td_agent=/opt/td-agent/embedded/bin/ruby
 
 # timeout can be overridden from /etc/sysconfig/td-agent
-STOPTIMEOUT=60
+STOPTIMEOUT=120
 
 if [ -f /etc/sysconfig/$prog ]; then
 	. /etc/sysconfig/$prog
