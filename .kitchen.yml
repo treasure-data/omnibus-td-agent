@@ -4,7 +4,7 @@ driver:
     cpus: 2
     memory: 4096
   synced_folders:
-    - ['.', '/home/vagrant/td-agent']
+    - ['.', '/home/vagrant/google-fluentd']
   #vagrantfile_erb: Vagrantfile.erb
 
 provisioner:
@@ -29,6 +29,6 @@ suites:
     attributes:
       omnibus:
         build_user:  vagrant
-        build_dir:   /home/vagrant/td-agent
-        install_dir: /opt/td-agent
+        build_dir:   /home/vagrant/google-fluentd
+        install_dir: /opt/google-fluentd
         ruby_version: 2.1.2

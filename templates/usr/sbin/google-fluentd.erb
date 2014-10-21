@@ -1,0 +1,7 @@
+#!/opt/google-fluentd/embedded/bin/ruby
+ENV["GEM_HOME"]="/opt/google-fluentd/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+ENV["GEM_PATH"]="/opt/google-fluentd/embedded/lib/ruby/gems/<%= gem_dir_version %>/"
+ENV["FLUENT_CONF"]="/etc/google-fluentd/google-fluentd.conf"
+ENV["FLUENT_PLUGIN"]="/etc/google-fluentd/plugin"
+ENV["FLUENT_SOCKET"]="/var/run/google-fluentd/google-fluentd.sock"
+load "/opt/google-fluentd/embedded/bin/fluentd"

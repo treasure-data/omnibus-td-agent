@@ -21,7 +21,7 @@ Dir.chdir(gp.target_dir) {
     path = sprintf(file_format, index, n, v)
     loop {
       `curl -o #{path} -L http://rubygems.org/downloads/#{n}-#{v}.gem`
-      `gem install --explain #{path} --no-ri --no-rdoc`
+      `gem install #{path} --no-ri --no-rdoc`
       break if $?.success?
       sleep 1
     }

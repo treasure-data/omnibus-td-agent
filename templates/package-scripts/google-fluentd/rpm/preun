@@ -1,0 +1,11 @@
+# Just leave this file, because this line could delete google-fluentd.conf in a
+# *UPGRADE* process :-(
+# if [ -e "/etc/prelink.conf.d/google-fluentd-ruby.conf" ]; then
+#   echo "Uninstalling /etc/prelink.conf.d/google-fluentd-ruby.conf ..."
+#   rm -f /etc/prelink.conf.d/google-fluentd-ruby.conf
+# fi
+if [ $1 = 0 ] ; then
+  echo "Stopping google-fluentd ..."
+  /sbin/service google-fluentd stop >/dev/null 2>&1 || :
+  /sbin/chkconfig --del google-fluentd
+fi

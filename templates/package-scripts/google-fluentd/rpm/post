@@ -1,0 +1,73 @@
+google_fluentd_dir=/opt/google-fluentd
+
+echo "adding 'google-fluentd' group..."
+getent group google-fluentd >/dev/null || /usr/sbin/groupadd -r google-fluentd
+echo "adding 'google-fluentd' user..."
+getent passwd google-fluentd >/dev/null || \
+  /usr/sbin/useradd -r -g google-fluentd -d /var/lib/google-fluentd -s /sbin/nologin -c 'google-fluentd' google-fluentd
+
+if [ ! -e "/var/log/google-fluentd/" ]; then
+  mkdir -p /var/log/google-fluentd/
+fi
+chown -R google-fluentd:google-fluentd /var/log/google-fluentd/
+
+if [ ! -e "/etc/google-fluentd/" ]; then
+  mkdir -p /etc/google-fluentd/
+  mkdir -p /etc/google-fluentd/plugin
+fi
+if [ ! -e "/etc/google-fluentd/google-fluentd.conf" ]; then
+  echo "Installing default conffile..."
+  cp -f ${google_fluentd_dir}/etc/google-fluentd/google-fluentd.conf.tmpl /etc/google-fluentd/google-fluentd.conf
+fi
+
+# 2011/11/13 Kazuki Ohta <k@treasure-data.com>
+# This prevents prelink, to break the Ruby intepreter.
+if [ -d "/etc/prelink.conf.d/" ]; then
+  echo "prelink detected. Installing /etc/prelink.conf.d/google-fluentd-ruby.conf ..."
+  cp -f ${google_fluentd_dir}/etc/google-fluentd/prelink.conf.d/google-fluentd.conf /etc/prelink.conf.d/google-fluentd-ruby.conf
+elif [ -f "/etc/prelink.conf" ]; then
+  if [ $(grep '\-b ${google_fluentd_dir}/embedded/bin/ruby' -c /etc/prelink.conf) -eq 0 ]; then
+    echo "prelink detected, but /etc/prelink.conf.d/ dosen't exist. Adding /etc/prelink.conf ..."
+    echo "-b ${google_fluentd_dir}/embedded/bin/ruby" >> /etc/prelink.conf
+  fi
+fi
+
+# 2013/03/04 Kazuki Ohta <k@treasure-data.com>
+# Install log rotation script.
+if [ -d "/etc/logrotate.d/" ]; then
+  cp -f ${google_fluentd_dir}/etc/google-fluentd/logrotate.d/google-fluentd.logrotate /etc/logrotate.d/google-fluentd
+fi
+
+# 2011/11/13 Kazuki Ohta <k@treasure-data.com>
+# Before google-fluentd v1.1.0, fluentd has a bug of loading plugin before changing
+# to the right user. Then, these directories were created with root permission.
+# The following lines fix that problem.
+if [ ! -e "/var/log/google-fluentd/buffer/" ]; then
+  mkdir -p /var/log/google-fluentd/buffer/
+fi
+if [ -d "/var/log/google-fluentd/buffer/" ]; then
+  chown -R google-fluentd:google-fluentd /var/log/google-fluentd/buffer/
+fi
+if [ ! -e "/tmp/google-fluentd/" ]; then
+  mkdir -p /tmp/google-fluentd/
+fi
+if [ -d "/tmp/google-fluentd/" ]; then
+  chown -R google-fluentd:google-fluentd /tmp/google-fluentd/
+fi
+
+cp -f ${google_fluentd_dir}/etc/init.d/google-fluentd /etc/init.d/google-fluentd
+cp -f ${google_fluentd_dir}/usr/sbin/google-fluentd /usr/sbin/google-fluentd
+chmod 755 /usr/sbin/google-fluentd
+cp -f ${google_fluentd_dir}/usr/sbin/google-fluentd-gem /usr/sbin/google-fluentd-gem
+chmod 755 /usr/sbin/google-fluentd-gem
+cp -f ${google_fluentd_dir}/usr/bin/td /usr/bin/td
+chmod 755 /usr/bin/td
+
+echo "Configure google-fluentd to start, when booting up the OS..."
+/sbin/chkconfig --add google-fluentd
+
+# 2011/03/24 Kazuki Ohta <k@treasure-data.com>
+# When upgrade, restart agent if it's launched
+if [ "$1" = "2" ]; then
+  /sbin/service google-fluentd condrestart >/dev/null 2>&1 || :
+fi

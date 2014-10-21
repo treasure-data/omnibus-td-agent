@@ -1,0 +1,12 @@
+#! /bin/sh
+
+set -e
+
+if [ "$1" = "purge" ]; then
+        rm -f /etc/google-fluentd/*
+        dpkg-statoverride --remove /etc/google-fluentd
+	rm -f /var/run/google-fluentd/*
+        dpkg-statoverride --remove /var/run/google-fluentd
+fi
+
+#DEBHELPER#

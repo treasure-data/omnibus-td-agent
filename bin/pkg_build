@@ -36,7 +36,7 @@ def get_env(platform)
   "#{f}-#{v}"
 end
 
-`rm -rf ./td-agent2-pkg; mkdir td-agent2-pkg`
+`rm -rf ./google-fluentd2-pkg; mkdir google-fluentd2-pkg`
 
 puts "Build packages: #{platforms.join(', ')}"
 
@@ -44,8 +44,8 @@ platforms.each { |platform|
   `rm -rf ./pkg`
   system("vagrant up #{platform} #{arg}")
   if File.exist?('./pkg')
-    `mkdir -p ./td-agent2-pkg/#{get_env(platform)}`
-    `cp -rf ./pkg/* ./td-agent2-pkg/#{get_env(platform)}`
+    `mkdir -p ./google-fluentd2-pkg/#{get_env(platform)}`
+    `cp -rf ./pkg/* ./google-fluentd2-pkg/#{get_env(platform)}`
   end
   system "vagrant halt #{platform}" # should be destroy?
 }

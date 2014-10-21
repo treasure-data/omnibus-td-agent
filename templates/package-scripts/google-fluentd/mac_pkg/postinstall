@@ -1,0 +1,37 @@
+#!/bin/bash
+#
+# Install a full google-fluentd
+#
+
+google_fluentd_dir=/opt/google-fluentd
+
+# Create google-fluentd related directories and files
+
+if [ ! -e "/var/log/google-fluentd/" ]; then
+  mkdir -p /var/log/google-fluentd/
+  mkdir -p /var/log/google-fluentd/buffer/
+fi
+if [ ! -e "/var/run/google-fluentd/" ]; then
+  mkdir -p /var/run/google-fluentd/
+fi
+if [ ! -e "/etc/google-fluentd/" ]; then
+  mkdir -p /etc/google-fluentd/
+  mkdir -p /etc/google-fluentd/plugin
+fi
+if [ ! -e "/etc/google-fluentd/google-fluentd.conf" ]; then
+  echo "Installing default conffile..."
+  cp -f $google_fluentd_dir/etc/google-fluentd/google-fluentd.conf.tmpl /etc/google-fluentd/google-fluentd.conf
+fi
+if [ ! -e "/tmp/google-fluentd/" ]; then
+  mkdir -p /tmp/google-fluentd/
+fi
+
+cp -f $google_fluentd_dir/usr/sbin/google-fluentd /usr/sbin/google-fluentd
+chmod 755 /usr/sbin/google-fluentd
+cp -f $google_fluentd_dir/usr/sbin/google-fluentd-gem /usr/sbin/google-fluentd-gem
+chmod 755 /usr/sbin/google-fluentd-gem
+cp -f $google_fluentd_dir/usr/bin/td /usr/bin/td
+chmod 755 /usr/bin/td
+cp -f $google_fluentd_dir/google-fluentd.plist /Library/LaunchDaemons/
+
+exit 0

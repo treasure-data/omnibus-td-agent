@@ -1,7 +1,7 @@
 name "jemalloc"
 default_version "3.6.0"
 
-# for td-agent
+# for google-fluentd
 version("2.2.5") { source :md5 => 'a5c4332705ed0e3fff1ac73cfe975640' }
 version("3.6.0") { source :md5 => 'e76665b63a8fddf4c9f26d2fa67afdf2' }
 

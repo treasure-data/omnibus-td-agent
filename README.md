@@ -1,10 +1,10 @@
 # About
 
-The event collector daemon, for Treasure Data. This daemon collects various types of logs/events via various way, and transfer them to the cloud. For more about Treasure Data, see the [homepage](http://treasuredata.com/), and the [documentation](http://docs.treasuredata.com/).
+The event collector daemon, for Google fluentd. This daemon collects various types of logs/events via various way, and transfer them to the cloud.
 
-td-agent is open sourced as [Fluentd project](http://github.com/fluent/). In other words, td-agent is a distribution package of Fluentd.
+google-fluentd is open sourced as [Fluentd project](http://github.com/fluent/). In other words, google-fluentd is a distribution package of Fluentd.
 
-td-agent package is based on [Omnibus-ruby](https://github.com/opscode/omnibus-ruby)
+google-fluentd package is based on [Omnibus-ruby](https://github.com/opscode/omnibus-ruby)
 
 ## Installation
 
@@ -28,15 +28,15 @@ $ bin/gem_downloader plugin_gems.rb
 Create required directory and add permission
 
 ```shell
-$ sudo mkdir -p /opt/td-agent /var/cache/omnibus
-$ sudo chown [USER] /opt/td-agent
+$ sudo mkdir -p /opt/google-fluentd /var/cache/omnibus
+$ sudo chown [USER] /opt/google-fluentd
 $ sudo chown [USER] /var/cache/omnibus
 ```
 
 After that, you create a platform-specific package using the `build project` command:
 
 ```shell
-$ bin/omnibus build td-agent2
+$ bin/omnibus build google-fluentd2
 ```
 
 The platform/architecture type of the package created will match the platform
@@ -54,7 +54,7 @@ $ bin/omnibus clean
 ```
 
 Adding the `--purge` purge option removes __ALL__ files generated during the
-build including the project install directory (`/opt/td-agent`) and
+build including the project install directory (`/opt/google-fluentd`) and
 the package cache directory (`/var/cache/omnibus/pkg`):
 
 ```shell
@@ -72,7 +72,7 @@ $ bin/omnibus help
 
 ## Vagrant-based Virtualized Build Lab
 
-td-agent omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
+google-fluentd omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
 that will allow you to build your projects on the following platforms:
 
 * CentOS 5 64-bit
@@ -189,10 +189,10 @@ section:
 
 ```shell
 $ bundle exec kitchen login default-ubuntu-1204
-[vagrant@ubuntu...] $ cd td-agent
+[vagrant@ubuntu...] $ cd google-fluentd
 [vagrant@ubuntu...] $ bundle install
 [vagrant@ubuntu...] $ ...
-[vagrant@ubuntu...] $ ./bin/omnibus build td-agent2
+[vagrant@ubuntu...] $ ./bin/omnibus build google-fluentd2
 ```
 
 For a complete list of all commands and platforms, run `kitchen list` or

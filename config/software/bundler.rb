@@ -21,6 +21,6 @@ version "1.6.6"
 #dependency "rubygems" unless platform == 'windows'
 
 build do
-  # Use 'command' instead of 'gem' to keep  previous td-agent directory structure
+  # Use 'command' instead of 'gem' to keep  previous google-fluentd directory structure
   command "sudo #{install_dir}/ruby/bin/gem install bundler --no-rdoc --no-ri -v '#{version}'"
 end

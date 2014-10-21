@@ -1,0 +1,13 @@
+/var/log/google-fluentd/google-fluentd.log {
+  daily
+  rotate 30
+  compress
+  delaycompress
+  notifempty
+  create 640 google-fluentd google-fluentd
+  sharedscripts
+  postrotate
+    pid=/var/run/google-fluentd/google-fluentd.pid
+    test -s $pid && kill -USR1 "$(cat $pid)"
+  endscript
+}

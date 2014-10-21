@@ -1,0 +1,100 @@
+#! /bin/sh
+
+set -e
+
+google_fluentd_dir=/opt/google-fluentd
+
+prevver="$2"
+
+add_system_user() {
+    if ! getent passwd google-fluentd >/dev/null; then
+        adduser --group --system --no-create-home google-fluentd
+    fi
+}
+
+add_directories() {
+    mkdir -p /var/run/google-fluentd
+    mkdir -p /etc/google-fluentd
+    mkdir -p /etc/google-fluentd/plugin
+    mkdir -p /var/log/google-fluentd
+}
+
+fixperms() {
+    dpkg-statoverride --list /var/run/google-fluentd >/dev/null || \
+        dpkg-statoverride --update --add google-fluentd google-fluentd 0755 /var/run/google-fluentd
+    dpkg-statoverride --list /etc/google-fluentd >/dev/null || \
+        dpkg-statoverride --update --add google-fluentd google-fluentd 0755 /etc/google-fluentd
+    dpkg-statoverride --list /var/log/google-fluentd >/dev/null || \
+        dpkg-statoverride --update --add google-fluentd google-fluentd 0755 /var/log/google-fluentd
+}
+
+update_conffile() {
+    CONFFILE="$1"
+    TMPL="$2"
+
+    if [ -e "$CONFFILE" ]; then
+        md5sum="`md5sum \"$CONFFILE\" | sed -e \"s/ .*//\"`"
+        old_md5sum="`sed -n -e \"/^Conffiles:/,/^[^ ]/{\\\\' $TMPL'{s/.* //;p}}\" /var/lib/dpkg/status`"
+        if [ -z "$old_md5sum" ]; then
+           # backward compatibility
+            old_md5sum="`sed -n -e \"/^Conffiles:/,/^[^ ]/{\\\\' $CONFFILE'{s/.* //;p}}\" /var/lib/dpkg/status`"
+        fi
+
+        if [ "$md5sum" != "$old_md5sum" ]; then
+            echo "Conffile $CONFFILE has been modified. Remain untouched."
+            # do nothing
+        else
+            echo "Updating conffile $CONFFILE ..."
+            cp -f "$TMPL" "$CONFFILE"
+        fi
+    else
+        echo "Installing default conffile $CONFFILE ..."
+        cp -f "$TMPL" "$CONFFILE"
+    fi
+
+    # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
+    # Before google-fluentd v1.1.0, fluentd has a bug of loading plugin before
+    # changing to the right user. Then, these directories were created with
+    # root permission. The following lines fix that problem.
+    if [ -d "/var/log/google-fluentd/buffer/" ]; then
+        chown -R google-fluentd:google-fluentd /var/log/google-fluentd/buffer/
+    fi
+    if [ -d "/tmp/google-fluentd/" ]; then
+        chown -R google-fluentd:google-fluentd /tmp/google-fluentd/
+    fi
+}
+
+case "$1" in
+    configure)
+        add_system_user
+        add_directories
+        fixperms
+        update_conffile /etc/google-fluentd/google-fluentd.conf ${google_fluentd_dir}/etc/google-fluentd/google-fluentd.conf.tmpl
+        ;;
+    abort-upgrade|abort-deconfigure|abort-remove)
+        :
+        ;;
+    *)
+        echo "Called with unknown argument $1, bailing out."
+        exit 1
+        ;;
+esac
+
+cp -f ${google_fluentd_dir}/etc/init.d/google-fluentd /etc/init.d/google-fluentd
+cp -f ${google_fluentd_dir}/usr/sbin/google-fluentd /usr/sbin/google-fluentd
+chmod 755 /usr/sbin/google-fluentd
+cp -f ${google_fluentd_dir}/usr/sbin/google-fluentd-gem /usr/sbin/google-fluentd-gem
+chmod 755 /usr/sbin/google-fluentd-gem
+cp -f ${google_fluentd_dir}/usr/bin/td /usr/bin/td
+chmod 755 /usr/bin/td
+
+if [ ! -e "/etc/default/google-fluentd" ]; then
+  cat > /etc/default/google-fluentd <<EOF
+# This file is sourced by /bin/sh from /etc/init.d/google-fluentd
+# Options to pass to google-fluentd
+DAEMON_ARGS=""
+
+EOF
+fi
+
+#DEBHELPER#
