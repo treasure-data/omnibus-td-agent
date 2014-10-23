@@ -26,7 +26,7 @@ build do
     }
 
     # setup plist / init.d file
-    if ['mac_pkg', 'mac_dmg'].include?(pkg_type)
+    if ['pkg', 'dmg'].include?(pkg_type)
       td_agent_plist_path = File.join(install_path, 'td-agent.plist')
       File.open(td_agent_plist_path, 'w', 0755) { |f|
         f.write(ERB.new(File.read(File.join('templates', 'td-agent.plist.erb'))).result(binding))

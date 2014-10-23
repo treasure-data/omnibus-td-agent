@@ -14,6 +14,8 @@ build_iteration 0
 # creates required build directories
 dependency "preparation"
 
+override :zlib, :version => '1.2.8'
+
 # td-agent dependencies/components
 dependency "td-agent"
 dependency "td-agent-files"
@@ -23,3 +25,6 @@ dependency "version-manifest"
 
 exclude "\.git*"
 exclude "bundler\/git"
+
+compress :dmg do
+end
