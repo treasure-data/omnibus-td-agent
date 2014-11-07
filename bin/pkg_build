@@ -11,7 +11,8 @@ unless ARGV.include?('--without-deb')
     "ubuntu-10.04",
     "ubuntu-12.04",
     "ubuntu-10.04-i386",
-    "ubuntu-12.04-i386"
+    "ubuntu-12.04-i386",
+    "ubuntu-14.04"
   ]
 end
 
@@ -26,8 +27,8 @@ end
 
 unless ARGV.include?('--without-debian')
   platforms += [
-    "debian-6.0.8",
-    "debian-7.4"
+    "debian-6.0.10",
+    "debian-7.6"
   ]
 end
 

@@ -3,8 +3,6 @@ name "google-fluentd-files"
 
 dependency "google-fluentd"
 
-always_build true
-
 # This software setup google-fluentd related files, e.g. etc files.
 # Separating file into google-fluentd.rb and google-fluentd-files.rb is for speed up package building
 
@@ -28,9 +26,9 @@ build do
     }
 
     # setup plist / init.d file
-    if ['mac_pkg', 'mac_dmg'].include?(pkg_type)
-      google_fluentd_plist_path = File.join(install_path, 'google-fluentd.plist')
-      File.open(google_fluentd_plist_path, 'w', 0755) { |f|
+    if ['pkg', 'dmg'].include?(pkg_type)
+      td_agent_plist_path = File.join(install_path, 'google-fluentd.plist')
+      File.open(td_agent_plist_path, 'w', 0755) { |f|
         f.write(ERB.new(File.read(File.join('templates', 'google-fluentd.plist.erb'))).result(binding))
       }
     else
