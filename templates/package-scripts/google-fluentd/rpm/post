@@ -11,6 +11,11 @@ if [ ! -e "/var/log/google-fluentd/" ]; then
 fi
 chown -R google-fluentd:google-fluentd /var/log/google-fluentd/
 
+if [ ! -e "/var/run/google-fluentd/" ]; then
+  mkdir -p /var/run/google-fluentd/
+fi
+chown -R google-fluentd:google-fluentd /var/run/google-fluentd/
+
 if [ ! -e "/etc/google-fluentd/" ]; then
   mkdir -p /etc/google-fluentd/
   mkdir -p /etc/google-fluentd/plugin
