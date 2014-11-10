@@ -34,8 +34,11 @@ DAEMON_ARGS=${DAEMON_ARGS---user td-agent}
 TD_AGENT_ARGS="${TD_AGENT_ARGS-/usr/sbin/td-agent --group td-agent --log /var/log/td-agent/td-agent.log --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
-	mkdir -p $(dirname ${PIDFILE})
-	chown -R td-agent:td-agent $(dirname ${PIDFILE})
+	PIDFILE_DIR=$(dirname ${PIDFILE})
+	if [ ! -e $PIDFILE_DIR ]; then
+		mkdir -p $PIDFILE_DIR
+	fi
+	chown -R td-agent:td-agent $PIDFILE_DIR
 	TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 

@@ -11,6 +11,11 @@ if [ ! -e "/var/log/td-agent/" ]; then
 fi
 chown -R td-agent:td-agent /var/log/td-agent/
 
+if [ ! -e "/var/run/td-agent/" ]; then
+  mkdir -p /var/run/td-agent/
+fi
+chown -R td-agent:td-agent /var/run/td-agent/
+
 if [ ! -e "/etc/td-agent/" ]; then
   mkdir -p /etc/td-agent/
   mkdir -p /etc/td-agent/plugin
