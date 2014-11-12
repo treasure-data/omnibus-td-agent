@@ -8,7 +8,7 @@ homepage "http://google.com"
 description "Google fluentd and plugins for Google Cloud"
 
 install_dir     "/opt/google-fluentd"
-build_version   "1.0.1"
+build_version   "1.1.0"
 build_iteration 0
 
 # creates required build directories
