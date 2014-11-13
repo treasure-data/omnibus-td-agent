@@ -15,6 +15,7 @@ build_iteration 0
 dependency "preparation"
 
 override :zlib, :version => '1.2.8'
+override :rubygems, :version => '2.2.1'
 
 # td-agent dependencies/components
 dependency "td-agent"
