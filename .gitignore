@@ -10,13 +10,13 @@ files/**/cache/
 resources/**/cache/
 vendor/cookbooks
 
-# td-agent specific package
+# google-fluentd specific package
 core_gems/*
 plugin_gems/*
-package-scripts/td-agent/makeselfinst
-package-scripts/td-agent/postinst
-package-scripts/td-agent/postrm
-package-scripts/td-agent/preinst
-package-scripts/td-agent/prerm
-files/etc/init.d/td-agent
-resources/td-agent/etc/init.d/td-agent
+package-scripts/google-fluentd/makeselfinst
+package-scripts/google-fluentd/postinst
+package-scripts/google-fluentd/postrm
+package-scripts/google-fluentd/preinst
+package-scripts/google-fluentd/prerm
+files/etc/init.d/google-fluentd
+resources/google-fluentd/etc/init.d/google-fluentd
