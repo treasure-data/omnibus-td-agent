@@ -1,5 +1,5 @@
 name "jemalloc"
-default_version "3.6.0"
+default_version "2.2.5"
 
 # for td-agent
 version("2.2.5") { source :md5 => 'a5c4332705ed0e3fff1ac73cfe975640' }
