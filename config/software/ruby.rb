@@ -77,6 +77,7 @@ build do
                        "--enable-shared",
                        "--enable-libedit",
                        "--with-ext=psych",
+                       "--without-gmp",
                        #"--with-libyaml-dir=#{install_dir}/embedded",
                        "--disable-install-doc"]
 
