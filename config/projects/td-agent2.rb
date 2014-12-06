@@ -20,6 +20,8 @@ override :rubygems, :version => '2.2.1'
 # td-agent dependencies/components
 dependency "td-agent"
 dependency "td-agent-files"
+dependency "td"
+dependency "td-agent-ui"
 
 # version manifest file
 dependency "version-manifest"

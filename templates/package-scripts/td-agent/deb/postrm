@@ -3,10 +3,10 @@
 set -e
 
 if [ "$1" = "purge" ]; then
-        rm -f /etc/td-agent/*
-        dpkg-statoverride --remove /etc/td-agent
-	rm -f /var/run/td-agent/*
-        dpkg-statoverride --remove /var/run/td-agent
+        rm -f /etc/<%= project_name %>/*
+        dpkg-statoverride --remove /etc/<%= project_name %>
+	rm -f /var/run/<%= project_name %>/*
+        dpkg-statoverride --remove /var/run/<%= project_name %>
 fi
 
 #DEBHELPER#

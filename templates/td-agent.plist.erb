@@ -5,17 +5,17 @@
   <key>KeepAlive</key>
   <true/>
   <key>Label</key>
-  <string>td-agent</string>
+  <string><%= project_name %></string>
   <key>ProgramArguments</key>
   <array>
-    <string>/usr/sbin/td-agent</string>
+    <string>/usr/sbin/<%= project_name %></string>
     <string>--log</string>
-    <string>/var/log/td-agent/td-agent.log</string>
+    <string>/var/log/<%= project_name %>/<%= project_name %>.log</string>
     <string>--use-v1-config</string>
   </array>
   <key>RunAtLoad</key>
   <true/>
   <key>WorkingDirectory</key>
-  <string>/opt/td-agent</string>
+  <string><%= install_path %></string>
 </dict>
 </plist>
