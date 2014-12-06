@@ -70,6 +70,29 @@ Full help for the Omnibus command line interface can be accessed with the
 $ bin/omnibus help
 ```
 
+### Build with customized plugins, files and package name
+
+Follow steps below to build packages with customized gem lists, configuration files and original package name.
+
+1. make plugin list for your own environment
+  * edit `plugin_gems` to add or remove plugins
+  * `rm plugin_gems/*`
+  * `bin/gem_downloader plugin_gems.rb`
+2. make your default configuration file
+  * edit `templates/etc/td-agent/td-agent.conf` and `td-agent.conf.tmpl`
+3. rename `config/projects/td-agent2.rb` as `config/projects/YOUR_PACKAGE_NAME.rb`
+4. edit `config/projects/YOUR_PACKAGE_NAME.rb`
+  * fix `name`, `maintainer`, `homepage` and `description`
+  * change `install_dir` as `/opt/YOUR_PACKAGE_NAME`
+  * change `build_version` and `build_iteration`
+  * comment out `td` and `td-agent-ui` if you want not to install them
+5. build package by `bin/omnibus build YOUR_PACKAGE_NAME`
+6. test your package file
+
+Build script generates file paths with `YOUR_PACKAGE_NAME`, from templates. Leave file names with `td-agent` in `templates`.
+
+NOTE: edit `project_name` in Vagrantfile if required.
+
 ## Vagrant-based Virtualized Build Lab
 
 td-agent omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
