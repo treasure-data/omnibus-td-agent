@@ -75,12 +75,12 @@ $ bin/omnibus help
 Follow steps below to build packages with customized gem lists, configuration files and original package name.
 
 1. make plugin list for your own environment
-  * edit `plugin_gems` to add or remove plugins
+  * add `your_plugin_gems.rb` to define the plugin list for your package
   * `rm plugin_gems/*`
-  * `bin/gem_downloader plugin_gems.rb`
+  * `bin/gem_downloader your_plugin_gems.rb`
 2. make your default configuration file
   * edit `templates/etc/td-agent/td-agent.conf` and `td-agent.conf.tmpl`
-3. rename `config/projects/td-agent2.rb` as `config/projects/YOUR_PACKAGE_NAME.rb`
+3. copy `config/projects/td-agent2.rb` to `config/projects/YOUR_PACKAGE_NAME.rb`
 4. edit `config/projects/YOUR_PACKAGE_NAME.rb`
   * fix `name`, `maintainer`, `homepage` and `description`
   * change `install_dir` as `/opt/YOUR_PACKAGE_NAME`
