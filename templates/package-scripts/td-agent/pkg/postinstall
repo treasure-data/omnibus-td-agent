@@ -1,39 +1,43 @@
 #!/bin/bash
 #
-# Install a full td-agent
+# Install a full <%= project_name %>
 #
 
-td_agent_dir=/opt/td-agent
+<%= project_name_snake %>_dir=/opt/<%= project_name %>
 
-# Create td-agent related directories and files
+# Create <%= project_name %> related directories and files
 
-if [ ! -e "/var/log/td-agent/" ]; then
-  mkdir -p /var/log/td-agent/
-  mkdir -p /var/log/td-agent/buffer/
+if [ ! -e "/var/log/<%= project_name %>/" ]; then
+  mkdir -p /var/log/<%= project_name %>/
+  mkdir -p /var/log/<%= project_name %>/buffer/
 fi
-if [ ! -e "/var/run/td-agent/" ]; then
-  mkdir -p /var/run/td-agent/
+if [ ! -e "/var/run/<%= project_name %>/" ]; then
+  mkdir -p /var/run/<%= project_name %>/
 fi
-if [ ! -e "/etc/td-agent/" ]; then
-  mkdir -p /etc/td-agent/
-  mkdir -p /etc/td-agent/plugin
+if [ ! -e "/etc/<%= project_name %>/" ]; then
+  mkdir -p /etc/<%= project_name %>/
+  mkdir -p /etc/<%= project_name %>/plugin
 fi
-if [ ! -e "/etc/td-agent/td-agent.conf" ]; then
+if [ ! -e "/etc/<%= project_name %>/<%= project_name %>.conf" ]; then
   echo "Installing default conffile..."
-  cp -f $td_agent_dir/etc/td-agent/td-agent.conf.tmpl /etc/td-agent/td-agent.conf
+  cp -f $<%= project_name_snake %>_dir/etc/<%= project_name %>/<%= project_name %>.conf.tmpl /etc/<%= project_name %>/<%= project_name %>.conf
 fi
-if [ ! -e "/tmp/td-agent/" ]; then
-  mkdir -p /tmp/td-agent/
+if [ ! -e "/tmp/<%= project_name %>/" ]; then
+  mkdir -p /tmp/<%= project_name %>/
 fi
 
-cp -f $td_agent_dir/usr/sbin/td-agent /usr/sbin/td-agent
-chmod 755 /usr/sbin/td-agent
-cp -f $td_agent_dir/usr/sbin/td-agent-gem /usr/sbin/td-agent-gem
-chmod 755 /usr/sbin/td-agent-gem
-cp -f $td_agent_dir/usr/sbin/td-agent-ui /usr/sbin/td-agent-ui
-chmod 755 /usr/sbin/td-agent-ui
-cp -f $td_agent_dir/usr/bin/td /usr/bin/td
-chmod 755 /usr/bin/td
-cp -f $td_agent_dir/td-agent.plist /Library/LaunchDaemons/
+cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %> /usr/sbin/<%= project_name %>
+chmod 755 /usr/sbin/<%= project_name %>
+cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-gem /usr/sbin/<%= project_name %>-gem
+chmod 755 /usr/sbin/<%= project_name %>-gem
+if [ -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-ui ];
+    cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-ui /usr/sbin/<%= project_name %>-ui
+    chmod 755 /usr/sbin/<%= project_name %>-ui
+fi
+if [ -f $<%= project_name_snake %>_dir/usr/bin/td ];
+    cp -f $<%= project_name_snake %>_dir/usr/bin/td /usr/bin/td
+    chmod 755 /usr/bin/td
+fi
+cp -f $<%= project_name_snake %>_dir/<%= project_name %>.plist /Library/LaunchDaemons/
 
 exit 0

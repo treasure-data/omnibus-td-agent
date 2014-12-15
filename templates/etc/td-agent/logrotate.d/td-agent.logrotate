@@ -1,0 +1,13 @@
+/var/log/<%= project_name %>/<%= project_name %>.log {
+  daily
+  rotate 30
+  compress
+  delaycompress
+  notifempty
+  create 640 <%= project_name %> <%= project_name %>
+  sharedscripts
+  postrotate
+    pid=/var/run/<%= project_name %>/<%= project_name %>.pid
+    test -s $pid && kill -USR1 "$(cat $pid)"
+  endscript
+}

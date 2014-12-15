@@ -9,6 +9,7 @@ bin/*
 files/**/cache/
 resources/**/cache/
 vendor/cookbooks
+Gemfile.lock
 
 # td-agent specific package
 core_gems/*

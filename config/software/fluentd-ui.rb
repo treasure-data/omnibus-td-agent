@@ -16,6 +16,7 @@ build do
     gem "install --no-ri --no-rdoc pkg/fluentd-ui-*.gem"
     td_agent_bin_dir = File.join(project.install_dir, 'embedded', 'bin')
     # Avoid deb's start-stop-daemon issue by providing another ruby binary. Will remove this ad-hoc code
-    copy(File.join(td_agent_bin_dir, "ruby"), File.join(td_agent_bin_dir, "td_agent_ui_ruby"))
+    project_name_snake = project.name.gsub('-', '_')
+    copy(File.join(td_agent_bin_dir, "ruby"), File.join(td_agent_bin_dir, "#{project_name_snake}_ui_ruby"))
   end
 end

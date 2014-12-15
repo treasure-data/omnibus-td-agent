@@ -1,6 +1,6 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          td-agent
+# Provides:          <%= project_name %>
 # Required-Start:    $network $local_fs
 # Required-Stop:
 # Default-Start:     2 3 4 5
@@ -12,20 +12,20 @@
 # Author: Kazuki Ohta <k@treasure-data.com>
 
 # Introduce the short server's name here
-NAME=td-agent
+NAME=<%= project_name %>
 
 # Read configuration variable file if it is present
 [ -r /etc/default/$NAME ] && . /etc/default/$NAME
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-USER=td-agent                   # Running user
-GROUP=td-agent                  # Running group
-DESC=td-agent                   # Introduce a short description here
+USER=<%= project_name %>                   # Running user
+GROUP=<%= project_name %>                  # Running group
+DESC=<%= project_name %>                   # Introduce a short description here
 PIDFILE=/var/run/$NAME/$NAME.pid
-DAEMON=/opt/td-agent/embedded/bin/ruby # Introduce the server's location here
+DAEMON=<%= install_path %>/embedded/bin/ruby # Introduce the server's location here
 # Arguments to run the daemon with
-DAEMON_ARGS="/usr/sbin/td-agent $DAEMON_ARGS --daemon $PIDFILE --log /var/log/td-agent/td-agent.log --use-v1-config"
+DAEMON_ARGS="/usr/sbin/<%= project_name %> $DAEMON_ARGS --daemon $PIDFILE --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config"
 SCRIPTNAME=/etc/init.d/$NAME
 START_STOP_DAEMON_ARGS=""
 
@@ -43,7 +43,7 @@ VERBOSE="yes"
 # Check the user
 if [ -n "${USER}" ]; then
 	if ! getent passwd | grep -q "^${USER}:"; then
-		echo "$0: user for running td-agent doesn't exist: ${USER}" >&2
+		echo "$0: user for running <%= project_name %> doesn't exist: ${USER}" >&2
 		exit 1
 	fi
 	if [ ! -d $(dirname ${PIDFILE}) ]; then
@@ -54,7 +54,7 @@ if [ -n "${USER}" ]; then
 fi
 if [ -n "${GROUP}" ]; then
 	if ! getent group | grep -q "^${GROUP}:"; then
-		echo "$0: group for running td-agent doesn't exist: ${GROUP}" >&2
+		echo "$0: group for running <%= project_name %> doesn't exist: ${GROUP}" >&2
 		exit 1
 	fi
 	START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --group ${GROUP}"
@@ -62,8 +62,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # Use jemalloc to avoid memory fragmentation
-if [ -f "/opt/td-agent/embedded/lib/libjemalloc.so" ]; then
-	export LD_PRELOAD=/opt/td-agent/embedded/lib/libjemalloc.so
+if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
+	export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
 fi
 
 #
