@@ -18,6 +18,7 @@ end
 
 unless ARGV.include?('--without-rpm')
   platforms += [
+    "centos-7.0",
     "centos-6.5",
     "centos-5.10",
     "centos-6.5-i386",

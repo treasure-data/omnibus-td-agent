@@ -28,6 +28,7 @@ Vagrant.configure('2') do |config|
     centos-5.10-i386
     centos-6.5
     centos-6.5-i386
+    centos-7.0
   }.each_with_index do |platform, index|
     use_nfs = false
     chef_version = bootstrap_chef_version
