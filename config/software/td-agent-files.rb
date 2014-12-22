@@ -14,12 +14,14 @@ build do
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
     project_name_snake_upcase = project_name_snake.upcase
+    project_root = Omnibus::Config.project_root
     gem_dir_version = "2.1.0"
 
     template = -> (*parts) { File.join('templates', *parts) }
     generate_from_template = -> (dst, src, erb_binding, opts={}) {
       mode = opts.fetch(:mode, 0755)
-      destination = dst.gsub('td-agent', project.name)
+      dst.slice!(project_root)
+      destination = project_root + dst.gsub('td-agent', project.name)
       FileUtils.mkdir_p File.dirname(destination)
       File.open(destination, 'w', mode) do |f|
         f.write ERB.new(File.read(src)).result(erb_binding)
