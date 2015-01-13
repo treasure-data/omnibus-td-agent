@@ -3,7 +3,7 @@
 set -e
 
 if [ "$1" = "purge" ]; then
-        rm -f /etc/<%= project_name %>/*
+        rm -rf /etc/<%= project_name %>/*
         dpkg-statoverride --remove /etc/<%= project_name %>
 	rm -f /var/run/<%= project_name %>/*
         dpkg-statoverride --remove /var/run/<%= project_name %>
