@@ -3,10 +3,14 @@
 set -e
 
 if [ "$1" = "purge" ]; then
-        rm -f /etc/<%= project_name %>/*
-        dpkg-statoverride --remove /etc/<%= project_name %>
+        rm -f /etc/default/<%= project_name %>
+        rm -f /etc/<%= project_name %>/<%= project_name %>.conf
+	dpkg-statoverride --list /var/run/<%= project_name %> > /dev/null && \
+		dpkg-statoverride --remove /etc/<%= project_name %>
 	rm -f /var/run/<%= project_name %>/*
-        dpkg-statoverride --remove /var/run/<%= project_name %>
+	dpkg-statoverride --list /var/run/<%= project_name %> > /dev/null && \
+		dpkg-statoverride --remove /var/run/<%= project_name %>
+
 fi
 
 #DEBHELPER#
