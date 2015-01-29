@@ -11,7 +11,7 @@ host_project_path = File.expand_path('..', __FILE__)
 guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
-bootstrap_chef_version = '11.12.4'
+bootstrap_chef_version = '11.16.4'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"

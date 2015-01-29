@@ -8,7 +8,7 @@ driver:
   #vagrantfile_erb: Vagrantfile.erb
 
 provisioner:
-  require_chef_omnibus: 11.8.0
+  require_chef_omnibus: 11.16.4
 
 platforms:
   # converge failed on 14.04 because libcurl4-gnutls-dev causes an error.
