@@ -16,6 +16,8 @@
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
 
+set -e
+
 # Source function library.
 . /etc/init.d/functions
 

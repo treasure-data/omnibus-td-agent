@@ -16,8 +16,8 @@ build do
     project_name_snake_upcase = project_name_snake.upcase
     gem_dir_version = "2.1.0"
 
-    template = -> (*parts) { File.join('templates', *parts) }
-    generate_from_template = -> (dst, src, erb_binding, opts={}) {
+    template = ->(*parts) { File.join('templates', *parts) }
+    generate_from_template = ->(dst, src, erb_binding, opts={}) {
       mode = opts.fetch(:mode, 0755)
       destination = dst.gsub('td-agent', project.name)
       FileUtils.mkdir_p File.dirname(destination)
@@ -41,7 +41,7 @@ build do
     if ['pkg', 'dmg'].include?(pkg_type)
       # templates/td-agent.plist.erb -> INSTALL_PATH/td-agent.plist
       plist_path = File.join(install_path, "td-agent.plist")
-      generate_from_template.call plist_path, template.call("td-agent.plist.erb")
+      generate_from_template.call plist_path, template.call("td-agent.plist.erb"), binding, mode: 0755
     else
       # templates/etc/init.d/xxxx/td-agent -> ./resources/etc/init.d/td-agent
       initd_file_path = File.join(project.resources_path, 'etc', 'init.d', project.name)

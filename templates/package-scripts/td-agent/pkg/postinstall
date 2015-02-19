@@ -30,11 +30,11 @@ cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %> /usr/sbin/<%= 
 chmod 755 /usr/sbin/<%= project_name %>
 cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-gem /usr/sbin/<%= project_name %>-gem
 chmod 755 /usr/sbin/<%= project_name %>-gem
-if [ -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-ui ];
+if [ -f "$<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-ui" ]; then
     cp -f $<%= project_name_snake %>_dir/usr/sbin/<%= project_name %>-ui /usr/sbin/<%= project_name %>-ui
     chmod 755 /usr/sbin/<%= project_name %>-ui
 fi
-if [ -f $<%= project_name_snake %>_dir/usr/bin/td ];
+if [ -f "$<%= project_name_snake %>_dir/usr/bin/td" ]; then
     cp -f $<%= project_name_snake %>_dir/usr/bin/td /usr/bin/td
     chmod 755 /usr/bin/td
 fi
