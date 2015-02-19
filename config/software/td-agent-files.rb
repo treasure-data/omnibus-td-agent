@@ -41,7 +41,7 @@ build do
     if ['pkg', 'dmg'].include?(pkg_type)
       # templates/td-agent.plist.erb -> INSTALL_PATH/td-agent.plist
       plist_path = File.join(install_path, "td-agent.plist")
-      generate_from_template.call plist_path, template.call("td-agent.plist.erb")
+      generate_from_template.call plist_path, template.call("td-agent.plist.erb"), binding, mode: 0755
     else
       # templates/etc/init.d/xxxx/td-agent -> ./resources/etc/init.d/td-agent
       initd_file_path = File.join(project.resources_path, 'etc', 'init.d', project.name)
