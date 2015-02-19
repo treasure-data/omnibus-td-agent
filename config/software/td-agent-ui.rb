@@ -16,8 +16,8 @@ build do
     project_name_snake_upcase = project_name_snake.upcase
     gem_dir_version = "2.1.0"
 
-    template = -> (*parts) { File.join('templates', *parts) }
-    generate_from_template = -> (dst, src, erb_binding, opts={}) {
+    template = ->(*parts) { File.join('templates', *parts) }
+    generate_from_template = ->(dst, src, erb_binding, opts={}) {
       mode = opts.fetch(:mode, 0755)
       destination = dst.gsub('td-agent', project.name)
       FileUtils.mkdir_p File.dirname(destination)
