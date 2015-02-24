@@ -57,8 +57,8 @@ start() {
 	# see http://docs.fluentd.org/en/articles/before-install
 	ulimit -n 65536
 	echo -n "Starting $name: "
-	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$<%= project_name_snake_upcase %>_ARGS"
-	RETVAL=$?
+	local RETVAL=0
+	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$<%= project_name_snake_upcase %>_ARGS" || RETVAL="$?"
 	echo
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
 	return $RETVAL
@@ -66,12 +66,12 @@ start() {
 
 stop() {
 	echo -n "Shutting down $name: "
+	local RETVAL=0
 	if [ -e "${PIDFILE}" ]; then
 	    # Use own process termination instead of killproc because killproc can't wait SIGTERM
 	    <%= project_name_snake_upcase %>_PID=`cat "$PIDFILE" 2>/dev/null`
 	    if [ -n "$<%= project_name_snake_upcase %>_PID" ]; then
-		/bin/kill "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1
-		RETVAL=$?
+		/bin/kill "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || RETVAL="$?"
 		if [ $RETVAL -eq 0 ]; then
 		    TIMEOUT="$STOPTIMEOUT"
 		    while [ $TIMEOUT -gt 0 ]; do
@@ -95,8 +95,7 @@ stop() {
 		RETVAL=4
 	    fi
 	else
-	    killproc $prog
-	    RETVAL=$?
+	    killproc $prog || RETVAL="$?"
 	    if [ $RETVAL -eq 0 ]; then
 		success
 	    else
@@ -117,9 +116,10 @@ restart() {
 reload() {
 	configtest || return $?
 	echo -n "Reloading $name: "
-	killproc $process_bin -HUP
-	RETVAL=$?
+	local RETVAL=0
+	killproc $process_bin -HUP || RETVAL="$?"
 	echo
+	return "$RETVAL"
 }
 
 configtest() {
@@ -153,4 +153,3 @@ case "$1" in
 	exit 1
 	;;
 esac
-exit $?
