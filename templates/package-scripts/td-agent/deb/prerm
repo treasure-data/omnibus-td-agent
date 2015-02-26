@@ -5,4 +5,3 @@ if [ -x "/etc/init.d/<%= project_name %>" ]; then
 	invoke-rc.d <%= project_name %> stop || exit $?
 fi
 
-#DEBHELPER#
