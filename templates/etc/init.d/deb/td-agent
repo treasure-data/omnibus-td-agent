@@ -20,8 +20,8 @@ NAME=<%= project_name %>
 
 # PATH should only include /usr/* if it runs after the mountnfs.sh script
 PATH=/sbin:/usr/sbin:/bin:/usr/bin
-USER=<%= project_name %>                   # Running user
-GROUP=<%= project_name %>                  # Running group
+USER=root                   # Running user
+GROUP=root                  # Running group
 DESC=<%= project_name %>                   # Introduce a short description here
 PIDFILE=/var/run/$NAME/$NAME.pid
 DAEMON=<%= install_path %>/embedded/bin/ruby # Introduce the server's location here

@@ -32,8 +32,8 @@ if [ -f /etc/sysconfig/$prog ]; then
 	. /etc/sysconfig/$prog
 fi
 PIDFILE=${PIDFILE-/var/run/<%= project_name %>/$prog.pid}
-DAEMON_ARGS=${DAEMON_ARGS---user <%= project_name %>}
-<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS-/usr/sbin/<%= project_name %> --group <%= project_name %> --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config}"
+DAEMON_ARGS=${DAEMON_ARGS---user root}
+<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS-/usr/sbin/<%= project_name %> --group root --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
 	PIDFILE_DIR=$(dirname ${PIDFILE})
