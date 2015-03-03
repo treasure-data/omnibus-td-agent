@@ -16,6 +16,10 @@ dependency "preparation"
 
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.2.1'
+# CentOS7 needs latest liblzma to build pg and some gems
+if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 7
+  override :liblzma, :version => '5.1.2alpha'
+end
 
 # td-agent dependencies/components
 dependency "td-agent"
