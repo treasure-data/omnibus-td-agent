@@ -101,8 +101,8 @@ do_stop()
 	#   1 if daemon was already stopped
 	#   2 if daemon could not be stopped
 	#   other if a failure occurred
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name ruby
-	RETVAL="$?"
+	local RETVAL=0
+	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name ruby || RETVAL="$?"
 	[ "$RETVAL" = 2 ] && return 2
 	# Wait for children to finish too if this is a daemon that forks
 	# and if the daemon is only ever run from this initscript.
@@ -110,8 +110,8 @@ do_stop()
 	# that waits for the process to drop all resources that could be
 	# needed by services started subsequently.  A last resort is to
 	# sleep for some time.
-	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON
-	[ "$?" = 2 ] && return 2
+	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON || RETVAL="$?"
+	[ "$RETVAL" = 2 ] && return 2
 	# Many daemons don't delete their pidfiles when they exit.
 	rm -f $PIDFILE
 	return "$RETVAL"
@@ -127,32 +127,32 @@ do_reload() {
 	# then implement that here.
 	#
 	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name ruby
-	return 0
 }
 
 do_configtest() {
 	eval "$DAEMON_ARGS --user ${USER} --group ${GROUP} --dry-run -q"
 }
 
+RETVAL=0
 case "$1" in
   start)
     [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC " "$NAME"
-    do_start
-    case "$?" in
+    do_start || RETVAL="$?"
+    case "$RETVAL" in
 		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
 		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
 	esac
   ;;
   stop)
 	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-	do_stop
-	case "$?" in
+	do_stop || RETVAL="$?"
+	case "$RETVAL" in
 		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
 		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
 	esac
 	;;
   status)
-       status_of_proc "$DAEMON" ruby && exit 0 || exit $?
+       status_of_proc "$DAEMON" ruby
        ;;
   reload|force-reload)
 	#
@@ -160,21 +160,21 @@ case "$1" in
 	# and leave 'force-reload' as an alias for 'restart'.
 	#
 	log_daemon_msg "Reloading $DESC" "$NAME"
-	do_reload
-	log_end_msg $?
+  do_configtest && do_reload || RETVAL="$?"
+	log_end_msg "$RETVAL"
 	;;
   restart|force-reload)
 	#
 	# If the "reload" option is implemented then remove the
 	# 'force-reload' alias
 	#
-	do_configtest || return $?
 	log_daemon_msg "Restarting $DESC" "$NAME"
-	do_stop
-	case "$?" in
+	do_configtest && do_stop || RETVAL="$?"
+	case "$RETVAL" in
 	  0|1)
-		do_start
-		case "$?" in
+		RETVAL=0
+		do_start || RETVAL="$?"
+		case "$RETVAL" in
 			0) log_end_msg 0 ;;
 			1) log_end_msg 1 ;; # Old process is still running
 			*) log_end_msg 1 ;; # Failed to start
@@ -187,7 +187,8 @@ case "$1" in
 	esac
 	;;
   configtest)
-	do_configtest
+	do_configtest || RETVAL="$?"
+		log_end_msg "$RETVAL"
 	;;
   *)
 	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2

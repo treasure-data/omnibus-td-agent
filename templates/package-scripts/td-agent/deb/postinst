@@ -104,4 +104,16 @@ DAEMON_ARGS=""
 EOF
 fi
 
-#DEBHELPER#
+# Automatically added by dh_installinit
+if [ -x "/etc/init.d/<%= project_name %>" ]; then
+	if [ ! -e "/etc/init/<%= project_name %>.conf" ]; then
+		update-rc.d <%= project_name %> defaults >/dev/null
+	fi
+	invoke-rc.d <%= project_name %> start || exit $?
+fi
+# End automatically added section
+# Automatically added by dh_makeshlibs
+if [ "$1" = "configure" ]; then
+	ldconfig
+fi
+# End automatically added section
