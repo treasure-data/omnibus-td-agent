@@ -2,14 +2,14 @@ require 'erb'
 require 'fileutils'
 require 'rubygems'
 
-name "td-agent"
-maintainer "Treasure Data, Inc"
-homepage "http://treasuredata.com"
-description "Treasure Agent: A data collector for Treasure Data"
+name "google-fluentd"
+maintainer "Google, Inc."
+homepage "http://cloud.google.com/logging/docs/"
+description "Google Fluentd: A data collector for Google Cloud Logging"
 
-install_dir     "/opt/td-agent"
-build_version   "2.1.4"
-build_iteration 0
+install_dir     "/opt/google-fluentd"
+build_version   "1.3.0"
+build_iteration 1
 
 # creates required build directories
 dependency "preparation"
