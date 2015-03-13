@@ -26,6 +26,7 @@ dependency "td-agent"
 dependency "td-agent-files"
 dependency "td"
 dependency "td-agent-ui"
+dependency "td-agent-cleanup"
 
 # version manifest file
 dependency "version-manifest"
