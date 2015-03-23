@@ -143,7 +143,7 @@ Vagrant.configure('2') do |config|
       aws.tags = {'Name' => 'td-agent-build'}
 
       override.ssh.username = project_build_user
-      override.ssh.private_key_path = "/Users/repeatedly/.ssh/td-east.pem"
+      override.ssh.private_key_path = ENV["AWS_SSH_KEY_PATH"]
       override.ssh.pty = true
     end
 
