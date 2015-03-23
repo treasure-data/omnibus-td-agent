@@ -8,13 +8,14 @@ if Vagrant::VERSION.to_f < 1.5
 end
 
 host_project_path = File.expand_path('..', __FILE__)
-guest_project_path = "/home/vagrant/#{File.basename(host_project_path)}"
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
 bootstrap_chef_version = '11.16.4'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"
+  use_nfs = false
+  chef_version = bootstrap_chef_version
 
   %w{
     ubuntu-10.04
@@ -30,8 +31,8 @@ Vagrant.configure('2') do |config|
     centos-6.5-i386
     centos-7.0
   }.each_with_index do |platform, index|
-    use_nfs = false
-    chef_version = bootstrap_chef_version
+    project_build_user = 'vagrant'
+    guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
 
     config.vm.define platform do |c|
       chef_run_list = []
@@ -72,7 +73,7 @@ Vagrant.configure('2') do |config|
         chef.synced_folder_type = "nfs" if use_nfs
         chef.json = {
           'omnibus' => {
-            'build_user' => 'vagrant',
+            'build_user' => project_build_user,
             'build_dir' => guest_project_path,
             'ruby_version' => '2.1.2',
             'install_dir' => "/opt/#{project_name}"
@@ -110,11 +111,79 @@ Vagrant.configure('2') do |config|
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
         sudo mkdir -p /opt/#{project_name}
-        sudo chown vagrant /opt/#{project_name}
+        sudo chown #{project_build_user} /opt/#{project_name}
         cd #{guest_project_path}
-        bundle install --path=/home/vagrant/.bundler
+        bundle install --path=/home/#{project_build_user}/.bundler
         bundle exec omnibus build #{project_name}2
       OMNIBUS_BUILD
     end # config.vm.define.platform
   end # each_with_index
+
+  config.vm.define 'amazon' do |c|
+    project_build_user = 'ec2-user'
+    guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
+
+    # Amazon Linux doesn't have SELinux so it should be removed from Omnibus run_list.
+    chef_run_list = ['recipe[yum-epel::default]'] + ['omnibus::_common', 'omnibus::_bash', 'omnibus::_cacerts', 'omnibus::_ccache',
+      'omnibus::_chruby', 'omnibus::_compile', 'omnibus::_ruby', 'omnibus::_git', 'omnibus::_github', 'omnibus::_openssl',
+      'omnibus::_packaging', 'omnibus::_rsync', 'omnibus::_xml', 'omnibus::_yaml', 'omnibus::_environment'].map { |r|
+       "recipe[#{r}]"
+    }
+
+    c.vm.box = "dummy"
+    c.vm.box_url = "https://github.com/mitchellh/vagrant-aws/raw/master/dummy.box"
+    c.omnibus.chef_version = chef_version
+    c.vm.provider :aws do |aws, override|
+      aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
+      aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
+      aws.keypair_name = "treasure-data"
+
+      aws.ami = "ami-146e2a7c"
+      aws.instance_type = 'm3.large'
+      aws.tags = {'Name' => 'td-agent-build'}
+
+      override.ssh.username = project_build_user
+      override.ssh.private_key_path = "/Users/repeatedly/.ssh/td-east.pem"
+      override.ssh.pty = true
+    end
+
+    config.berkshelf.enabled = true
+    config.ssh.forward_agent = true
+    config.vm.synced_folder '.', '/vagrant', :id => 'vagrant-root', :nfs => use_nfs
+    config.vm.synced_folder host_project_path, guest_project_path, :nfs => use_nfs
+
+    #c.vm.provision :shell, :privileged => false, :inline => <<-DUMMY_SELINUX
+    #  touch /usr/sbin/setenforce
+    #  chmod 755 /usr/sbin/setenforce
+    #  touch /usr/sbin/getenforce
+    #  chmod 755 /usr/sbin/getenforce
+    #DUMMY_SELINUX
+
+    config.vm.provision :chef_solo do |chef|
+      chef.synced_folder_type = "nfs" if use_nfs
+      chef.json = {
+        'omnibus' => {
+          'build_user' => project_build_user,
+          'build_dir' => guest_project_path,
+          'ruby_version' => '2.1.2',
+          'install_dir' => "/opt/#{project_name}"
+        }
+      }
+
+      chef.run_list = chef_run_list
+    end
+
+    config.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_OMNIBUS
+      rpm -ev #{project_name} || true
+      rm -rf /opt/#{project_name} || true
+    REMOVE_OMNIBUS
+
+    config.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
+      sudo mkdir -p /opt/#{project_name}
+      sudo chown #{project_build_user} /opt/#{project_name}
+      cd #{guest_project_path}
+      bundle install --path=/home/#{project_build_user}/.bundler
+      bundle exec omnibus build #{project_name}2
+    OMNIBUS_BUILD
+  end # config.vm.define.platform
 end # Vagrant.configure
