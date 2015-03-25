@@ -146,6 +146,8 @@ case "$1" in
         configtest
         ;;
     status)
+	# `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
+	set +e
 	status -p $PIDFILE '<%= project_name %>'
 	;;
     *)
