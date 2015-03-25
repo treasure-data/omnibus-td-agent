@@ -4,6 +4,7 @@ name "td-agent"
 dependency "jemalloc"
 dependency "ruby"
 dependency "nokogiri"
+dependency "postgresql"
 dependency "fluentd"
 
 env = {}
