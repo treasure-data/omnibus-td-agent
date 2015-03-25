@@ -26,7 +26,7 @@ DESC=<%= project_name %>                   # Introduce a short description here
 PIDFILE=/var/run/$NAME/$NAME.pid
 DAEMON=<%= install_path %>/embedded/bin/ruby # Introduce the server's location here
 # Arguments to run the daemon with
-DAEMON_ARGS="/usr/sbin/<%= project_name %> $DAEMON_ARGS --daemon $PIDFILE --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config"
+DAEMON_ARGS="/usr/sbin/<%= project_name %> $DAEMON_ARGS --daemon $PIDFILE --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config --suppress-repeated-stacktrace"
 SCRIPTNAME=/etc/init.d/$NAME
 START_STOP_DAEMON_ARGS=""
 
