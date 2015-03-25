@@ -52,7 +52,7 @@ fi
 
 RETVAL=0
 
-start() {
+do_start() {
 	# Set Max number of file descriptors for the safety sake
 	# see http://docs.fluentd.org/en/articles/before-install
 	ulimit -n 65536
@@ -64,7 +64,7 @@ start() {
 	return $RETVAL
 }
 
-stop() {
+do_stop() {
 	echo -n "Shutting down $name: "
 	local RETVAL=0
 	if [ -e "${PIDFILE}" ]; then
@@ -107,14 +107,14 @@ stop() {
 	return $RETVAL
 }
 
-restart() {
-	configtest || return $?
-	stop
-	start
+do_restart() {
+	do_configtest || return $?
+	do_stop
+	do_start
 }
 
-reload() {
-	configtest || return $?
+do_reload() {
+	do_configtest || return $?
 	echo -n "Reloading $name: "
 	local RETVAL=0
 	killproc $process_bin -HUP || RETVAL="$?"
@@ -122,28 +122,28 @@ reload() {
 	return "$RETVAL"
 }
 
-configtest() {
+do_configtest() {
 	eval "$<%= project_name_snake_upcase %>_ARGS $DAEMON_ARGS --dry-run -q"
 }
 
 case "$1" in
     start)
-	start
+	do_start
 	;;
     stop)
-	stop
+	do_stop
 	;;
     restart)
-	restart
+	do_restart
 	;;
     reload)
-	reload
+	do_reload
 	;;
     condrestart)
-	[ -f /var/lock/subsys/$prog ] && restart || :
+	[ -f /var/lock/subsys/$prog ] && do_restart || :
 	;;
     configtest)
-        configtest
+        do_configtest
         ;;
     status)
 	# `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
