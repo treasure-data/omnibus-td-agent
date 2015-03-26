@@ -1,7 +1,7 @@
 dir 'plugin_gems'
 download "httpclient", "2.4.0"
 download "td-client", "0.8.68"
-download "td", "0.11.8"
+download "td", "0.11.8.1"
 download "fluent-plugin-td", "0.10.26"
 download "thrift", "0.8.0"
 download "fluent-plugin-scribe", "0.10.14"
