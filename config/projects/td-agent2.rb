@@ -8,12 +8,13 @@ homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
 install_dir     "/opt/td-agent"
-build_version   "2.1.5"
-build_iteration 1
+build_version   "2.2.0"
+build_iteration 0
 
 # creates required build directories
 dependency "preparation"
 
+override :ruby, :version => '2.1.5'
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.2.1'
 override :postgresql, :version => '9.3.5'

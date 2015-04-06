@@ -102,10 +102,15 @@ that will allow you to build your projects on the following platforms:
 * CentOS 5 32-bit
 * CentOS 6 64-bit
 * CentOS 6 32-bit
+* CentOS 7 64-bit
 * Ubuntu 10.04 64-bit
 * Ubuntu 10.04 32-bit
 * Ubuntu 12.04 64-bit
 * Ubuntu 12.04 32-bit
+* Ubuntu 14.04 64-bit
+* Debian 6.0.10 64-bit
+* Debian 7.7 64-bit
+* Amazon Linux 2015.03 64-bit
 
 Please note this build-lab is only meant to get you up and running quickly;
 there's nothing inherent in Omnibus that restricts you to just building CentOS
@@ -141,6 +146,16 @@ $ vagrant up PLATFORM
 ```
 
 The complete list of valid platform names can be viewed with the `vagrant status` command.
+
+### Amazon Linux build
+
+You need to install vagrant-aws 0.5.0 and add `--provider` option to `vagrant up`.
+
+```sh
+AWS_SSH_KEY_PATH=/path/to/your_aws_key_file vagrant up amazon --provider=aws
+```
+
+After build package, you need to copy rpm file from ec2 instances. No automatic sync for now.
 
 ### pkg_build command
 

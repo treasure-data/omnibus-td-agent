@@ -138,7 +138,7 @@ Vagrant.configure('2') do |config|
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
       aws.keypair_name = "treasure-data"
 
-      aws.ami = "ami-146e2a7c"
+      aws.ami = "ami-1ecae776"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
 
@@ -151,13 +151,6 @@ Vagrant.configure('2') do |config|
     config.ssh.forward_agent = true
     config.vm.synced_folder '.', '/vagrant', :id => 'vagrant-root', :nfs => use_nfs
     config.vm.synced_folder host_project_path, guest_project_path, :nfs => use_nfs
-
-    #c.vm.provision :shell, :privileged => false, :inline => <<-DUMMY_SELINUX
-    #  touch /usr/sbin/setenforce
-    #  chmod 755 /usr/sbin/setenforce
-    #  touch /usr/sbin/getenforce
-    #  chmod 755 /usr/sbin/getenforce
-    #DUMMY_SELINUX
 
     config.vm.provision :chef_solo do |chef|
       chef.synced_folder_type = "nfs" if use_nfs
