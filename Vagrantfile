@@ -138,7 +138,7 @@ Vagrant.configure('2') do |config|
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
       aws.keypair_name = "treasure-data"
 
-      aws.ami = "ami-146e2a7c"
+      aws.ami = "ami-1ecae776"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
 
