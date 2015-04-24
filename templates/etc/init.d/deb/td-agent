@@ -152,7 +152,7 @@ case "$1" in
 	esac
 	;;
   status)
-       status_of_proc "$DAEMON" ruby
+       status_of_proc "$DAEMON" "$NAME"
        ;;
   reload|force-reload)
 	#
