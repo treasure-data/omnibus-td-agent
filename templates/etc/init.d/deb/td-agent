@@ -152,7 +152,7 @@ case "$1" in
 	esac
 	;;
   status)
-       status_of_proc "$DAEMON" ruby
+       status_of_proc "$DAEMON" "$NAME"
        ;;
   reload|force-reload)
 	#
@@ -191,7 +191,6 @@ case "$1" in
 		log_end_msg "$RETVAL"
 	;;
   *)
-	#echo "Usage: $SCRIPTNAME {start|stop|restart|reload|force-reload}" >&2
 	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload|configtest}" >&2
 	exit 3
 	;;
