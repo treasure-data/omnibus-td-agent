@@ -19,8 +19,6 @@
 # Source function library.
 . <%= File.join(root_path, "etc/init.d/functions") %>
 
-set -e
-
 export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
 
 TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
