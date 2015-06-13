@@ -82,16 +82,16 @@ do_stop() {
 		    if [ $TIMEOUT -eq 0 ]; then
 			echo -n "Timeout error occurred trying to stop <%= project_name %>..."
 			RETVAL=1
-			failure
+			failure || true
 		    else
 			RETVAL=0
 			success
 		    fi
 		else
-		    failure
+		    failure || true
 		fi
 	    else
-		failure
+		failure || true
 		RETVAL=4
 	    fi
 	else
@@ -99,7 +99,7 @@ do_stop() {
 	    if [ $RETVAL -eq 0 ]; then
 		success
 	    else
-		failure
+		failure || true
 	    fi
 	fi
 	echo
