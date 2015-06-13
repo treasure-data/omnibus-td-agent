@@ -1,11 +1,11 @@
 #!/bin/bash
 #
-# /etc/rc.d/init.d/<%= project_name %>
+# <%= File.join(root_path, "etc/rc.d/init.d", project_name) %>
 #
 # chkconfig: - 80 20
 # description: <%= project_name %>
 # processname: <%= project_name %>
-# pidfile: /var/run/<%= project_name %>/<%= project_name %>.pid
+# pidfile: <%= File.join(root_path, "var/run", project_name, "#{project_name}.pid") %>
 #
 ### BEGIN INIT INFO
 # Provides:          <%= project_name %>
@@ -17,23 +17,23 @@
 ### END INIT INFO
 
 # Source function library.
-. /etc/init.d/functions
+. <%= File.join(root_path, "etc/init.d/functions") %>
 
 set -e
 
 name="<%= project_name %>"
 prog="<%= project_name %>"
-process_bin=<%= install_path %>/embedded/bin/ruby
+process_bin=<%= File.join(root_path, install_path, "embedded/bin/ruby") %>
 
-# timeout can be overridden from /etc/sysconfig/<%= project_name %>
+# timeout can be overridden from <%= File.join(root_path, "etc/sysconfig", project_name) %>
 STOPTIMEOUT=120
 
-if [ -f /etc/sysconfig/$prog ]; then
-	. /etc/sysconfig/$prog
+if [ -f <%= File.join(root_path, "etc/sysconfig/$prog") %> ]; then
+	. <%= File.join(root_path, "etc/sysconfig/$prog") %>
 fi
-PIDFILE=${PIDFILE-/var/run/<%= project_name %>/$prog.pid}
+PIDFILE=${PIDFILE-<%= File.join(root_path, "var/run", project_name, "$prog.pid") %>}
 DAEMON_ARGS=${DAEMON_ARGS---user <%= project_name %>}
-<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS-/usr/sbin/<%= project_name %> --group <%= project_name %> --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config}"
+<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS-<%= File.join(root_path, "usr/sbin", project_name) %> --group <%= project_name %> --log <%= File.join(root_path, "var/log", project_name, "#{project_name}.log") %> --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
 	PIDFILE_DIR=$(dirname ${PIDFILE})
@@ -46,8 +46,8 @@ fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
+if [ -f "<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>" ]; then
+        export LD_PRELOAD=<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>
 fi
 
 RETVAL=0
@@ -60,7 +60,7 @@ do_start() {
 	local RETVAL=0
 	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$<%= project_name_snake_upcase %>_ARGS" || RETVAL="$?"
 	echo
-	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/$prog
+	[ $RETVAL -eq 0 ] && touch <%= File.join(root_path, "var/lock/subsys/$prog") %>
 	return $RETVAL
 }
 
@@ -71,11 +71,11 @@ do_stop() {
 	    # Use own process termination instead of killproc because killproc can't wait SIGTERM
 	    <%= project_name_snake_upcase %>_PID=`cat "$PIDFILE" 2>/dev/null`
 	    if [ -n "$<%= project_name_snake_upcase %>_PID" ]; then
-		/bin/kill "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || RETVAL="$?"
+		<%= File.join(root_path, "bin/kill") %> "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || RETVAL="$?"
 		if [ $RETVAL -eq 0 ]; then
 		    TIMEOUT="$STOPTIMEOUT"
 		    while [ $TIMEOUT -gt 0 ]; do
-			/bin/kill -0 "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || break
+			<%= File.join(root_path, "bin/kill") %> -0 "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || break
 			sleep 1
 			let TIMEOUT=${TIMEOUT}-1
 		    done
@@ -103,7 +103,7 @@ do_stop() {
 	    fi
 	fi
 	echo
-	[ $RETVAL -eq 0 ] && rm -f $PIDFILE && rm -f /var/lock/subsys/$prog
+	[ $RETVAL -eq 0 ] && rm -f $PIDFILE && rm -f <%= File.join(root_path, "var/lock/subsys/$prog") %>
 	return $RETVAL
 }
 
@@ -140,7 +140,7 @@ case "$1" in
 	do_reload
 	;;
     condrestart)
-	[ -f /var/lock/subsys/$prog ] && do_restart || :
+	[ -f <%= File.join(root_path, "var/lock/subsys/$prog") %> ] && do_restart || :
 	;;
     configtest)
         do_configtest
