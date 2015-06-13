@@ -160,7 +160,8 @@ case "$1" in
 	# and leave 'force-reload' as an alias for 'restart'.
 	#
 	log_daemon_msg "Reloading $DESC" "$NAME"
-  do_configtest && do_reload || RETVAL="$?"
+	do_configtest || log_end_msg 1
+	do_reload || RETVAL="$?"
 	log_end_msg "$RETVAL"
 	;;
   restart|force-reload)
@@ -169,7 +170,8 @@ case "$1" in
 	# 'force-reload' alias
 	#
 	log_daemon_msg "Restarting $DESC" "$NAME"
-	do_configtest && do_stop || RETVAL="$?"
+	do_configtest || log_end_msg 1
+	do_stop || RETVAL="$?"
 	case "$RETVAL" in
 	  0|1)
 		RETVAL=0
