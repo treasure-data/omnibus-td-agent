@@ -109,7 +109,7 @@ do_stop() {
 
 do_restart() {
 	do_configtest || return $?
-	do_stop
+	do_stop || true
 	do_start
 }
 
