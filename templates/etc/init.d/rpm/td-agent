@@ -90,7 +90,7 @@ do_start() {
   ulimit -n 65536
   echo -n "Starting ${AGENT_NAME}: "
   local RETVAL=0
-  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_RUBY}" "$TD_AGENT_ARGS" || RETVAL="$?"
+  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
   echo
   [ $RETVAL -eq 0 ] && touch "${AGENT_LOCK_FILE}"
   return $RETVAL

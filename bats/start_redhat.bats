@@ -24,7 +24,14 @@ Starting td-agent:
   --user
   td-agent
   ${TMP}/opt/td-agent/embedded/bin/ruby
-  ${TMP}/usr/sbin/td-agent --group td-agent --log ${TMP}/var/log/td-agent/td-agent.log --use-v1-config --daemon ${TMP}/var/run/td-agent/td-agent.pid
+  ${TMP}/usr/sbin/td-agent
+  --group
+  td-agent
+  --log
+  ${TMP}/var/log/td-agent/td-agent.log
+  --use-v1-config
+  --daemon
+  ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -52,7 +59,14 @@ Starting custom_name:
   --user
   td-agent
   ${TMP}/path/to/custom_process_bin
-  ${TMP}/usr/sbin/td-agent --group td-agent --log ${TMP}/var/log/td-agent/td-agent.log --use-v1-config --daemon ${TMP}/var/run/td-agent/custom_prog.pid
+  ${TMP}/usr/sbin/td-agent
+  --group
+  td-agent
+  --log
+  ${TMP}/var/log/td-agent/td-agent.log
+  --use-v1-config
+  --daemon
+  ${TMP}/var/run/td-agent/custom_prog.pid
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/custom_prog" ]
@@ -77,7 +91,14 @@ Starting td-agent:
   --user
   nobody
   ${TMP}/opt/td-agent/embedded/bin/ruby
-  /path/to/td-agent -vv --group nogroup --log /path/to/td-agent.log --daemon ${TMP}/path/to/td-agent.pid
+  /path/to/td-agent
+  -vv
+  --group
+  nogroup
+  --log
+  /path/to/td-agent.log
+  --daemon
+  ${TMP}/path/to/td-agent.pid
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
