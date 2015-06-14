@@ -37,129 +37,129 @@ AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "
 STOPTIMEOUT=120
 
 if [ -f "${AGENT_DEFAULT}" ]; then
-	. "${AGENT_DEFAULT}"
+  . "${AGENT_DEFAULT}"
 fi
 PIDFILE="${PIDFILE-${AGENT_PID_FILE}}"
 DAEMON_ARGS="${DAEMON_ARGS---user ${AGENT_USER}}"
 TD_AGENT_ARGS="${TD_AGENT_ARGS-${AGENT_BIN_FILE} --group ${AGENT_GROUP} --log ${AGENT_LOG_FILE} --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
-	PIDFILE_DIR="$(dirname "${PIDFILE}")"
-	if [ ! -e "$PIDFILE_DIR" ]; then
-		mkdir -p "$PIDFILE_DIR"
-	fi
-	chown -R "${AGENT_USER}:${AGENT_GROUP}" "$PIDFILE_DIR"
-	TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
+  PIDFILE_DIR="$(dirname "${PIDFILE}")"
+  if [ ! -e "$PIDFILE_DIR" ]; then
+    mkdir -p "$PIDFILE_DIR"
+  fi
+  chown -R "${AGENT_USER}:${AGENT_GROUP}" "$PIDFILE_DIR"
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
 if [ -f "${AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
-        export LD_PRELOAD="${AGENT_HOME}/embedded/lib/libjemalloc.so"
+  export LD_PRELOAD="${AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
 RETVAL=0
 
 do_start() {
-	# Set Max number of file descriptors for the safety sake
-	# see http://docs.fluentd.org/en/articles/before-install
-	ulimit -n 65536
-	echo -n "Starting ${AGENT_NAME}: "
-	local RETVAL=0
-	daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_HOME}/embedded/bin/ruby" "$TD_AGENT_ARGS" || RETVAL="$?"
-	echo
-	[ $RETVAL -eq 0 ] && touch "${AGENT_LOCK_FILE}"
-	return $RETVAL
+  # Set Max number of file descriptors for the safety sake
+  # see http://docs.fluentd.org/en/articles/before-install
+  ulimit -n 65536
+  echo -n "Starting ${AGENT_NAME}: "
+  local RETVAL=0
+  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_HOME}/embedded/bin/ruby" "$TD_AGENT_ARGS" || RETVAL="$?"
+  echo
+  [ $RETVAL -eq 0 ] && touch "${AGENT_LOCK_FILE}"
+  return $RETVAL
 }
 
 do_stop() {
-	echo -n "Shutting down ${AGENT_NAME}: "
-	local RETVAL=0
-	if [ -e "${PIDFILE}" ]; then
-	    # Use own process termination instead of killproc because killproc can't wait SIGTERM
-	    TD_AGENT_PID=`cat "$PIDFILE" 2>/dev/null`
-	    if [ -n "$TD_AGENT_PID" ]; then
-		<%= File.join(root_path, "bin/kill") %> "$TD_AGENT_PID" >/dev/null 2>&1 || RETVAL="$?"
-		if [ $RETVAL -eq 0 ]; then
-		    TIMEOUT="$STOPTIMEOUT"
-		    while [ $TIMEOUT -gt 0 ]; do
-			<%= File.join(root_path, "bin/kill") %> -0 "$TD_AGENT_PID" >/dev/null 2>&1 || break
-			sleep 1
-			let TIMEOUT="${TIMEOUT}-1" || true
-		    done
-		    if [ "$TIMEOUT" -eq 0 ]; then
-			echo -n "Timeout error occurred trying to stop ${AGENT_NAME}..."
-			RETVAL=1
-			failure || true
-		    else
-			RETVAL=0
-			success
-		    fi
-		else
-		    failure || true
-		fi
-	    else
-		failure || true
-		RETVAL=4
-	    fi
-	else
-	    killproc "${AGENT_NAME}" || RETVAL="$?"
-	    if [ $RETVAL -eq 0 ]; then
-		success
-	    else
-		failure || true
-	    fi
-	fi
-	echo
-	[ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${AGENT_LOCK_FILE}"
-	return $RETVAL
+  echo -n "Shutting down ${AGENT_NAME}: "
+  local RETVAL=0
+  if [ -e "${PIDFILE}" ]; then
+    # Use own process termination instead of killproc because killproc can't wait SIGTERM
+    TD_AGENT_PID=`cat "$PIDFILE" 2>/dev/null`
+    if [ -n "$TD_AGENT_PID" ]; then
+      <%= File.join(root_path, "bin/kill") %> "$TD_AGENT_PID" >/dev/null 2>&1 || RETVAL="$?"
+      if [ $RETVAL -eq 0 ]; then
+        TIMEOUT="$STOPTIMEOUT"
+        while [ $TIMEOUT -gt 0 ]; do
+          <%= File.join(root_path, "bin/kill") %> -0 "$TD_AGENT_PID" >/dev/null 2>&1 || break
+          sleep 1
+          let TIMEOUT="${TIMEOUT}-1" || true
+        done
+        if [ "$TIMEOUT" -eq 0 ]; then
+          echo -n "Timeout error occurred trying to stop ${AGENT_NAME}..."
+          RETVAL=1
+          failure || true
+        else
+          RETVAL=0
+          success
+        fi
+      else
+        failure || true
+      fi
+    else
+      failure || true
+      RETVAL=4
+    fi
+  else
+    killproc "${AGENT_NAME}" || RETVAL="$?"
+    if [ $RETVAL -eq 0 ]; then
+      success
+    else
+      failure || true
+    fi
+  fi
+  echo
+  [ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${AGENT_LOCK_FILE}"
+  return $RETVAL
 }
 
 do_restart() {
-	do_configtest || return $?
-	do_stop || true
-	do_start
+  do_configtest || return $?
+  do_stop || true
+  do_start
 }
 
 do_reload() {
-	do_configtest || return $?
-	echo -n "Reloading ${AGENT_NAME}: "
-	local RETVAL=0
-	killproc "${AGENT_HOME}/embedded/bin/ruby" -HUP || RETVAL="$?"
-	echo
-	return "$RETVAL"
+  do_configtest || return $?
+  echo -n "Reloading ${AGENT_NAME}: "
+  local RETVAL=0
+  killproc "${AGENT_HOME}/embedded/bin/ruby" -HUP || RETVAL="$?"
+  echo
+  return "$RETVAL"
 }
 
 do_configtest() {
-	eval "$TD_AGENT_ARGS $DAEMON_ARGS --dry-run -q"
+  eval "$TD_AGENT_ARGS $DAEMON_ARGS --dry-run -q"
 }
 
 case "$1" in
-    start)
-	do_start
-	;;
-    stop)
-	do_stop
-	;;
-    restart)
-	do_restart
-	;;
-    reload)
-	do_reload
-	;;
-    condrestart)
-	[ -f "${AGENT_LOCK_FILE}" ] && do_restart || :
-	;;
-    configtest)
-        do_configtest
-        ;;
-    status)
-	# `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
-	set +e
-	status -p "$PIDFILE" "${AGENT_NAME}"
-	;;
-    *)
-	echo "Usage: ${AGENT_NAME} {start|stop|reload|restart|condrestart|status|configtest}"
-	exit 1
-	;;
+"start" )
+  do_start
+  ;;
+"stop" )
+  do_stop
+  ;;
+"restart" )
+  do_restart
+  ;;
+"reload" )
+  do_reload
+  ;;
+"condrestart" )
+  [ -f "${AGENT_LOCK_FILE}" ] && do_restart || :
+  ;;
+"configtest" )
+  do_configtest
+  ;;
+"status" )
+  # `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
+  set +e
+  status -p "$PIDFILE" "${AGENT_NAME}"
+  ;;
+* )
+  echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}"
+  exit 1
+  ;;
 esac
