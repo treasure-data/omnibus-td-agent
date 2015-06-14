@@ -15,39 +15,47 @@
 # Short-Description: <%= project_name %>'s init script
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
-
+<% require "shellwords" %>
 # Source function library.
 . <%= File.join(root_path, "etc/init.d/functions") %>
 
 set -e
 
-name="<%= project_name %>"
-prog="<%= project_name %>"
-process_bin=<%= File.join(root_path, install_path, "embedded/bin/ruby") %>
+export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
+
+AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
+AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
+AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "sysconfig", project_name)) %>
+AGENT_USER=<%= Shellwords.shellescape(project_name) %>
+AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
+AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
+AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
+AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "subsys", project_name)) %>
 
 # timeout can be overridden from <%= File.join(root_path, "etc/sysconfig", project_name) %>
 STOPTIMEOUT=120
 
-if [ -f <%= File.join(root_path, "etc/sysconfig/$prog") %> ]; then
-	. <%= File.join(root_path, "etc/sysconfig/$prog") %>
+if [ -f "${AGENT_DEFAULT}" ]; then
+	. "${AGENT_DEFAULT}"
 fi
-PIDFILE=${PIDFILE-<%= File.join(root_path, "var/run", project_name, "$prog.pid") %>}
-DAEMON_ARGS=${DAEMON_ARGS---user <%= project_name %>}
-TD_AGENT_ARGS="${TD_AGENT_ARGS-<%= File.join(root_path, "usr/sbin", project_name) %> --group <%= project_name %> --log <%= File.join(root_path, "var/log", project_name, "#{project_name}.log") %> --use-v1-config}"
+PIDFILE="${PIDFILE-${AGENT_PID_FILE}}"
+DAEMON_ARGS="${DAEMON_ARGS---user ${AGENT_USER}}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS-${AGENT_BIN_FILE} --group ${AGENT_GROUP} --log ${AGENT_LOG_FILE} --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
-	PIDFILE_DIR=$(dirname ${PIDFILE})
-	if [ ! -e $PIDFILE_DIR ]; then
-		mkdir -p $PIDFILE_DIR
+	PIDFILE_DIR="$(dirname "${PIDFILE}")"
+	if [ ! -e "$PIDFILE_DIR" ]; then
+		mkdir -p "$PIDFILE_DIR"
 	fi
-	chown -R <%= project_name %>:<%= project_name %> $PIDFILE_DIR
+	chown -R "${AGENT_USER}:${AGENT_GROUP}" "$PIDFILE_DIR"
 	TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>" ]; then
-        export LD_PRELOAD=<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>
+if [ -f "${AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
+        export LD_PRELOAD="${AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
 RETVAL=0
@@ -56,16 +64,16 @@ do_start() {
 	# Set Max number of file descriptors for the safety sake
 	# see http://docs.fluentd.org/en/articles/before-install
 	ulimit -n 65536
-	echo -n "Starting $name: "
+	echo -n "Starting ${AGENT_NAME}: "
 	local RETVAL=0
-	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$TD_AGENT_ARGS" || RETVAL="$?"
+	daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_HOME}/embedded/bin/ruby" "$TD_AGENT_ARGS" || RETVAL="$?"
 	echo
-	[ $RETVAL -eq 0 ] && touch <%= File.join(root_path, "var/lock/subsys/$prog") %>
+	[ $RETVAL -eq 0 ] && touch "${AGENT_LOCK_FILE}"
 	return $RETVAL
 }
 
 do_stop() {
-	echo -n "Shutting down $name: "
+	echo -n "Shutting down ${AGENT_NAME}: "
 	local RETVAL=0
 	if [ -e "${PIDFILE}" ]; then
 	    # Use own process termination instead of killproc because killproc can't wait SIGTERM
@@ -77,10 +85,10 @@ do_stop() {
 		    while [ $TIMEOUT -gt 0 ]; do
 			<%= File.join(root_path, "bin/kill") %> -0 "$TD_AGENT_PID" >/dev/null 2>&1 || break
 			sleep 1
-			let TIMEOUT=${TIMEOUT}-1 || true
+			let TIMEOUT="${TIMEOUT}-1" || true
 		    done
-		    if [ $TIMEOUT -eq 0 ]; then
-			echo -n "Timeout error occurred trying to stop <%= project_name %>..."
+		    if [ "$TIMEOUT" -eq 0 ]; then
+			echo -n "Timeout error occurred trying to stop ${AGENT_NAME}..."
 			RETVAL=1
 			failure || true
 		    else
@@ -95,7 +103,7 @@ do_stop() {
 		RETVAL=4
 	    fi
 	else
-	    killproc $prog || RETVAL="$?"
+	    killproc "${AGENT_NAME}" || RETVAL="$?"
 	    if [ $RETVAL -eq 0 ]; then
 		success
 	    else
@@ -103,7 +111,7 @@ do_stop() {
 	    fi
 	fi
 	echo
-	[ $RETVAL -eq 0 ] && rm -f $PIDFILE && rm -f <%= File.join(root_path, "var/lock/subsys/$prog") %>
+	[ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${AGENT_LOCK_FILE}"
 	return $RETVAL
 }
 
@@ -115,9 +123,9 @@ do_restart() {
 
 do_reload() {
 	do_configtest || return $?
-	echo -n "Reloading $name: "
+	echo -n "Reloading ${AGENT_NAME}: "
 	local RETVAL=0
-	killproc $process_bin -HUP || RETVAL="$?"
+	killproc "${AGENT_HOME}/embedded/bin/ruby" -HUP || RETVAL="$?"
 	echo
 	return "$RETVAL"
 }
@@ -140,7 +148,7 @@ case "$1" in
 	do_reload
 	;;
     condrestart)
-	[ -f <%= File.join(root_path, "var/lock/subsys/$prog") %> ] && do_restart || :
+	[ -f "${AGENT_LOCK_FILE}" ] && do_restart || :
 	;;
     configtest)
         do_configtest
@@ -148,10 +156,10 @@ case "$1" in
     status)
 	# `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
 	set +e
-	status -p $PIDFILE '<%= project_name %>'
+	status -p "$PIDFILE" "${AGENT_NAME}"
 	;;
     *)
-	echo "Usage: $prog {start|stop|reload|restart|condrestart|status|configtest}"
+	echo "Usage: ${AGENT_NAME} {start|stop|reload|restart|condrestart|status|configtest}"
 	exit 1
 	;;
 esac
