@@ -68,11 +68,8 @@ DAEMON_ARGS="${DAEMON_ARGS---user ${AGENT_USER}}"
 TD_AGENT_ARGS="${TD_AGENT_ARGS-${AGENT_BIN_FILE} --group ${AGENT_GROUP} --log ${AGENT_LOG_FILE} --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
-  PIDFILE_DIR="$(dirname "${PIDFILE}")"
-  if [ ! -e "$PIDFILE_DIR" ]; then
-    mkdir -p "$PIDFILE_DIR"
-  fi
-  chown -R "${AGENT_USER}:${AGENT_GROUP}" "$PIDFILE_DIR"
+  mkdir -p "$(dirname "${PIDFILE}")"
+  chown -R "${AGENT_USER}:${AGENT_GROUP}" "$(dirname "${PIDFILE}")"
   TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 

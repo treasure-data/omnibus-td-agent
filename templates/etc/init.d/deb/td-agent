@@ -52,9 +52,7 @@ if [ -n "${AGENT_USER}" ]; then
     echo "$0: user for running <%= project_name %> doesn't exist: ${AGENT_USER}" >&2
     exit 1
   fi
-  if [ ! -d "$(dirname "${AGENT_PID_FILE}")" ]; then
-    mkdir -p "$(dirname "${AGENT_PID_FILE}")"
-  fi
+  mkdir -p "$(dirname "${AGENT_PID_FILE}")"
   chown -R "${AGENT_USER}" "$(dirname "${AGENT_PID_FILE}")"
   START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} -c ${AGENT_USER}"
 fi
