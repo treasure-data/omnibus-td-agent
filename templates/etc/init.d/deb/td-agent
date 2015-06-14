@@ -12,9 +12,6 @@
 # Author: Kazuki Ohta <k@treasure-data.com>
 set -e
 
-# Introduce the short server's name here
-NAME=<%= Shellwords.shellescape(project_name) %>
-
 export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
 
 AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
@@ -22,6 +19,7 @@ AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
 AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
 AGENT_USER=<%= Shellwords.shellescape(project_name) %>
 AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
+AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
 AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
 AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
 AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
@@ -29,8 +27,14 @@ AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", pro
 # Read configuration variable file if it is present
 [ -r "${AGENT_DEFAULT}" ] && . "${AGENT_DEFAULT}"
 
+if [ -n "${NAME}" ]; then
+  # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
+  echo "Declaring \$NAME in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
+  AGENT_PID_FILE="<%= root_path %>/var/run/${NAME}/${NAME}.pid"
+fi
+
 DESC=<%= Shellwords.shellescape(project_name) %> # Introduce a short description here
-DAEMON="${AGENT_HOME}/embedded/bin/ruby" # Introduce the server's location here
+DAEMON="${AGENT_RUBY}" # Introduce the server's location here
 # Arguments to run the daemon with
 DAEMON_ARGS="${AGENT_BIN_FILE} $DAEMON_ARGS --daemon ${AGENT_PID_FILE} --log ${AGENT_LOG_FILE} --use-v1-config"
 START_STOP_DAEMON_ARGS=""

@@ -93,6 +93,28 @@ EOS
   unstub success
 }
 
+@test "stop td-agent by custom name successfully (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/custom_prog.pid"
+  touch "${TMP}/var/lock/subsys/custom_prog"
+  cat <<EOS > "${TMP}/etc/sysconfig/td-agent"
+prog="custom_prog"
+EOS
+
+  stub killproc "custom_prog : true"
+  stub success "true"
+
+  run_service stop
+  assert_output <<EOS
+Declaring \$prog in ${TMP}/etc/sysconfig/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
+Shutting down td-agent: 
+EOS
+  assert_success
+  [ ! -f "${TMP}/var/lock/subsys/custom_prog" ]
+
+  unstub killproc
+  unstub success
+}
+
 @test "failed to stop td-agent by name (redhat)" {
   rm -f "${TMP}/var/run/td-agent/td-agent.pid"
   touch "${TMP}/var/lock/subsys/td-agent"

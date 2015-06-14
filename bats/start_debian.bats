@@ -49,6 +49,7 @@ EOS
 @test "start td-agent with custom configuration successfully (debian)" {
   cat <<EOS > "${TMP}/etc/default/td-agent"
 DAEMON_ARGS="-vv"
+NAME="custom_name"
 EOS
 
   stub_path /sbin/start-stop-daemon "true" \
@@ -57,11 +58,12 @@ EOS
 
   run_service start
   assert_output <<EOS
+Declaring \$NAME in ${TMP}/etc/default/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
 start-stop-daemon
   --start
   --quiet
   --pidfile
-  ${TMP}/var/run/td-agent/td-agent.pid
+  ${TMP}/var/run/custom_name/custom_name.pid
   --exec
   ${TMP}/opt/td-agent/embedded/bin/ruby
   -c
@@ -72,7 +74,7 @@ start-stop-daemon
   ${TMP}/usr/sbin/td-agent
   -vv
   --daemon
-  ${TMP}/var/run/td-agent/td-agent.pid
+  ${TMP}/var/run/custom_name/custom_name.pid
   --log
   ${TMP}/var/log/td-agent/td-agent.log
   --use-v1-config
