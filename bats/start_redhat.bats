@@ -51,9 +51,9 @@ EOS
 
   run_service start
   assert_output <<EOS
-Declaring \$name in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$AGENT_NAME instead.
-Declaring \$prog in ${TMP}/etc/sysconfig/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
-Declaring \$process_bin in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$AGENT_RUBY instead.
+Warning: Declaring \$name in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$AGENT_NAME instead.
+Warning: Declaring \$prog in ${TMP}/etc/sysconfig/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
+Warning: Declaring \$process_bin in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$AGENT_RUBY instead.
 Starting custom_name: 
   --pidfile=${TMP}/var/run/td-agent/custom_prog.pid
   --user

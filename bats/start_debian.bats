@@ -58,7 +58,7 @@ EOS
 
   run_service start
   assert_output <<EOS
-Declaring \$NAME in ${TMP}/etc/default/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
+Warning: Declaring \$NAME in ${TMP}/etc/default/td-agent for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead.
 start-stop-daemon
   --start
   --quiet

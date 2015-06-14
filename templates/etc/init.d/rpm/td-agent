@@ -43,13 +43,13 @@ fi
 
 if [ -n "${name}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Declaring \$name in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_NAME instead." 1>&2
+  echo "Warning: Declaring \$name in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_NAME instead." 1>&2
   AGENT_NAME="${name}"
 fi
 
 if [ -n "${prog}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Declaring \$prog in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
+  echo "Warning: Declaring \$prog in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
   [ -n "${PIDFILE}" ] || PIDFILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
   AGENT_LOCK_FILE="<%= root_path %>/var/lock/subsys/${prog}"
   AGENT_PROG_NAME="${prog}"
@@ -59,7 +59,7 @@ fi
 
 if [ -n "${process_bin}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Declaring \$process_bin in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_RUBY instead." 1>&2
+  echo "Warning: Declaring \$process_bin in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_RUBY instead." 1>&2
   AGENT_RUBY="${process_bin}"
 fi
 

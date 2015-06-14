@@ -29,7 +29,7 @@ AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", pro
 
 if [ -n "${NAME}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Declaring \$NAME in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
+  echo "Warning: Declaring \$NAME in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
   AGENT_PID_FILE="<%= root_path %>/var/run/${NAME}/${NAME}.pid"
 fi
 
