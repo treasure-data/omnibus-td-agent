@@ -33,7 +33,7 @@ if [ -f <%= File.join(root_path, "etc/sysconfig/$prog") %> ]; then
 fi
 PIDFILE=${PIDFILE-<%= File.join(root_path, "var/run", project_name, "$prog.pid") %>}
 DAEMON_ARGS=${DAEMON_ARGS---user <%= project_name %>}
-<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS-<%= File.join(root_path, "usr/sbin", project_name) %> --group <%= project_name %> --log <%= File.join(root_path, "var/log", project_name, "#{project_name}.log") %> --use-v1-config}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS-<%= File.join(root_path, "usr/sbin", project_name) %> --group <%= project_name %> --log <%= File.join(root_path, "var/log", project_name, "#{project_name}.log") %> --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
 	PIDFILE_DIR=$(dirname ${PIDFILE})
@@ -41,7 +41,7 @@ if [ -n "${PIDFILE}" ]; then
 		mkdir -p $PIDFILE_DIR
 	fi
 	chown -R <%= project_name %>:<%= project_name %> $PIDFILE_DIR
-	<%= project_name_snake_upcase %>_ARGS="${<%= project_name_snake_upcase %>_ARGS} --daemon ${PIDFILE}"
+	TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
@@ -58,7 +58,7 @@ do_start() {
 	ulimit -n 65536
 	echo -n "Starting $name: "
 	local RETVAL=0
-	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$<%= project_name_snake_upcase %>_ARGS" || RETVAL="$?"
+	daemon --pidfile=$PIDFILE $DAEMON_ARGS $process_bin "$TD_AGENT_ARGS" || RETVAL="$?"
 	echo
 	[ $RETVAL -eq 0 ] && touch <%= File.join(root_path, "var/lock/subsys/$prog") %>
 	return $RETVAL
@@ -69,13 +69,13 @@ do_stop() {
 	local RETVAL=0
 	if [ -e "${PIDFILE}" ]; then
 	    # Use own process termination instead of killproc because killproc can't wait SIGTERM
-	    <%= project_name_snake_upcase %>_PID=`cat "$PIDFILE" 2>/dev/null`
-	    if [ -n "$<%= project_name_snake_upcase %>_PID" ]; then
-		<%= File.join(root_path, "bin/kill") %> "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || RETVAL="$?"
+	    TD_AGENT_PID=`cat "$PIDFILE" 2>/dev/null`
+	    if [ -n "$TD_AGENT_PID" ]; then
+		<%= File.join(root_path, "bin/kill") %> "$TD_AGENT_PID" >/dev/null 2>&1 || RETVAL="$?"
 		if [ $RETVAL -eq 0 ]; then
 		    TIMEOUT="$STOPTIMEOUT"
 		    while [ $TIMEOUT -gt 0 ]; do
-			<%= File.join(root_path, "bin/kill") %> -0 "$<%= project_name_snake_upcase %>_PID" >/dev/null 2>&1 || break
+			<%= File.join(root_path, "bin/kill") %> -0 "$TD_AGENT_PID" >/dev/null 2>&1 || break
 			sleep 1
 			let TIMEOUT=${TIMEOUT}-1 || true
 		    done
@@ -123,7 +123,7 @@ do_reload() {
 }
 
 do_configtest() {
-	eval "$<%= project_name_snake_upcase %>_ARGS $DAEMON_ARGS --dry-run -q"
+	eval "$TD_AGENT_ARGS $DAEMON_ARGS --dry-run -q"
 }
 
 case "$1" in
