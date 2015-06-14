@@ -8,59 +8,64 @@
 # Short-Description: data collector for Treasure Data
 # Description:       Treasure Data Support <support@treasure-data.com>
 ### END INIT INFO
-
+<% require "shellwords" %>
 # Author: Kazuki Ohta <k@treasure-data.com>
 set -e
 
 # Introduce the short server's name here
-NAME=<%= project_name %>
+NAME=<%= Shellwords.shellescape(project_name) %>
+
+export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
+
+AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
+AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
+AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
+AGENT_USER=<%= Shellwords.shellescape(project_name) %>
+AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
+AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
+AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
+AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 
 # Read configuration variable file if it is present
-[ -r <%= File.join(root_path, "etc/default/$NAME") %> ] && . <%= File.join(root_path, "etc/default/$NAME") %>
+[ -r "${AGENT_DEFAULT}" ] && . "${AGENT_DEFAULT}"
 
-# PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=<%= "/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":") %>
-USER=<%= project_name %>                   # Running user
-GROUP=<%= project_name %>                  # Running group
-DESC=<%= project_name %>                   # Introduce a short description here
-PIDFILE=<%= File.join(root_path, "var/run/$NAME/$NAME.pid") %>
-DAEMON=<%= File.join(root_path, install_path, "embedded/bin/ruby") %> # Introduce the server's location here
+DESC=<%= Shellwords.shellescape(project_name) %> # Introduce a short description here
+DAEMON="${AGENT_HOME}/embedded/bin/ruby" # Introduce the server's location here
 # Arguments to run the daemon with
-DAEMON_ARGS="<%= File.join(root_path, "usr/sbin", project_name) %> $DAEMON_ARGS --daemon $PIDFILE --log <%= File.join(root_path, "var/log", project_name, "#{project_name}.log") %> --use-v1-config"
-SCRIPTNAME=<%= File.join(root_path, "etc/init.d/$NAME") %>
+DAEMON_ARGS="${AGENT_BIN_FILE} $DAEMON_ARGS --daemon ${AGENT_PID_FILE} --log ${AGENT_LOG_FILE} --use-v1-config"
 START_STOP_DAEMON_ARGS=""
 
 # Exit if the package is not installed
-[ -x $DAEMON ] || exit 0
+[ -x "$DAEMON" ] || exit 0
 
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. <%= File.join(root_path, "lib/lsb/init-functions") %>
+. <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %>
 
 # Check the user
-if [ -n "${USER}" ]; then
-  if ! getent passwd | grep -q "^${USER}:"; then
-    echo "$0: user for running <%= project_name %> doesn't exist: ${USER}" >&2
+if [ -n "${AGENT_USER}" ]; then
+  if ! getent passwd | grep -q "^${AGENT_USER}:"; then
+    echo "$0: user for running <%= project_name %> doesn't exist: ${AGENT_USER}" >&2
     exit 1
   fi
-  if [ ! -d $(dirname ${PIDFILE}) ]; then
-    mkdir -p $(dirname ${PIDFILE})
+  if [ ! -d "$(dirname "${AGENT_PID_FILE}")" ]; then
+    mkdir -p "$(dirname "${AGENT_PID_FILE}")"
   fi
-  chown -R ${USER} $(dirname ${PIDFILE})
-  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} -c ${USER}"
+  chown -R "${AGENT_USER}" "$(dirname "${AGENT_PID_FILE}")"
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} -c ${AGENT_USER}"
 fi
-if [ -n "${GROUP}" ]; then
-  if ! getent group | grep -q "^${GROUP}:"; then
-    echo "$0: group for running <%= project_name %> doesn't exist: ${GROUP}" >&2
+if [ -n "${AGENT_GROUP}" ]; then
+  if ! getent group | grep -q "^${AGENT_GROUP}:"; then
+    echo "$0: group for running <%= project_name %> doesn't exist: ${AGENT_GROUP}" >&2
     exit 1
   fi
-  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --group ${GROUP}"
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --group ${AGENT_GROUP}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # Use jemalloc to avoid memory fragmentation
-if [ -f "<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>" ]; then
-  export LD_PRELOAD=<%= File.join(root_path, install_path, "embedded/lib/libjemalloc.so") %>
+if [ -f "${AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
+  export LD_PRELOAD="${AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
 #
@@ -76,10 +81,10 @@ do_start()
   #   0 if daemon has been started
   #   1 if daemon was already running
   #   2 if daemon could not be started
-  start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
+  start-stop-daemon --start --quiet --pidfile "${AGENT_PID_FILE}" --exec "${DAEMON}" \
     ${START_STOP_DAEMON_ARGS} --test > /dev/null \
     || return 1
-  start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
+  start-stop-daemon --start --quiet --pidfile "${AGENT_PID_FILE}" --exec "${DAEMON}" \
     ${START_STOP_DAEMON_ARGS} -- $DAEMON_ARGS \
     || return 2
   # Add code here, if necessary, that waits for the process to be ready
@@ -98,7 +103,7 @@ do_stop()
   #   2 if daemon could not be stopped
   #   other if a failure occurred
   local RETVAL=0
-  start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name ruby || RETVAL="$?"
+  start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile "${AGENT_PID_FILE}" --name ruby || RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
   # Wait for children to finish too if this is a daemon that forks
   # and if the daemon is only ever run from this initscript.
@@ -106,10 +111,10 @@ do_stop()
   # that waits for the process to drop all resources that could be
   # needed by services started subsequently.  A last resort is to
   # sleep for some time.
-  start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON || RETVAL="$?"
+  start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec "${DAEMON}" || RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
   # Many daemons don't delete their pidfiles when they exit.
-  rm -f $PIDFILE
+  rm -f "${AGENT_PID_FILE}"
   return "$RETVAL"
 }
 
@@ -122,17 +127,17 @@ do_reload() {
   # restarting (for example, when it is sent a SIGHUP),
   # then implement that here.
   #
-  start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name ruby
+  start-stop-daemon --stop --signal 1 --quiet --pidfile "${AGENT_PID_FILE}" --name ruby
 }
 
 do_configtest() {
-  eval "$DAEMON_ARGS --user ${USER} --group ${GROUP} --dry-run -q"
+  eval "$DAEMON_ARGS --user ${AGENT_USER} --group ${AGENT_GROUP} --dry-run -q"
 }
 
 RETVAL=0
 case "$1" in
 "start" )
-  log_daemon_msg "Starting $DESC " "$NAME"
+  log_daemon_msg "Starting $DESC " "${AGENT_NAME}"
   do_start || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 ) log_end_msg 0 ;;
@@ -140,7 +145,7 @@ case "$1" in
   esac
   ;;
 "stop" )
-  log_daemon_msg "Stopping $DESC" "$NAME"
+  log_daemon_msg "Stopping $DESC" "${AGENT_NAME}"
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 ) log_end_msg 0 ;;
@@ -148,14 +153,14 @@ case "$1" in
   esac
   ;;
 "status" )
-  status_of_proc "$DAEMON" "$NAME"
+  status_of_proc "${DAEMON}" "${AGENT_NAME}"
   ;;
 "reload" | "force-reload" )
   #
   # If do_reload() is not implemented then leave this commented out
   # and leave 'force-reload' as an alias for 'restart'.
   #
-  log_daemon_msg "Reloading $DESC" "$NAME"
+  log_daemon_msg "Reloading $DESC" "${AGENT_NAME}"
   do_configtest || log_end_msg 1
   do_reload || RETVAL="$?"
   log_end_msg "$RETVAL"
@@ -165,7 +170,7 @@ case "$1" in
   # If the "reload" option is implemented then remove the
   # 'force-reload' alias
   #
-  log_daemon_msg "Restarting $DESC" "$NAME"
+  log_daemon_msg "Restarting $DESC" "${AGENT_NAME}"
   do_configtest || log_end_msg 1
   do_stop || RETVAL="$?"
   case "$RETVAL" in
@@ -189,7 +194,7 @@ case "$1" in
   log_end_msg "$RETVAL"
   ;;
 * )
-  echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload|configtest}" >&2
+  echo "Usage: $0 {start|stop|status|restart|force-reload|configtest}" >&2
   exit 3
   ;;
 esac
