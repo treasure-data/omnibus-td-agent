@@ -23,60 +23,60 @@ set -e
 
 export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
 
-AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
-AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
-AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "sysconfig", project_name)) %>
-AGENT_USER=<%= Shellwords.shellescape(project_name) %>
-AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
-AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
-AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
-AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
-AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
-AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "subsys", project_name)) %>
+TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
+TD_AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "sysconfig", project_name)) %>
+TD_AGENT_USER=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
+TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
+TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
+TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+TD_AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "subsys", project_name)) %>
 
 # timeout can be overridden from <%= File.join(root_path, "etc/sysconfig", project_name) %>
 STOPTIMEOUT=120
 
-if [ -f "${AGENT_DEFAULT}" ]; then
-  . "${AGENT_DEFAULT}"
+if [ -f "${TD_AGENT_DEFAULT}" ]; then
+  . "${TD_AGENT_DEFAULT}"
 fi
 
 if [ -n "${name}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Warning: Declaring \$name in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_NAME instead." 1>&2
-  AGENT_NAME="${name}"
+  echo "Warning: Declaring \$name in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_NAME instead." 1>&2
+  TD_AGENT_NAME="${name}"
 fi
 
 if [ -n "${prog}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Warning: Declaring \$prog in ${AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$AGENT_PID_FILE instead." 1>&2
+  echo "Warning: Declaring \$prog in ${TD_AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead." 1>&2
   [ -n "${PIDFILE}" ] || PIDFILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
-  AGENT_LOCK_FILE="<%= root_path %>/var/lock/subsys/${prog}"
-  AGENT_PROG_NAME="${prog}"
+  TD_AGENT_LOCK_FILE="<%= root_path %>/var/lock/subsys/${prog}"
+  TD_AGENT_PROG_NAME="${prog}"
 else
-  unset AGENT_PROG_NAME
+  unset TD_AGENT_PROG_NAME
 fi
 
 if [ -n "${process_bin}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
-  echo "Warning: Declaring \$process_bin in ${AGENT_DEFAULT} has been deprecated. Use \$AGENT_RUBY instead." 1>&2
-  AGENT_RUBY="${process_bin}"
+  echo "Warning: Declaring \$process_bin in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_RUBY instead." 1>&2
+  TD_AGENT_RUBY="${process_bin}"
 fi
 
-PIDFILE="${PIDFILE-${AGENT_PID_FILE}}"
-DAEMON_ARGS="${DAEMON_ARGS---user ${AGENT_USER}}"
-TD_AGENT_ARGS="${TD_AGENT_ARGS-${AGENT_BIN_FILE} --group ${AGENT_GROUP} --log ${AGENT_LOG_FILE} --use-v1-config}"
+PIDFILE="${PIDFILE-${TD_AGENT_PID_FILE}}"
+DAEMON_ARGS="${DAEMON_ARGS---user ${TD_AGENT_USER}}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS-${TD_AGENT_BIN_FILE} --group ${TD_AGENT_GROUP} --log ${TD_AGENT_LOG_FILE} --use-v1-config}"
 
 if [ -n "${PIDFILE}" ]; then
   mkdir -p "$(dirname "${PIDFILE}")"
-  chown -R "${AGENT_USER}:${AGENT_GROUP}" "$(dirname "${PIDFILE}")"
+  chown -R "${TD_AGENT_USER}:${TD_AGENT_GROUP}" "$(dirname "${PIDFILE}")"
   TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # use jemalloc to avoid fragmentation
-if [ -f "${AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
-  export LD_PRELOAD="${AGENT_HOME}/embedded/lib/libjemalloc.so"
+if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
+  export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
 RETVAL=0
@@ -85,16 +85,16 @@ do_start() {
   # Set Max number of file descriptors for the safety sake
   # see http://docs.fluentd.org/en/articles/before-install
   ulimit -n 65536
-  echo -n "Starting ${AGENT_NAME}: "
+  echo -n "Starting ${TD_AGENT_NAME}: "
   local RETVAL=0
-  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
+  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${TD_AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
   echo
-  [ $RETVAL -eq 0 ] && touch "${AGENT_LOCK_FILE}"
+  [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
 
 do_stop() {
-  echo -n "Shutting down ${AGENT_NAME}: "
+  echo -n "Shutting down ${TD_AGENT_NAME}: "
   local RETVAL=0
   if [ -e "${PIDFILE}" ]; then
     # Use own process termination instead of killproc because killproc can't wait SIGTERM
@@ -109,7 +109,7 @@ do_stop() {
           let TIMEOUT="${TIMEOUT}-1" || true
         done
         if [ "$TIMEOUT" -eq 0 ]; then
-          echo -n "Timeout error occurred trying to stop ${AGENT_NAME}..."
+          echo -n "Timeout error occurred trying to stop ${TD_AGENT_NAME}..."
           RETVAL=1
           failure || true
         else
@@ -124,7 +124,7 @@ do_stop() {
       RETVAL=4
     fi
   else
-    killproc "${AGENT_PROG_NAME:-${AGENT_NAME}}" || RETVAL="$?"
+    killproc "${TD_AGENT_PROG_NAME:-${TD_AGENT_NAME}}" || RETVAL="$?"
     if [ $RETVAL -eq 0 ]; then
       success
     else
@@ -132,7 +132,7 @@ do_stop() {
     fi
   fi
   echo
-  [ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${AGENT_LOCK_FILE}"
+  [ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
 
@@ -144,9 +144,9 @@ do_restart() {
 
 do_reload() {
   do_configtest || return $?
-  echo -n "Reloading ${AGENT_NAME}: "
+  echo -n "Reloading ${TD_AGENT_NAME}: "
   local RETVAL=0
-  killproc "${AGENT_RUBY}" -HUP || RETVAL="$?"
+  killproc "${TD_AGENT_RUBY}" -HUP || RETVAL="$?"
   echo
   return "$RETVAL"
 }
@@ -169,7 +169,7 @@ case "$1" in
   do_reload
   ;;
 "condrestart" )
-  [ -f "${AGENT_LOCK_FILE}" ] && do_restart || :
+  [ -f "${TD_AGENT_LOCK_FILE}" ] && do_restart || :
   ;;
 "configtest" )
   do_configtest
@@ -177,7 +177,7 @@ case "$1" in
 "status" )
   # `status` is a function defined in RedHat's `/etc/init.d/functions` and it doesn't work well with `set -e`
   set +e
-  status -p "$PIDFILE" "${AGENT_NAME}"
+  status -p "$PIDFILE" "${TD_AGENT_NAME}"
   ;;
 * )
   echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}"
