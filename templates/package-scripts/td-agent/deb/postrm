@@ -11,6 +11,20 @@ if [ "$1" = "purge" ]; then
 	dpkg-statoverride --list /var/run/<%= project_name %> > /dev/null && \
 		dpkg-statoverride --remove /var/run/<%= project_name %>
 
+    rm /etc/init.d/<%= project_name %>
+    rm /usr/sbin/<%= project_name %>
+    rm /usr/sbin/<%= project_name %>-gem
+
+    if [ -f /usr/sbin/<%= project_name %>-ui ]; then
+        rm /usr/sbin/<%= project_name %>-ui
+    fi
+    if [ -f /usr/bin/td ]; then
+        rm /usr/bin/td
+    fi
+    if [ -f /etc/logrotate.d/<%= project_name %> ]; then
+        rm /etc/logrotate.d/<%= project_name %>
+    fi
+
 fi
 
 # Automatically added by dh_makeshlibs
