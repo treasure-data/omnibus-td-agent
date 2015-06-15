@@ -167,7 +167,7 @@ case "$1" in
   do_reload || RETVAL="$?"
   log_end_msg "$RETVAL"
   ;;
-"restart" | "force-reload" )
+"restart" )
   #
   # If the "reload" option is implemented then remove the
   # 'force-reload' alias
