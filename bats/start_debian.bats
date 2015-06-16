@@ -46,43 +46,6 @@ EOS
   unstub log_end_msg
 }
 
-@test "start td-agent with custom configuration successfully (debian)" {
-  cat <<EOS > "${TMP}/etc/default/td-agent"
-DAEMON_ARGS="-vv"
-EOS
-
-  stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
-  stub log_end_msg "0 : true"
-
-  run_service start
-  assert_output <<EOS
-start-stop-daemon
-  --start
-  --quiet
-  --pidfile
-  ${TMP}/var/run/td-agent/td-agent.pid
-  --exec
-  ${TMP}/opt/td-agent/embedded/bin/ruby
-  -c
-  td-agent
-  --group
-  td-agent
-  --
-  ${TMP}/usr/sbin/td-agent
-  -vv
-  --daemon
-  ${TMP}/var/run/td-agent/td-agent.pid
-  --log
-  ${TMP}/var/log/td-agent/td-agent.log
-  --use-v1-config
-EOS
-  assert_success
-
-  unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
-}
-
 @test "start td-agent but it has already been started (debian)" {
   stub_path /sbin/start-stop-daemon "false"
   stub log_end_msg "0 : true"

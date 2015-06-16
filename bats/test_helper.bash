@@ -176,6 +176,8 @@ assert_equal() {
   if [ "$1" != "$2" ]; then
     { echo "expected: $1"
       echo "actual:   $2"
+      echo "diff:"
+      diff -u <(echo "$1") <(echo "$2")
     } | flunk
   fi
 }

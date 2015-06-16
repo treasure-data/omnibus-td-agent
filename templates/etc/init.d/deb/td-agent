@@ -25,7 +25,9 @@ TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", 
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 
 # Read configuration variable file if it is present
-[ -r "${TD_AGENT_DEFAULT}" ] && . "${TD_AGENT_DEFAULT}"
+if [ -f "${TD_AGENT_DEFAULT}" ]; then
+  . "${TD_AGENT_DEFAULT}"
+fi
 
 if [ -n "${NAME}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
