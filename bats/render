@@ -1,0 +1,14 @@
+#!/usr/bin/env ruby
+# -*- coding: utf-8 -*-
+
+# load variables from `../config/software/td-agent-files.rb`...?
+root_path = ENV.fetch("TMP", "/")
+install_path = "/opt/td-agent"
+project_name = "td-agent"
+project_name_snake = project_name.gsub("-", "_")
+project_name_snake_upcase = project_name_snake.upcase
+
+require "erb"
+STDOUT.puts(ERB.new(ARGF.read).result())
+
+# vim:set ft=ruby :

@@ -21,3 +21,6 @@ package-scripts/td-agent/preinst
 package-scripts/td-agent/prerm
 files/etc/init.d/td-agent
 resources/td-agent/etc/init.d/td-agent
+
+# bats
+/bats/bats
