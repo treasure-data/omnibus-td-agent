@@ -78,7 +78,7 @@ do_start()
 {
   # Set Max number of file descriptors for the safety sake
   # see http://docs.fluentd.org/en/articles/before-install
-  ulimit -n 65536
+  ulimit -n 65536 1>/dev/null 2>&1 || true
 
   # Return
   #   0 if daemon has been started
