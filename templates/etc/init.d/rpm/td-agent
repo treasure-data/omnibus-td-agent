@@ -19,8 +19,6 @@
 # Source function library.
 . <%= File.join(root_path, "etc/init.d/functions") %>
 
-set -e
-
 name="<%= project_name %>"
 prog="<%= project_name %>"
 process_bin=<%= File.join(root_path, install_path, "embedded/bin/ruby") %>
