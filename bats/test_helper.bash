@@ -1,8 +1,36 @@
 export TMP="${BATS_TEST_DIRNAME}/tmp"
 
+ORIG_PATH="${PATH}"
 PATH="/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin"
 PATH="${TMP}/bin:${PATH}"
 export PATH
+
+# unset td-agent configuration variables
+unset DAEMON_ARGS
+unset NAME
+unset PIDFILE
+unset STOPTIMEOUT
+unset TD_AGENT_ARGS
+unset TD_AGENT_BIN_FILE
+unset TD_AGENT_DEFAULT
+unset TD_AGENT_GROUP
+unset TD_AGENT_HOME
+unset TD_AGENT_LOCK_FILE
+unset TD_AGENT_LOG_FILE
+unset TD_AGENT_NAME
+unset TD_AGENT_PID_FILE
+unset TD_AGENT_RUBY
+unset TD_AGENT_USER
+unset name
+unset process_bin
+unset prog
+
+render() {
+  # restore original PATH to run ruby within RVM on travis-ci.org
+  ( export PATH="${ORIG_PATH}"
+    "${BATS_TEST_DIRNAME}/render" "$@"
+  )
+}
 
 init_debian() {
   mkdir -p "${TMP}/bin"
@@ -10,7 +38,7 @@ init_debian() {
   mkdir -p "${TMP}/etc/default"
 
   mkdir -p "${TMP}/etc/init.d"
-  "${BATS_TEST_DIRNAME}/render" "${BATS_TEST_DIRNAME}/../templates/etc/init.d/deb/td-agent" > "${TMP}/etc/init.d/td-agent"
+  render "${BATS_TEST_DIRNAME}/../templates/etc/init.d/deb/td-agent" > "${TMP}/etc/init.d/td-agent"
   chmod +x "${TMP}/etc/init.d/td-agent"
 
   mkdir -p "${TMP}/lib/lsb"
@@ -55,7 +83,7 @@ init_redhat() {
   touch "${TMP}/etc/init.d/functions"
 
   mkdir -p "${TMP}/etc/init.d"
-  "${BATS_TEST_DIRNAME}/render" "${BATS_TEST_DIRNAME}/../templates/etc/init.d/rpm/td-agent" > "${TMP}/etc/init.d/td-agent"
+  render "${BATS_TEST_DIRNAME}/../templates/etc/init.d/rpm/td-agent" > "${TMP}/etc/init.d/td-agent"
   chmod +x "${TMP}/etc/init.d/td-agent"
 
   mkdir -p "${TMP}/etc/sysconfig"

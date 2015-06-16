@@ -1,4 +1,3 @@
-language: ruby
-rvm:
-  - 2.1.6
-script: bundle exec rake bats:all
+language: c
+install: git clone --depth 1 https://github.com/sstephenson/bats.git bats/bats
+script: bats/bats/bin/bats --tap bats

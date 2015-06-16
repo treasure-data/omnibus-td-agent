@@ -23,22 +23,3 @@ namespace :spec do
     end
   end
 end
-
-namespace :bats do
-  bats_path = File.expand_path("../bats/bats", __FILE__)
-  test_path = File.expand_path("../bats", __FILE__)
-
-  desc "Run bats tests for init scripts"
-  task :all => [:setup, :run]
-  task :default => :all
-
-  task :setup do
-    unless File.exist?(bats_path)
-      sh "git clone https://github.com/sstephenson/bats.git #{Shellwords.shellescape(bats_path)}"
-    end
-  end
-
-  task :run do
-    sh "#{Shellwords.shellescape(File.join(bats_path, "bin", "bats"))} --tap #{Shellwords.shellescape(test_path)}"
-  end
-end

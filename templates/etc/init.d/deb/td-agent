@@ -12,7 +12,7 @@
 # Author: Kazuki Ohta <k@treasure-data.com>
 set -e
 
-export PATH=<%= Shellwords.shellescape("/sbin:/usr/sbin:/bin:/usr/bin".split(":").map { |path| [File.join(root_path, path), path] }.reduce(:+).join(":")) %>
+export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
 
 TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
