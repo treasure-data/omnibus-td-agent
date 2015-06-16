@@ -39,41 +39,6 @@ EOS
   unstub daemon
 }
 
-@test "start td-agent with custom name successfully (redhat)" {
-  rm -f "${TMP}/var/run/td-agent/custom_prog.pid"
-  cat <<EOS > "${TMP}/etc/sysconfig/td-agent"
-name="custom_name"
-process_bin="${TMP}/path/to/custom_process_bin"
-prog="custom_prog"
-EOS
-
-  stub daemon "echo; for arg; do echo \"  \$arg\"; done"
-
-  run_service start
-  assert_output <<EOS
-Warning: Declaring \$name in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_NAME instead.
-Warning: Declaring \$prog in ${TMP}/etc/sysconfig/td-agent for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead.
-Warning: Declaring \$process_bin in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_RUBY instead.
-Starting custom_name: 
-  --pidfile=${TMP}/var/run/td-agent/custom_prog.pid
-  --user
-  td-agent
-  ${TMP}/path/to/custom_process_bin
-  ${TMP}/usr/sbin/td-agent
-  --group
-  td-agent
-  --log
-  ${TMP}/var/log/td-agent/td-agent.log
-  --use-v1-config
-  --daemon
-  ${TMP}/var/run/td-agent/custom_prog.pid
-EOS
-  assert_success
-  [ -f "${TMP}/var/lock/subsys/custom_prog" ]
-
-  unstub daemon
-}
-
 @test "start td-agent with custom configuration successfully (redhat)" {
   rm -f "${TMP}/path/to/td-agent.pid"
   cat <<EOS > "${TMP}/etc/sysconfig/td-agent"
