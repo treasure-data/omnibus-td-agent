@@ -13,6 +13,8 @@ teardown() {
 }
 
 @test "start td-agent successfully (redhat)" {
+  rm -f "${TMP}/etc/sysconfig/td-agent"
+
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
 
   run_service start
@@ -22,7 +24,14 @@ Starting td-agent:
   --user
   td-agent
   ${TMP}/opt/td-agent/embedded/bin/ruby
-  ${TMP}/usr/sbin/td-agent --group td-agent --log ${TMP}/var/log/td-agent/td-agent.log --use-v1-config --daemon ${TMP}/var/run/td-agent/td-agent.pid
+  ${TMP}/usr/sbin/td-agent
+  --group
+  td-agent
+  --log
+  ${TMP}/var/log/td-agent/td-agent.log
+  --use-v1-config
+  --daemon
+  ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]

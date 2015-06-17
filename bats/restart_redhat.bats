@@ -82,3 +82,35 @@ EOS
   unstub success
   unstub daemon
 }
+
+@test "conditional restart of td-agent (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
+  touch "${TMP}/var/lock/subsys/td-agent"
+
+  stub_path /usr/sbin/td-agent "true"
+  stub killproc "true"
+  stub success "true"
+  stub daemon "true"
+
+  run_service condrestart
+  assert_output <<EOS
+Shutting down td-agent: 
+Starting td-agent: 
+EOS
+  assert_success
+  [ -f "${TMP}/var/lock/subsys/td-agent" ]
+
+  unstub_path /usr/sbin/td-agent
+  unstub killproc
+  unstub success
+  unstub daemon
+}
+
+@test "conditional restart do nothing if lock file doesn't exist (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
+  rm -f "${TMP}/var/lock/subsys/td-agent"
+
+  run_service condrestart
+  assert_success
+  [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
+}

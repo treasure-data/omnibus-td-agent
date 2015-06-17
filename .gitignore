@@ -24,3 +24,4 @@ resources/td-agent/etc/init.d/td-agent
 
 # bats
 /bats/bats
+/bats/tmp
