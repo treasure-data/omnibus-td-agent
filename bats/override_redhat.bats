@@ -52,6 +52,42 @@ EOS
   unstub chown
 }
 
+@test "start td-agent with --user=... and --group=... in configuration variables successfully (redhat)" {
+  stub getent "passwd : echo nobody:x:100:100:,,,:/:/sbin/nologin"
+  stub chown "true" \
+             "true"
+  stub getent "group : echo nogroup:x:100:"
+  rm -f "${TMP}/path/to/td-agent.pid"
+  stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  custom_run <<EOS
+DAEMON_ARGS="--user=nobody"
+PIDFILE="${TMP}/path/to/td-agent.pid"
+TD_AGENT_ARGS="/path/to/td-agent --verbose --verbose --group=nogroup --log /path/to/td-agent.log"
+EOS
+  assert_output <<EOS
+Warning: Declaring \$PIDFILE in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_PIDFILE instead.
+Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead.
+Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
+Starting td-agent: 
+  --pidfile=${TMP}/path/to/td-agent.pid
+  --user
+  nobody
+  ${TMP}/opt/td-agent/embedded/bin/ruby
+  /path/to/td-agent
+  --verbose
+  --verbose
+  --log
+  /path/to/td-agent.log
+  --group
+  nogroup
+  --daemon
+  ${TMP}/path/to/td-agent.pid
+EOS
+  [ -f "${TMP}/var/lock/subsys/td-agent" ]
+  unstub getent
+  unstub chown
+}
+
 @test "start td-agent with custom configurations successfully (redhat)" {
   stub getent "passwd : echo custom_td_agent_user:x:501:501:,,,:/var/lib/custom_td_agent_user:/sbin/nologin"
   stub chown "true" \
