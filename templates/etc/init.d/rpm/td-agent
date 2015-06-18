@@ -31,6 +31,7 @@ TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin",
 TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 TD_AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "subsys", project_name)) %>
+TD_AGENT_OPTIONS="--use-v1-config"
 
 # timeout can be overridden from <%= File.join(root_path, "etc/sysconfig", project_name) %>
 STOPTIMEOUT=120
@@ -63,7 +64,7 @@ fi
 
 PIDFILE="${PIDFILE-${TD_AGENT_PID_FILE}}"
 DAEMON_ARGS="${DAEMON_ARGS---user ${TD_AGENT_USER}}"
-TD_AGENT_ARGS="${TD_AGENT_ARGS-${TD_AGENT_BIN_FILE} --group ${TD_AGENT_GROUP} --log ${TD_AGENT_LOG_FILE} --use-v1-config}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS-${TD_AGENT_BIN_FILE} --group ${TD_AGENT_GROUP} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
 
 if [ -n "${PIDFILE}" ]; then
   mkdir -p "$(dirname "${PIDFILE}")"

@@ -59,6 +59,7 @@ TD_AGENT_BIN_FILE="${TMP}/path/to/custom_td_agent_bin_file"
 TD_AGENT_LOG_FILE="${TMP}/path/to/custom_td_agent_log_file"
 TD_AGENT_PID_FILE="${TMP}/path/to/custom_td_agent_pid_file"
 TD_AGENT_LOCK_FILE="${TMP}/path/to/custom_td_agent_lock_file"
+TD_AGENT_OPTIONS="--use-v0-config --no-supervisor"
 EOS
   assert_output <<EOS
 Starting custom_td_agent_name: 
@@ -71,7 +72,8 @@ Starting custom_td_agent_name:
   custom_td_agent_group
   --log
   ${TMP}/path/to/custom_td_agent_log_file
-  --use-v1-config
+  --use-v0-config
+  --no-supervisor
   --daemon
   ${TMP}/path/to/custom_td_agent_pid_file
 EOS

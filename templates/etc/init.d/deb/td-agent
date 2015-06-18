@@ -23,6 +23,7 @@ TD_AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "emb
 TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
 TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+TD_AGENT_OPTIONS="--use-v1-config"
 
 # Read configuration variable file if it is present
 if [ -f "${TD_AGENT_DEFAULT}" ]; then
@@ -37,7 +38,7 @@ fi
 
 DAEMON="${TD_AGENT_RUBY}" # Introduce the server's location here
 # Arguments to run the daemon with
-DAEMON_ARGS="${TD_AGENT_BIN_FILE} $DAEMON_ARGS --daemon ${TD_AGENT_PID_FILE} --log ${TD_AGENT_LOG_FILE} --use-v1-config"
+DAEMON_ARGS="${TD_AGENT_BIN_FILE} $DAEMON_ARGS --daemon ${TD_AGENT_PID_FILE} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}"
 START_STOP_DAEMON_ARGS=""
 
 # Exit if the package is not installed
