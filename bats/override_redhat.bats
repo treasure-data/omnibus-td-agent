@@ -27,6 +27,7 @@ PIDFILE="${TMP}/path/to/td-agent.pid"
 TD_AGENT_ARGS="/path/to/td-agent --verbose --verbose --group nogroup --log /path/to/td-agent.log"
 EOS
   assert_output <<EOS
+Warning: Declaring \$PIDFILE in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_PIDFILE instead.
 Starting td-agent: 
   --pidfile=${TMP}/path/to/td-agent.pid
   --user

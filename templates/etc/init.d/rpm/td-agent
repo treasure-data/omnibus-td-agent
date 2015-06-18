@@ -49,7 +49,9 @@ fi
 if [ -n "${prog}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
   echo "Warning: Declaring \$prog in ${TD_AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead." 1>&2
-  [ -n "${PIDFILE}" ] || PIDFILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
+  if [ -z "${PIDFILE}" ]; then
+    TD_AGENT_PID_FILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
+  fi
   TD_AGENT_LOCK_FILE="<%= root_path %>/var/lock/subsys/${prog}"
   TD_AGENT_PROG_NAME="${prog}"
 else
@@ -62,14 +64,18 @@ if [ -n "${process_bin}" ]; then
   TD_AGENT_RUBY="${process_bin}"
 fi
 
-PIDFILE="${PIDFILE-${TD_AGENT_PID_FILE}}"
+if [ -n "${PIDFILE}" ]; then
+  echo "Warning: Declaring \$PIDFILE in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_PIDFILE instead." 1>&2
+  TD_AGENT_PID_FILE="${PIDFILE}"
+fi
+
 DAEMON_ARGS="${DAEMON_ARGS---user ${TD_AGENT_USER}}"
 TD_AGENT_ARGS="${TD_AGENT_ARGS-${TD_AGENT_BIN_FILE} --group ${TD_AGENT_GROUP} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
 
-if [ -n "${PIDFILE}" ]; then
-  mkdir -p "$(dirname "${PIDFILE}")"
-  chown -R "${TD_AGENT_USER}:${TD_AGENT_GROUP}" "$(dirname "${PIDFILE}")"
-  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
+if [ -n "${TD_AGENT_PID_FILE}" ]; then
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}:${TD_AGENT_GROUP}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
@@ -86,7 +92,7 @@ do_start() {
   ulimit -n 65536 1>/dev/null 2>&1 || true
   echo -n "Starting ${TD_AGENT_NAME}: "
   local RETVAL=0
-  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${TD_AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
+  daemon --pidfile="${TD_AGENT_PID_FILE}" $DAEMON_ARGS "${TD_AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
   echo
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
@@ -95,9 +101,9 @@ do_start() {
 do_stop() {
   echo -n "Shutting down ${TD_AGENT_NAME}: "
   local RETVAL=0
-  if [ -e "${PIDFILE}" ]; then
+  if [ -e "${TD_AGENT_PID_FILE}" ]; then
     # Use own process termination instead of killproc because killproc can't wait SIGTERM
-    TD_AGENT_PID=`cat "$PIDFILE" 2>/dev/null`
+    TD_AGENT_PID=`cat "${TD_AGENT_PID_FILE}" 2>/dev/null`
     if [ -n "$TD_AGENT_PID" ]; then
       <%= File.join(root_path, "bin/kill") %> "$TD_AGENT_PID" >/dev/null 2>&1 || RETVAL="$?"
       if [ $RETVAL -eq 0 ]; then
@@ -131,7 +137,7 @@ do_stop() {
     fi
   fi
   echo
-  [ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${TD_AGENT_LOCK_FILE}"
+  [ $RETVAL -eq 0 ] && rm -f "${TD_AGENT_PID_FILE}" && rm -f "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
 
@@ -174,7 +180,7 @@ case "$1" in
   do_configtest
   ;;
 "status" )
-  status -p "$PIDFILE" "${TD_AGENT_NAME}"
+  status -p "${TD_AGENT_PID_FILE}" "${TD_AGENT_NAME}"
   ;;
 * )
   echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}"
