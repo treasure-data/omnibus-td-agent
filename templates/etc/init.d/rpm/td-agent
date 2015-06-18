@@ -69,6 +69,8 @@ if [ -n "${PIDFILE}" ]; then
 fi
 
 if [ -n "${DAEMON_ARGS}" ]; then
+# TODO: Show warning on use of `DAEMON_ARGS`
+# echo "Warning: Declaring \$DAEMON_ARGS in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_OPTIONS instead." 1>&2
   START_STOP_DAEMON=""
   parse_daemon_args() {
     while [ -n "$1" ]; do

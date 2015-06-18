@@ -36,6 +36,8 @@ if [ -n "${NAME}" ]; then
 fi
 
 if [ -n "${DAEMON_ARGS}" ]; then
+# TODO: Show warning on use of `DAEMON_ARGS`
+# echo "Warning: Declaring \$DAEMON_ARGS in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_OPTIONS instead." 1>&2
   TD_AGENT_OPTIONS="${DAEMON_ARGS} ${TD_AGENT_OPTIONS}"
 fi
 
