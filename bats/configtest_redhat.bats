@@ -18,11 +18,11 @@ teardown() {
   run_service configtest
   assert_output <<EOS
 td-agent
-  --group
-  td-agent
   --log
   ${TMP}/var/log/td-agent/td-agent.log
   --use-v1-config
+  --group
+  td-agent
   --daemon
   ${TMP}/var/run/td-agent/td-agent.pid
   --user

@@ -110,10 +110,13 @@ init_redhat() {
 }
 
 stub_redhat() {
+  stub getent "passwd : echo td-agent:x:500:500:,,,:/var/lib/td-agent:/sbin/nologin"
   stub chown true
+  stub getent "group : echo td-agent:x:500:"
 }
 
 unstub_redhat() {
+  unstub getent
   unstub chown
 }
 
