@@ -39,15 +39,16 @@ start-stop-daemon
   td-agent
   --
   ${TMP}/usr/sbin/td-agent
-  --verbose
-  --verbose
-  --daemon
-  ${TMP}/var/run/td-agent/td-agent.pid
   --log
   ${TMP}/var/log/td-agent/td-agent.log
+  --verbose
+  --verbose
   --use-v1-config
+  --daemon
+  ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   unstub_path /sbin/start-stop-daemon
+  unstub_debian
 }
 
 @test "start td-agent with custom configurations successfully (debian)" {
@@ -86,12 +87,12 @@ start-stop-daemon
   custom_td_agent_group
   --
   ${TMP}/path/to/custom_td_agent_bin_file
-  --daemon
-  ${TMP}/path/to/custom_td_agent_pid_file
   --log
   ${TMP}/path/to/custom_td_agent_log_file
   --use-v0-config
   --no-supervisor
+  --daemon
+  ${TMP}/path/to/custom_td_agent_pid_file
 EOS
   unstub_path /sbin/start-stop-daemon
   unstub getent
