@@ -53,7 +53,8 @@ EOS
 
 @test "start td-agent with custom configurations successfully (debian)" {
   stub getent "passwd : echo custom_td_agent_user:x:501:501:,,,:/var/lib/custom_td_agent_user:/sbin/nologin"
-  stub chown true
+  stub chown "true" \
+             "true"
   stub getent "group : echo custom_td_agent_group:x:501:"
   stub log_daemon_msg true
   stub_path /sbin/start-stop-daemon "true" \

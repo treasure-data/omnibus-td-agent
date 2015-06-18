@@ -142,8 +142,8 @@ if [ -n "${TD_AGENT_USER}" ]; then
     echo "$0: user for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_USER}" >&2
     exit 1
   fi
-# mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
-# chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
   START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --user ${TD_AGENT_USER}"
 fi
 
@@ -157,7 +157,7 @@ fi
 
 if [ -n "${TD_AGENT_PID_FILE}" ]; then
   mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
-  chown -R "${TD_AGENT_USER}:${TD_AGENT_GROUP}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
   TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 

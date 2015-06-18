@@ -71,9 +71,8 @@ if [ -n "${TD_AGENT_GROUP}" ]; then
 fi
 
 if [ -n "${TD_AGENT_PID_FILE}" ]; then
-# TODO: uncomment
-# mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
-# chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
   TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 

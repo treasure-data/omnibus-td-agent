@@ -65,7 +65,8 @@ init_debian() {
 
 stub_debian() {
   stub getent "passwd : echo td-agent:x:500:500:,,,:/var/lib/td-agent:/sbin/nologin"
-  stub chown true
+  stub chown "true" \
+             "true"
   stub getent "group : echo td-agent:x:500:"
   stub log_daemon_msg true
 }
@@ -111,7 +112,8 @@ init_redhat() {
 
 stub_redhat() {
   stub getent "passwd : echo td-agent:x:500:500:,,,:/var/lib/td-agent:/sbin/nologin"
-  stub chown true
+  stub chown "true" \
+             "true"
   stub getent "group : echo td-agent:x:500:"
 }
 

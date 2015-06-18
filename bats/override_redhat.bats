@@ -18,7 +18,8 @@ custom_run() {
 
 @test "start td-agent with custom arguments successfully (redhat)" {
   stub getent "passwd : echo nobody:x:100:100:,,,:/:/sbin/nologin"
-  stub chown true
+  stub chown "true" \
+             "true"
   stub getent "group : echo nogroup:x:100:"
   rm -f "${TMP}/path/to/td-agent.pid"
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
@@ -53,7 +54,8 @@ EOS
 
 @test "start td-agent with custom configurations successfully (redhat)" {
   stub getent "passwd : echo custom_td_agent_user:x:501:501:,,,:/var/lib/custom_td_agent_user:/sbin/nologin"
-  stub chown true
+  stub chown "true" \
+             "true"
   stub getent "group : echo custom_td_agent_group:x:501:"
   mkdir -p "${TMP}/path/to"
   touch "${TMP}/path/to/custom_td_agent_ruby"
