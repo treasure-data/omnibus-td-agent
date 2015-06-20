@@ -12,14 +12,12 @@
 # Default-Stop:      0 1 6
 # Required-Start:    $local_fs
 # Required-Stop:     $local_fs
-# Short-Description: <%= project_name %>'s init script
+# Short-Description: data collector for Treasure Data
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
 <% require "shellwords" %>
-# Source function library.
-. <%= File.join(root_path, "etc/init.d/functions") %>
 
-export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map{ |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
+export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
 
 TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
@@ -31,10 +29,12 @@ TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin",
 TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 TD_AGENT_LOCK_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "lock", "subsys", project_name)) %>
+TD_AGENT_OPTIONS="--use-v1-config"
 
 # timeout can be overridden from <%= File.join(root_path, "etc/sysconfig", project_name) %>
 STOPTIMEOUT=120
 
+# Read configuration variable file if it is present
 if [ -f "${TD_AGENT_DEFAULT}" ]; then
   . "${TD_AGENT_DEFAULT}"
 fi
@@ -48,7 +48,9 @@ fi
 if [ -n "${prog}" ]; then
   # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
   echo "Warning: Declaring \$prog in ${TD_AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead." 1>&2
-  [ -n "${PIDFILE}" ] || PIDFILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
+  if [ -z "${PIDFILE}" ]; then
+    TD_AGENT_PID_FILE="<%= root_path %>/var/run/<%= project_name %>/${prog}.pid"
+  fi
   TD_AGENT_LOCK_FILE="<%= root_path %>/var/lock/subsys/${prog}"
   TD_AGENT_PROG_NAME="${prog}"
 else
@@ -61,48 +63,144 @@ if [ -n "${process_bin}" ]; then
   TD_AGENT_RUBY="${process_bin}"
 fi
 
-PIDFILE="${PIDFILE-${TD_AGENT_PID_FILE}}"
-DAEMON_ARGS="${DAEMON_ARGS---user ${TD_AGENT_USER}}"
-TD_AGENT_ARGS="${TD_AGENT_ARGS-${TD_AGENT_BIN_FILE} --group ${TD_AGENT_GROUP} --log ${TD_AGENT_LOG_FILE} --use-v1-config}"
-
 if [ -n "${PIDFILE}" ]; then
-  mkdir -p "$(dirname "${PIDFILE}")"
-  chown -R "${TD_AGENT_USER}:${TD_AGENT_GROUP}" "$(dirname "${PIDFILE}")"
-  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${PIDFILE}"
+  echo "Warning: Declaring \$PIDFILE in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_PIDFILE instead." 1>&2
+  TD_AGENT_PID_FILE="${PIDFILE}"
+fi
+
+if [ -n "${DAEMON_ARGS}" ]; then
+# TODO: Show warning on use of `DAEMON_ARGS`
+# echo "Warning: Declaring \$DAEMON_ARGS in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_OPTIONS instead." 1>&2
+  START_STOP_DAEMON=""
+  parse_daemon_args() {
+    while [ -n "$1" ]; do
+      case "$1" in
+      "--user="?* )
+        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        TD_AGENT_USER="${1#*=}"
+        ;;
+      "--user" )
+        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        shift 1
+        TD_AGENT_USER="$1"
+        ;;
+      * )
+        START_STOP_DAEMON="${START_STOP_DAEMON} $1"
+        ;;
+      esac
+      shift 1
+    done
+  }
+  parse_daemon_args ${DAEMON_ARGS}
+fi
+
+if [ -n "${TD_AGENT_ARGS}" ]; then
+  ORIG_TD_AGENT_ARGS="${TD_AGENT_ARGS}"
+  TD_AGENT_ARGS=""
+  parse_td_agent_args() {
+    while [ -n "$1" ]; do
+      case "$1" in
+      "--group="?* )
+        echo "Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
+        TD_AGENT_GROUP="${1#*=}"
+        ;;
+      "--group" )
+        echo "Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
+        shift 1
+        TD_AGENT_GROUP="$1"
+        ;;
+      "--user="?* )
+        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        TD_AGENT_USER="${1#*=}"
+        ;;
+      "--user" )
+        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        shift 1
+        TD_AGENT_USER="$1"
+        ;;
+      * )
+        TD_AGENT_ARGS="${TD_AGENT_ARGS} $1"
+        ;;
+      esac
+      shift 1
+    done
+  }
+  parse_td_agent_args ${ORIG_TD_AGENT_ARGS}
+fi
+
+# Arguments to run the daemon with
+TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
+START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
+
+# Exit if the package is not installed
+[ -x "${TD_AGENT_RUBY}" ] || exit 0
+
+# Source function library.
+. <%= File.join(root_path, "etc/init.d/functions") %>
+
+# Check the user
+if [ -n "${TD_AGENT_USER}" ]; then
+  if ! getent passwd | grep -q "^${TD_AGENT_USER}:"; then
+    echo "$0: user for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_USER}" >&2
+    exit 1
+  fi
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --user ${TD_AGENT_USER}"
+fi
+
+if [ -n "${TD_AGENT_GROUP}" ]; then
+  if ! getent group | grep -q "^${TD_AGENT_GROUP}:"; then
+    echo "$0: group for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_GROUP}" >&2
+    exit 1
+  fi
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --group ${TD_AGENT_GROUP}"
+fi
+
+if [ -n "${TD_AGENT_PID_FILE}" ]; then
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
-# use jemalloc to avoid fragmentation
+# Use jemalloc to avoid memory fragmentation
 if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
   export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
 RETVAL=0
 
+#
+# Function that starts the daemon/service
+#
 do_start() {
   # Set Max number of file descriptors for the safety sake
   # see http://docs.fluentd.org/en/articles/before-install
   ulimit -n 65536 1>/dev/null 2>&1 || true
   echo -n "Starting ${TD_AGENT_NAME}: "
   local RETVAL=0
-  daemon --pidfile="$PIDFILE" $DAEMON_ARGS "${TD_AGENT_RUBY}" $TD_AGENT_ARGS || RETVAL="$?"
+  daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} "${TD_AGENT_RUBY}" ${TD_AGENT_ARGS} || RETVAL="$?"
   echo
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
 
+#
+# Function that stops the daemon/service
+#
 do_stop() {
   echo -n "Shutting down ${TD_AGENT_NAME}: "
   local RETVAL=0
-  if [ -e "${PIDFILE}" ]; then
+  if [ -e "${TD_AGENT_PID_FILE}" ]; then
     # Use own process termination instead of killproc because killproc can't wait SIGTERM
-    TD_AGENT_PID=`cat "$PIDFILE" 2>/dev/null`
-    if [ -n "$TD_AGENT_PID" ]; then
-      <%= File.join(root_path, "bin/kill") %> "$TD_AGENT_PID" >/dev/null 2>&1 || RETVAL="$?"
+    TD_AGENT_PID=`cat "${TD_AGENT_PID_FILE}" 2>/dev/null`
+    if [ -n "${TD_AGENT_PID}" ]; then
+      <%= File.join(root_path, "bin/kill") %> "${TD_AGENT_PID}" >/dev/null 2>&1 || RETVAL="$?"
       if [ $RETVAL -eq 0 ]; then
         TIMEOUT="$STOPTIMEOUT"
         while [ $TIMEOUT -gt 0 ]; do
-          <%= File.join(root_path, "bin/kill") %> -0 "$TD_AGENT_PID" >/dev/null 2>&1 || break
+          <%= File.join(root_path, "bin/kill") %> -0 "${TD_AGENT_PID}" >/dev/null 2>&1 || break
           sleep 1
           let TIMEOUT="${TIMEOUT}-1" || true
         done
@@ -130,7 +228,7 @@ do_stop() {
     fi
   fi
   echo
-  [ $RETVAL -eq 0 ] && rm -f "$PIDFILE" && rm -f "${TD_AGENT_LOCK_FILE}"
+  [ $RETVAL -eq 0 ] && rm -f "${TD_AGENT_PID_FILE}" && rm -f "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
 
@@ -140,6 +238,9 @@ do_restart() {
   do_start
 }
 
+#
+# Function that sends a SIGHUP to the daemon/service
+#
 do_reload() {
   do_configtest || return $?
   echo -n "Reloading ${TD_AGENT_NAME}: "
@@ -150,7 +251,7 @@ do_reload() {
 }
 
 do_configtest() {
-  eval "$TD_AGENT_ARGS $DAEMON_ARGS --dry-run -q"
+  eval "${TD_AGENT_ARGS} ${START_STOP_DAEMON_ARGS} --dry-run -q"
 }
 
 case "$1" in
@@ -160,11 +261,14 @@ case "$1" in
 "stop" )
   do_stop
   ;;
+"reload" )
+  do_reload
+  ;;
 "restart" )
   do_restart
   ;;
-"reload" )
-  do_reload
+"status" )
+  status -p "${TD_AGENT_PID_FILE}" "${TD_AGENT_NAME}"
   ;;
 "condrestart" )
   [ -f "${TD_AGENT_LOCK_FILE}" ] && do_restart || :
@@ -172,11 +276,8 @@ case "$1" in
 "configtest" )
   do_configtest
   ;;
-"status" )
-  status -p "$PIDFILE" "${TD_AGENT_NAME}"
-  ;;
 * )
-  echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}"
+  echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}" >&2
   exit 1
   ;;
 esac

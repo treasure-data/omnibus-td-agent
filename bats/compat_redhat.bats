@@ -13,6 +13,9 @@ teardown() {
 }
 
 @test "start td-agent with backward-compatible configuration (redhat)" {
+  mkdir -p "${TMP}/path/to"
+  touch "${TMP}/path/to/custom_process_bin"
+  chmod +x "${TMP}/path/to/custom_process_bin"
   rm -f "${TMP}/var/run/td-agent/custom_prog.pid"
   cat <<EOS > "${TMP}/etc/sysconfig/td-agent"
 name="custom_name"
@@ -33,11 +36,11 @@ Starting custom_name:
   td-agent
   ${TMP}/path/to/custom_process_bin
   ${TMP}/usr/sbin/td-agent
-  --group
-  td-agent
   --log
   ${TMP}/var/log/td-agent/td-agent.log
   --use-v1-config
+  --group
+  td-agent
   --daemon
   ${TMP}/var/run/td-agent/custom_prog.pid
 EOS

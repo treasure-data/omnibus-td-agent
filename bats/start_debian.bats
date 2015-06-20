@@ -34,11 +34,11 @@ start-stop-daemon
   td-agent
   --
   ${TMP}/usr/sbin/td-agent
-  --daemon
-  ${TMP}/var/run/td-agent/td-agent.pid
   --log
   ${TMP}/var/log/td-agent/td-agent.log
   --use-v1-config
+  --daemon
+  ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   assert_success
 
