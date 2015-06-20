@@ -24,7 +24,7 @@ custom_run() {
   rm -f "${TMP}/path/to/td-agent.pid"
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
   custom_run <<EOS
-DAEMON_ARGS="--user nobody"
+DAEMON_ARGS="--user nobody -10"
 PIDFILE="${TMP}/path/to/td-agent.pid"
 TD_AGENT_ARGS="/path/to/td-agent --verbose --verbose --group nogroup --log /path/to/td-agent.log"
 EOS
@@ -34,6 +34,7 @@ Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_U
 Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
 Starting td-agent: 
   --pidfile=${TMP}/path/to/td-agent.pid
+  -10
   --user
   nobody
   ${TMP}/opt/td-agent/embedded/bin/ruby

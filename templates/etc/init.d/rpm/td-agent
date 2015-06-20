@@ -71,7 +71,7 @@ fi
 if [ -n "${DAEMON_ARGS}" ]; then
 # TODO: Show warning on use of `DAEMON_ARGS`
 # echo "Warning: Declaring \$DAEMON_ARGS in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_OPTIONS instead." 1>&2
-  START_STOP_DAEMON=""
+  START_STOP_DAEMON_ARGS=""
   parse_daemon_args() {
     while [ -n "$1" ]; do
       case "$1" in
@@ -85,7 +85,7 @@ if [ -n "${DAEMON_ARGS}" ]; then
         TD_AGENT_USER="$1"
         ;;
       * )
-        START_STOP_DAEMON="${START_STOP_DAEMON} $1"
+        START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} $1"
         ;;
       esac
       shift 1
