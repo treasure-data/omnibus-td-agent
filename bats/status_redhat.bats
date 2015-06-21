@@ -13,19 +13,25 @@ teardown() {
 }
 
 @test "show td-agent status successfully (redhat)" {
-  stub status "-p ${TMP}/var/run/td-agent/td-agent.pid td-agent : true"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+  stub kill "-0 1234 : true"
+  stub log_success_msg "true"
 
   run_service status
   assert_success
 
-  unstub status
+  unstub kill
+  unstub log_success_msg
 }
 
 @test "failed to show td-agent status (redhat)" {
-  stub status "-p ${TMP}/var/run/td-agent/td-agent.pid td-agent : false"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+  stub kill "-0 1234 : false"
+  stub log_failure_msg "true"
 
   run_service status
   assert_failure
 
-  unstub status
+  unstub kill
+  unstub log_failure_msg
 }

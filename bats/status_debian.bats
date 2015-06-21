@@ -13,23 +13,25 @@ teardown() {
 }
 
 @test "show td-agent status successfully (debian)" {
-  stub status_of_proc "for arg; do echo \$arg; done"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+  stub kill "-0 1234 : true"
+  stub log_success_msg "true"
 
   run_service status
-  assert_output <<EOS
-${TMP}/opt/td-agent/embedded/bin/ruby
-td-agent
-EOS
   assert_success
 
-  unstub status_of_proc
+  unstub kill
+  unstub log_success_msg
 }
 
 @test "failed to show td-agent status (debian)" {
-  stub status_of_proc "false"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+  stub kill "-0 1234 : false"
+  stub log_failure_msg "true"
 
   run_service status
   assert_failure
 
-  unstub status_of_proc
+  unstub kill
+  unstub log_failure_msg
 }
