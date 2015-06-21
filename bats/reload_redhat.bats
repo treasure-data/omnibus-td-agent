@@ -13,33 +13,37 @@ teardown() {
 }
 
 @test "reload td-agent successfully (redhat)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
-  stub killproc "echo; for arg; do echo \"  \$arg\"; done"
+  stub kill "-HUP 1234 : true"
 
   run_service reload
-  assert_output <<EOS
-Reloading td-agent: 
-  ${TMP}/opt/td-agent/embedded/bin/ruby
-  -HUP
-EOS
   assert_success
 
   unstub_path /usr/sbin/td-agent
-  unstub killproc
+  unstub kill
 }
 
 @test "failed to reload td-agent (redhat)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
-  stub killproc "false"
+  stub kill "-HUP 1234 : false"
 
   run_service reload
-  assert_output <<EOS
-Reloading td-agent: 
-EOS
   assert_failure
 
   unstub_path /usr/sbin/td-agent
-  unstub killproc
+  unstub kill
+}
+
+@test "failed to reload td-agent by missing pid file (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
+  stub_path /usr/sbin/td-agent "true"
+
+  run_service reload
+  assert_failure
+
+  unstub_path /usr/sbin/td-agent
 }
 
 @test "failed to reload td-agent by configuration test failure (redhat)" {
