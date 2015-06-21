@@ -194,44 +194,40 @@ do_start() {
 # Function that stops the daemon/service
 #
 do_stop() {
-  local RETVAL=0
+  # Return
+  #   0 if daemon has been stopped
+  #   1 if daemon was already stopped
+  #   2 if daemon could not be stopped
+  #   other if a failure occurred
   if [ -e "${TD_AGENT_PID_FILE}" ]; then
     # Use own process termination instead of killproc because killproc can't wait SIGTERM
-    TD_AGENT_PID=`cat "${TD_AGENT_PID_FILE}" 2>/dev/null`
-    if [ -n "${TD_AGENT_PID}" ]; then
-      <%= File.join(root_path, "bin/kill") %> "${TD_AGENT_PID}" >/dev/null 2>&1 || RETVAL="$?"
-      if [ $RETVAL -eq 0 ]; then
-        TIMEOUT="$STOPTIMEOUT"
-        while [ $TIMEOUT -gt 0 ]; do
-          <%= File.join(root_path, "bin/kill") %> -0 "${TD_AGENT_PID}" >/dev/null 2>&1 || break
+    if kill_by_file -TERM "${TD_AGENT_PID_FILE}"; then
+      local i
+      for i in $(seq "${STOPTIMEOUT}"); do
+        if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
           sleep 1
-          let TIMEOUT="${TIMEOUT}-1" || true
-        done
-        if [ "$TIMEOUT" -eq 0 ]; then
-          echo -n "Timeout error occurred trying to stop ${TD_AGENT_NAME}..."
-          RETVAL=1
-          failure || true
         else
-          RETVAL=0
-          success
+          break
         fi
+      done
+      if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+        echo -n "Timeout error occurred trying to stop ${TD_AGENT_NAME}..."
+        return 2
       else
-        failure || true
+        rm -f "${TD_AGENT_PID_FILE}"
+        rm -f "${TD_AGENT_LOCK_FILE}"
       fi
     else
-      failure || true
-      RETVAL=4
+      return 1
     fi
   else
-    killproc "${TD_AGENT_PROG_NAME:-${TD_AGENT_NAME}}" || RETVAL="$?"
-    if [ $RETVAL -eq 0 ]; then
-      success
+    if killproc "${TD_AGENT_PROG_NAME:-${TD_AGENT_NAME}}"; then
+      rm -f "${TD_AGENT_PID_FILE}"
+      rm -f "${TD_AGENT_LOCK_FILE}"
     else
-      failure || true
+      return 2
     fi
   fi
-  [ $RETVAL -eq 0 ] && rm -f "${TD_AGENT_PID_FILE}" && rm -f "${TD_AGENT_LOCK_FILE}"
-  return $RETVAL
 }
 
 #
@@ -248,7 +244,8 @@ do_restart() {
   local val=0
   do_stop || val="$?"
   case "${val}" in
-  * )
+  0 )
+    success
     val=0
     do_start || val="$?"
     case "${val}" in
@@ -260,10 +257,21 @@ do_restart() {
       ;;
     esac
     ;;
+  * )
+    failure
 # TODO: change the behavior on stop failure
-# * ) # Failed to stop
 #   return 1
-#   ;;
+    val=0
+    do_start || val="$?"
+    case "${val}" in
+    0 )
+      :
+      ;;
+    * ) # Old process is still running, or failed to start
+      return 1
+      ;;
+    esac
+    ;;
   esac
 }
 
@@ -291,10 +299,10 @@ case "$1" in
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 )
-    echo
+    success
     ;;
   * )
-    echo
+    failure
     exit 1
     ;;
   esac

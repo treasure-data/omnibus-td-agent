@@ -16,7 +16,8 @@ teardown() {
   echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   touch "${TMP}/var/lock/subsys/td-agent"
 
-  stub kill "1234 : true" \
+  stub kill "-TERM 1234 : true" \
+             "-0 1234 : false" \
              "-0 1234 : false"
   stub success "true"
 
@@ -35,7 +36,7 @@ EOS
   echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   touch "${TMP}/var/lock/subsys/td-agent"
 
-  stub kill "1234 : false"
+  stub kill "-TERM 1234 : false"
   stub failure "false"
 
   run_service stop
@@ -57,7 +58,8 @@ EOS
 STOPTIMEOUT=3
 SH
 
-  stub kill "1234 : true" \
+  stub kill "-TERM 1234 : true" \
+            "-0 1234 : true" \
             "-0 1234 : true" \
             "-0 1234 : true" \
             "-0 1234 : true"
