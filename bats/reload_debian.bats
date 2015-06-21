@@ -13,63 +13,56 @@ teardown() {
 }
 
 @test "reload td-agent successfully (debian)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub kill "-HUP 1234 : true"
   stub log_end_msg "0 : true"
 
   run_service reload
-  assert_output <<EOS
-start-stop-daemon
-  --stop
-  --signal
-  1
-  --quiet
-  --pidfile
-  ${TMP}/var/run/td-agent/td-agent.pid
-  --name
-  ruby
-EOS
   assert_success
 
   unstub_path /usr/sbin/td-agent
-  unstub_path /sbin/start-stop-daemon
+  unstub kill
   unstub log_end_msg
 }
 
 @test "reload td-agent forcibly (debian)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub kill "-HUP 1234 : true"
   stub log_end_msg "0 : true"
 
   run_service force-reload
-  assert_output <<EOS
-start-stop-daemon
-  --stop
-  --signal
-  1
-  --quiet
-  --pidfile
-  ${TMP}/var/run/td-agent/td-agent.pid
-  --name
-  ruby
-EOS
   assert_success
 
   unstub_path /usr/sbin/td-agent
-  unstub_path /sbin/start-stop-daemon
+  unstub kill
   unstub log_end_msg
 }
 
 @test "failed to reload td-agent (debian)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "false"
+  stub kill "-HUP 1234 : false"
   stub log_end_msg "1 : false"
 
   run_service reload
   assert_failure
 
   unstub_path /usr/sbin/td-agent
-  unstub_path /sbin/start-stop-daemon
+  unstub kill
+  unstub log_end_msg
+}
+
+@test "failed to reload td-agent by missing pid file (debian)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
+  stub_path /usr/sbin/td-agent "true"
+  stub log_end_msg "1 : false"
+
+  run_service reload
+  assert_failure
+
+  unstub_path /usr/sbin/td-agent
   unstub log_end_msg
 }
 

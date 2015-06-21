@@ -84,6 +84,21 @@ if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
   export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
+kill_by_file() {
+  local sig="$1"
+  shift 1
+  local pid="$(cat "$@" 2>/dev/null || true)"
+  if [ -n "${pid}" ]; then
+    if <%= Shellwords.shellescape(File.join(root_path, "bin/kill")) %> "${sig}" "${pid}" 1>/dev/null 2>&1; then
+      return 0
+    else
+      return 2
+    fi
+  else
+    return 1
+  fi
+}
+
 #
 # Function that starts the daemon/service
 #
@@ -133,7 +148,7 @@ do_reload() {
   # restarting (for example, when it is sent a SIGHUP),
   # then implement that here.
   #
-  start-stop-daemon --stop --signal 1 --quiet --pidfile "${TD_AGENT_PID_FILE}" --name ruby
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || return 1
 }
 
 do_configtest() {

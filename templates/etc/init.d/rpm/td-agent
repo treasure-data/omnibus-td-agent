@@ -162,7 +162,20 @@ if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
   export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
-RETVAL=0
+kill_by_file() {
+  local sig="$1"
+  shift 1
+  local pid="$(cat "$@" 2>/dev/null || true)"
+  if [ -n "${pid}" ]; then
+    if <%= Shellwords.shellescape(File.join(root_path, "bin/kill")) %> "${sig}" "${pid}" 1>/dev/null 2>&1; then
+      return 0
+    else
+      return 2
+    fi
+  else
+    return 1
+  fi
+}
 
 #
 # Function that starts the daemon/service
@@ -237,10 +250,10 @@ do_restart() {
 do_reload() {
   do_configtest || return $?
   echo -n "Reloading ${TD_AGENT_NAME}: "
-  local RETVAL=0
-  killproc "${TD_AGENT_RUBY}" -HUP || RETVAL="$?"
+  local val=0
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || val="$?"
   echo
-  return "$RETVAL"
+  return "${val}"
 }
 
 do_configtest() {
