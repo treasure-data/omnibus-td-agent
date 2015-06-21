@@ -18,12 +18,13 @@ NAME="custom_name"
 EOS
 
   stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+                                    "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   stub log_end_msg "0 : true"
 
   run_service start
   assert_output <<EOS
 Warning: Declaring \$NAME in ${TMP}/etc/default/td-agent for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead.
+Starting td-agent: 
 start-stop-daemon
   --start
   --quiet

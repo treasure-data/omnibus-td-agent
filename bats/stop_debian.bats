@@ -13,11 +13,12 @@ teardown() {
 }
 
 @test "stop td-agent successfully (debian)" {
-  stub_path /sbin/start-stop-daemon "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   stub log_end_msg "0 : true"
 
   run_service stop
   assert_output <<EOS
+Stopping td-agent: 
 start-stop-daemon
   --stop
   --quiet

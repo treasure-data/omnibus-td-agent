@@ -14,13 +14,14 @@ teardown() {
 
 @test "restart td-agent successfully (debian)" {
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo stopped successfully" \
+  stub_path /sbin/start-stop-daemon "echo; echo stopped successfully" \
                                     "echo not running" \
                                     "echo started"
   stub log_end_msg "0 : true"
 
   run_service restart
   assert_output <<EOS
+Restarting td-agent: 
 stopped successfully
 started
 EOS
@@ -33,13 +34,14 @@ EOS
 
 @test "restart td-agent regardless of stop failure (debian)" {
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo failed to stop; false" \
+  stub_path /sbin/start-stop-daemon "echo; echo failed to stop; false" \
                                     "echo not running" \
                                     "echo started"
   stub log_end_msg "0 : true"
 
   run_service restart
   assert_output <<EOS
+Restarting td-agent: 
 failed to stop
 started
 EOS
@@ -63,12 +65,13 @@ EOS
 
 @test "failed to restart td-agent by stale process (debian)" {
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo stopped successfully" \
+  stub_path /sbin/start-stop-daemon "echo; echo stopped successfully" \
                                     "echo still running; false"
   stub log_end_msg "1 : false"
 
   run_service restart
   assert_output <<EOS
+Restarting td-agent: 
 stopped successfully
 EOS
   assert_failure
@@ -80,13 +83,14 @@ EOS
 
 @test "failed to restart td-agent by start failure (debian)" {
   stub_path /usr/sbin/td-agent "true"
-  stub_path /sbin/start-stop-daemon "echo stopped successfully" \
+  stub_path /sbin/start-stop-daemon "echo; echo stopped successfully" \
                                     "echo not running" \
                                     "echo failed to start; false"
   stub log_end_msg "1 : false"
 
   run_service restart
   assert_output <<EOS
+Restarting td-agent: 
 stopped successfully
 failed to start
 EOS

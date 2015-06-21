@@ -68,13 +68,11 @@ stub_debian() {
   stub chown "true" \
              "true"
   stub getent "group : echo td-agent:x:500:"
-  stub log_daemon_msg true
 }
 
 unstub_debian() {
   unstub getent
   unstub chown
-  unstub log_daemon_msg
 }
 
 init_redhat() {
