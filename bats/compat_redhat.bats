@@ -63,7 +63,7 @@ EOS
   run_service stop
   assert_output <<EOS
 Warning: Declaring \$prog in ${TMP}/etc/sysconfig/td-agent for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead.
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/custom_prog" ]

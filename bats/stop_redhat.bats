@@ -22,7 +22,7 @@ teardown() {
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -40,7 +40,7 @@ EOS
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_failure # TODO: change this to success for compatibility between debian
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -66,7 +66,7 @@ SH
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: Timeout error occurred trying to stop td-agent...
+Stopping td-agent: Timeout error occurred trying to stop td-agent...
 EOS
   assert_failure
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -84,7 +84,7 @@ EOS
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -102,7 +102,7 @@ EOS
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_failure
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
