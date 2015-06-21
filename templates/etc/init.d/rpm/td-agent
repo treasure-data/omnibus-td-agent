@@ -184,7 +184,6 @@ do_start() {
   # Set Max number of file descriptors for the safety sake
   # see http://docs.fluentd.org/en/articles/before-install
   ulimit -n 65536 1>/dev/null 2>&1 || true
-  echo -n "Starting ${TD_AGENT_NAME}: "
   local RETVAL=0
   daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} "${TD_AGENT_RUBY}" ${TD_AGENT_ARGS} || RETVAL="$?"
   echo
@@ -196,7 +195,6 @@ do_start() {
 # Function that stops the daemon/service
 #
 do_stop() {
-  echo -n "Shutting down ${TD_AGENT_NAME}: "
   local RETVAL=0
   if [ -e "${TD_AGENT_PID_FILE}" ]; then
     # Use own process termination instead of killproc because killproc can't wait SIGTERM
@@ -249,7 +247,6 @@ do_restart() {
 #
 do_reload() {
   do_configtest || return $?
-  echo -n "Reloading ${TD_AGENT_NAME}: "
   local val=0
   kill_by_file -HUP "${TD_AGENT_PID_FILE}" || val="$?"
   echo
@@ -262,22 +259,29 @@ do_configtest() {
 
 case "$1" in
 "start" )
+  echo -n "Starting ${TD_AGENT_NAME}: "
   do_start
   ;;
 "stop" )
+  echo -n "Stopping ${TD_AGENT_NAME}: "
   do_stop
   ;;
 "reload" )
+  echo -n "Reloading ${TD_AGENT_NAME}: "
   do_reload
   ;;
 "restart" )
+  echo -n "Restarting ${TD_AGENT_NAME}: "
   do_restart
   ;;
 "status" )
   status -p "${TD_AGENT_PID_FILE}" "${TD_AGENT_NAME}"
   ;;
 "condrestart" )
-  [ -f "${TD_AGENT_LOCK_FILE}" ] && do_restart || :
+  if [ -f "${TD_AGENT_LOCK_FILE}" ]; then
+    echo -n "Restarting ${TD_AGENT_NAME}: "
+    do_restart
+  fi
   ;;
 "configtest" )
   do_configtest

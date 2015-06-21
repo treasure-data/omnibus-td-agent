@@ -23,8 +23,7 @@ teardown() {
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -43,8 +42,7 @@ EOS
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
 
@@ -71,8 +69,7 @@ EOS
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_failure
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -94,8 +91,7 @@ EOS
 
   run_service condrestart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
