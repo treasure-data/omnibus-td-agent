@@ -17,7 +17,7 @@ teardown() {
 
   stub_path /sbin/start-stop-daemon "true" \
                                     "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
-  stub log_end_msg "0 : true"
+  stub log_success_msg "td-agent : true"
 
   run_service start
   assert_output <<EOS
@@ -44,28 +44,28 @@ EOS
   assert_success
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_success_msg
 }
 
 @test "start td-agent but it has already been started (debian)" {
   stub_path /sbin/start-stop-daemon "false"
-  stub log_end_msg "0 : true"
+  stub log_success_msg "td-agent : true"
 
   run_service start
   assert_success
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_success_msg
 }
 
 @test "failed to start td-agent (debian)" {
   stub_path /sbin/start-stop-daemon "true" \
                                     "false"
-  stub log_end_msg "1 : false"
+  stub log_failure_msg "td-agent : true"
 
   run_service start
   assert_failure
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_failure_msg
 }
