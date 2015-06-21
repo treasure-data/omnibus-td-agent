@@ -186,7 +186,6 @@ do_start() {
   ulimit -n 65536 1>/dev/null 2>&1 || true
   local RETVAL=0
   daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} "${TD_AGENT_RUBY}" ${TD_AGENT_ARGS} || RETVAL="$?"
-  echo
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
@@ -231,48 +230,96 @@ do_stop() {
       failure || true
     fi
   fi
-  echo
   [ $RETVAL -eq 0 ] && rm -f "${TD_AGENT_PID_FILE}" && rm -f "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
-}
-
-do_restart() {
-  do_configtest || return $?
-  do_stop || true
-  do_start
 }
 
 #
 # Function that sends a SIGHUP to the daemon/service
 #
 do_reload() {
-  do_configtest || return $?
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}"
+}
+
+do_restart() {
+  if ! do_configtest; then
+    return 1
+  fi
   local val=0
-  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || val="$?"
-  echo
-  return "${val}"
+  do_stop || val="$?"
+  case "${val}" in
+  * )
+    val=0
+    do_start || val="$?"
+    case "${val}" in
+    0 )
+      :
+      ;;
+    * ) # Old process is still running, or failed to start
+      return 1
+      ;;
+    esac
+    ;;
+# TODO: change the behavior on stop failure
+# * ) # Failed to stop
+#   return 1
+#   ;;
+  esac
 }
 
 do_configtest() {
   eval "${TD_AGENT_ARGS} ${START_STOP_DAEMON_ARGS} --dry-run -q"
 }
 
+RETVAL=0
 case "$1" in
 "start" )
   echo -n "Starting ${TD_AGENT_NAME}: "
-  do_start
+  do_start || RETVAL="$?"
+  case "$RETVAL" in
+  0 )
+    echo
+    ;;
+  * )
+    echo
+    exit 1
+    ;;
+  esac
   ;;
 "stop" )
   echo -n "Stopping ${TD_AGENT_NAME}: "
-  do_stop
+  do_stop || RETVAL="$?"
+  case "$RETVAL" in
+  0 )
+    echo
+    ;;
+  * )
+    echo
+    exit 1
+    ;;
+  esac
   ;;
 "reload" )
   echo -n "Reloading ${TD_AGENT_NAME}: "
-  do_reload
+  if ! do_configtest; then
+    echo
+    exit 1
+  fi
+  if do_reload; then
+    echo
+  else
+    echo
+    exit 1
+  fi
   ;;
 "restart" )
   echo -n "Restarting ${TD_AGENT_NAME}: "
-  do_restart
+  if do_restart; then
+    echo
+  else
+    echo
+    exit 1
+  fi
   ;;
 "status" )
   status -p "${TD_AGENT_PID_FILE}" "${TD_AGENT_NAME}"
@@ -280,11 +327,21 @@ case "$1" in
 "condrestart" )
   if [ -f "${TD_AGENT_LOCK_FILE}" ]; then
     echo -n "Restarting ${TD_AGENT_NAME}: "
-    do_restart
+    if do_restart; then
+      echo
+    else
+      echo
+      exit 1
+    fi
   fi
   ;;
 "configtest" )
-  do_configtest
+  if do_configtest; then
+    echo
+  else
+    echo
+    exit 1
+  fi
   ;;
 * )
   echo "Usage: $0 {start|stop|reload|restart|condrestart|status|configtest}" >&2

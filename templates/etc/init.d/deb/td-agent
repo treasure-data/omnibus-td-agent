@@ -151,6 +151,31 @@ do_reload() {
   kill_by_file -HUP "${TD_AGENT_PID_FILE}" || return 1
 }
 
+do_restart() {
+  if ! do_configtest; then
+    return 1
+  fi
+  local val=0
+  do_stop || val="$?"
+  case "${val}" in
+  0 | 1 )
+    val=0
+    do_start || val="$?"
+    case "${val}" in
+    0 )
+      :
+      ;;
+    * ) # Old process is still running, or failed to start
+      return 1
+      ;;
+    esac
+    ;;
+  * ) # Failed to stop
+    return 1
+    ;;
+  esac
+}
+
 do_configtest() {
   eval "${TD_AGENT_ARGS} --user ${TD_AGENT_USER} --group ${TD_AGENT_GROUP} --dry-run -q"
 }
@@ -161,16 +186,26 @@ case "$1" in
   echo -n "Starting ${TD_AGENT_NAME}: "
   do_start || RETVAL="$?"
   case "$RETVAL" in
-  0 | 1 ) log_end_msg 0 ;;
-      2 ) log_end_msg 1 ;;
+  0 | 1 )
+    log_end_msg 0
+    ;;
+  * )
+    log_end_msg 1
+    exit 1
+    ;;
   esac
   ;;
 "stop" )
   echo -n "Stopping ${TD_AGENT_NAME}: "
   do_stop || RETVAL="$?"
   case "$RETVAL" in
-  0 | 1 ) log_end_msg 0 ;;
-      2 ) log_end_msg 1 ;;
+  0 | 1 )
+    log_end_msg 0
+    ;;
+  * )
+    log_end_msg 1
+    exit 1
+    ;;
   esac
   ;;
 "reload" | "force-reload" )
@@ -179,9 +214,15 @@ case "$1" in
   # and leave 'force-reload' as an alias for 'restart'.
   #
   echo -n "Reloading ${TD_AGENT_NAME}: "
-  do_configtest || log_end_msg 1
-  do_reload || RETVAL="$?"
-  log_end_msg "$RETVAL"
+  if ! do_configtest; then
+    log_end_msg 1
+    exit 1
+  fi
+  if do_reload; then
+    log_end_msg 0
+  else
+    log_end_msg 1
+  fi
   ;;
 "restart" )
   #
@@ -189,30 +230,21 @@ case "$1" in
   # 'force-reload' alias
   #
   echo -n "Restarting ${TD_AGENT_NAME}: "
-  do_configtest || log_end_msg 1
-  do_stop || RETVAL="$?"
-  case "$RETVAL" in
-  0 | 1 )
-    RETVAL=0
-    do_start || RETVAL="$?"
-    case "$RETVAL" in
-    0 ) log_end_msg 0 ;;
-    1 ) log_end_msg 1 ;; # Old process is still running
-    * ) log_end_msg 1 ;; # Failed to start
-    esac
-    ;;
-  * )
-    # Failed to stop
+  if do_restart; then
+    log_end_msg 0
+  else
     log_end_msg 1
-    ;;
-  esac
+  fi
   ;;
 "status" )
   status_of_proc "${TD_AGENT_RUBY}" "${TD_AGENT_NAME}"
   ;;
 "configtest" )
-  do_configtest || RETVAL="$?"
-  log_end_msg "$RETVAL"
+  if do_configtest; then
+    log_end_msg 0
+  else
+    log_end_msg 1
+  fi
   ;;
 * )
   echo "Usage: $0 {start|stop|reload|restart|force-reload|status|configtest}" >&2
