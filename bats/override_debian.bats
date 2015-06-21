@@ -21,11 +21,12 @@ custom_run() {
 @test "start td-agent with additional arguments successfully (debian)" {
   stub_debian
   stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+                                    "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   custom_run <<EOS
 DAEMON_ARGS="--verbose --verbose"
 EOS
   assert_output <<EOS
+Starting td-agent: 
 start-stop-daemon
   --start
   --quiet
@@ -56,9 +57,8 @@ EOS
   stub chown "true" \
              "true"
   stub getent "group : echo custom_td_agent_group:x:501:"
-  stub log_daemon_msg true
   stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+                                    "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   mkdir -p "${TMP}/path/to"
   touch "${TMP}/path/to/custom_td_agent_ruby"
   chmod +x "${TMP}/path/to/custom_td_agent_ruby"
@@ -75,6 +75,7 @@ TD_AGENT_PID_FILE="${TMP}/path/to/custom_td_agent_pid_file"
 TD_AGENT_OPTIONS="--use-v0-config --no-supervisor"
 EOS
   assert_output <<EOS
+Starting custom_td_agent_name: 
 start-stop-daemon
   --start
   --quiet
@@ -98,5 +99,4 @@ EOS
   unstub_path /sbin/start-stop-daemon
   unstub getent
   unstub chown
-  unstub log_daemon_msg
 }

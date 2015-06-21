@@ -161,7 +161,7 @@ do_configtest() {
 RETVAL=0
 case "$1" in
 "start" )
-  log_daemon_msg "Starting ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Starting ${TD_AGENT_NAME}: "
   do_start || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 ) log_end_msg 0 ;;
@@ -169,7 +169,7 @@ case "$1" in
   esac
   ;;
 "stop" )
-  log_daemon_msg "Stopping ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Stopping ${TD_AGENT_NAME}: "
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 ) log_end_msg 0 ;;
@@ -181,7 +181,7 @@ case "$1" in
   # If do_reload() is not implemented then leave this commented out
   # and leave 'force-reload' as an alias for 'restart'.
   #
-  log_daemon_msg "Reloading ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Reloading ${TD_AGENT_NAME}: "
   do_configtest || log_end_msg 1
   do_reload || RETVAL="$?"
   log_end_msg "$RETVAL"
@@ -191,7 +191,7 @@ case "$1" in
   # If the "reload" option is implemented then remove the
   # 'force-reload' alias
   #
-  log_daemon_msg "Restarting ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Restarting ${TD_AGENT_NAME}: "
   do_configtest || log_end_msg 1
   do_stop || RETVAL="$?"
   case "$RETVAL" in

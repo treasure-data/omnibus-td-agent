@@ -16,11 +16,12 @@ teardown() {
   rm -f "${TMP}/etc/default/td-agent"
 
   stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+                                    "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   stub log_end_msg "0 : true"
 
   run_service start
   assert_output <<EOS
+Starting td-agent: 
 start-stop-daemon
   --start
   --quiet
