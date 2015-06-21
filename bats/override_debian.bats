@@ -11,17 +11,16 @@ teardown() {
 }
 
 custom_run() {
-  stub log_end_msg "0 : true"
   cat > "${TMP}/etc/default/td-agent"
   run_service "${1:-start}"
   assert_success
-  unstub log_end_msg
 }
 
 @test "start td-agent with additional arguments successfully (debian)" {
   stub_debian
   stub_path /sbin/start-stop-daemon "true" \
                                     "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
   custom_run <<EOS
 DAEMON_ARGS="--verbose --verbose"
 EOS
@@ -49,6 +48,7 @@ start-stop-daemon
   ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   unstub_path /sbin/start-stop-daemon
+  unstub log_success_msg
   unstub_debian
 }
 
@@ -62,6 +62,7 @@ EOS
   mkdir -p "${TMP}/path/to"
   touch "${TMP}/path/to/custom_td_agent_ruby"
   chmod +x "${TMP}/path/to/custom_td_agent_ruby"
+  stub log_success_msg "custom_td_agent_name : true"
   custom_run <<EOS
 TD_AGENT_NAME="custom_td_agent_name"
 TD_AGENT_HOME="${TMP}/path/to/custom_td_agent_home"
@@ -97,6 +98,7 @@ start-stop-daemon
   ${TMP}/path/to/custom_td_agent_pid_file
 EOS
   unstub_path /sbin/start-stop-daemon
+  unstub log_success_msg
   unstub getent
   unstub chown
 }

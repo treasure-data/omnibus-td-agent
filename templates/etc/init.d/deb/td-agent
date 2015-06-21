@@ -187,10 +187,10 @@ case "$1" in
   do_start || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 )
-    log_end_msg 0
+    log_success_msg "${TD_AGENT_NAME}"
     ;;
   * )
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
     ;;
   esac
@@ -200,10 +200,10 @@ case "$1" in
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 | 1 )
-    log_end_msg 0
+    log_success_msg "${TD_AGENT_NAME}"
     ;;
   * )
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
     ;;
   esac
@@ -215,13 +215,14 @@ case "$1" in
   #
   echo -n "Reloading ${TD_AGENT_NAME}: "
   if ! do_configtest; then
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
   fi
   if do_reload; then
-    log_end_msg 0
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
   fi
   ;;
 "restart" )
@@ -231,9 +232,10 @@ case "$1" in
   #
   echo -n "Restarting ${TD_AGENT_NAME}: "
   if do_restart; then
-    log_end_msg 0
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
   fi
   ;;
 "status" )
@@ -241,9 +243,10 @@ case "$1" in
   ;;
 "configtest" )
   if do_configtest; then
-    log_end_msg 0
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    log_end_msg 1
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
   fi
   ;;
 * )

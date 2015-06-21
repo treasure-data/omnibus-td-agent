@@ -19,7 +19,7 @@ EOS
 
   stub_path /sbin/start-stop-daemon "true" \
                                     "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
-  stub log_end_msg "0 : true"
+  stub log_success_msg "td-agent : true"
 
   run_service start
   assert_output <<EOS
@@ -47,5 +47,5 @@ EOS
   assert_success
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_success_msg
 }
