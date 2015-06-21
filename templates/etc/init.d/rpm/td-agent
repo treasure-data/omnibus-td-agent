@@ -245,7 +245,7 @@ do_restart() {
   do_stop || val="$?"
   case "${val}" in
   0 )
-    success
+    echo "$(success)"
     val=0
     do_start || val="$?"
     case "${val}" in
@@ -258,7 +258,7 @@ do_restart() {
     esac
     ;;
   * )
-    failure
+    echo "$(failure)"
 # TODO: change the behavior on stop failure
 #   return 1
     val=0
@@ -299,10 +299,10 @@ case "$1" in
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 )
-    success
+    echo "$(success)"
     ;;
   * )
-    failure
+    echo "$(failure)"
     exit 1
     ;;
   esac
