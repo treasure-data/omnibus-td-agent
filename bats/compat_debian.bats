@@ -13,12 +13,12 @@ teardown() {
 }
 
 @test "start td-agent with backward-compatibile configuration (debian)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
   cat <<EOS > "${TMP}/etc/default/td-agent"
 NAME="custom_name"
 EOS
 
-  stub_path /sbin/start-stop-daemon "true" \
-                                    "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   stub log_success_msg "td-agent : true"
 
   run_service start

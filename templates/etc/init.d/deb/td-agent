@@ -114,12 +114,13 @@ do_start() {
   #   0 if daemon has been started
   #   1 if daemon was already running
   #   2 if daemon could not be started
-  start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-    ${START_STOP_DAEMON_ARGS} --test > /dev/null \
-    || return 1
-  start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-    ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
-    || return 2
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    return 1
+  else
+    start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
+      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
+      || return 2
+  fi
   # Add code here, if necessary, that waits for the process to be ready
   # to handle requests from services started subsequently which depend
   # on this one.  As a last resort, sleep for some time.
