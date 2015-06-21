@@ -245,32 +245,17 @@ do_restart() {
   do_stop || val="$?"
   case "${val}" in
   0 )
-    echo "$(success)"
-    val=0
-    do_start || val="$?"
-    case "${val}" in
-    0 )
-      :
-      ;;
-    * ) # Old process is still running, or failed to start
+    if ! do_start; then
       return 1
-      ;;
-    esac
+    fi
     ;;
   * )
-    echo "$(failure)"
 # TODO: change the behavior on stop failure
 #   return 1
     val=0
-    do_start || val="$?"
-    case "${val}" in
-    0 )
-      :
-      ;;
-    * ) # Old process is still running, or failed to start
+    if ! do_start; then
       return 1
-      ;;
-    esac
+    fi
     ;;
   esac
 }
@@ -323,22 +308,27 @@ case "$1" in
 "restart" )
   echo -n "Restarting ${TD_AGENT_NAME}: "
   if do_restart; then
-    echo
+    echo "$(success)"
   else
-    echo
+    echo "$(failure)"
     exit 1
   fi
   ;;
 "status" )
-  status -p "${TD_AGENT_PID_FILE}" "${TD_AGENT_NAME}"
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    log_success_msg "${TD_AGENT_NAME} is running"
+  else
+    log_failure_msg "${TD_AGENT_NAME} is not running"
+    exit 1
+  fi
   ;;
 "condrestart" )
   if [ -f "${TD_AGENT_LOCK_FILE}" ]; then
     echo -n "Restarting ${TD_AGENT_NAME}: "
     if do_restart; then
-      echo
+      echo "$(success)"
     else
-      echo
+      echo "$(failure)"
       exit 1
     fi
   fi
