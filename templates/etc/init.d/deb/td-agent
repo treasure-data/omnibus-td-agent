@@ -24,6 +24,9 @@ TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", 
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 TD_AGENT_OPTIONS="--use-v1-config"
 
+# timeout can be overridden from <%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
+STOPTIMEOUT=120
+
 # Read configuration variable file if it is present
 if [ -f "${TD_AGENT_DEFAULT}" ]; then
   . "${TD_AGENT_DEFAULT}"
@@ -117,7 +120,7 @@ do_stop() {
   #   2 if daemon could not be stopped
   #   other if a failure occurred
   local RETVAL=0
-  start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile "${TD_AGENT_PID_FILE}" --name ruby || RETVAL="$?"
+  start-stop-daemon --stop --quiet --retry="TERM/${STOPTIMEOUT}/KILL/5" --pidfile "${TD_AGENT_PID_FILE}" --name ruby || RETVAL="$?"
   [ "$RETVAL" = 2 ] && return 2
   # Many daemons don't delete their pidfiles when they exit.
   rm -f "${TD_AGENT_PID_FILE}"
