@@ -21,7 +21,7 @@ teardown() {
 start-stop-daemon
   --stop
   --quiet
-  --retry=TERM/30/KILL/5
+  --retry=TERM/120/KILL/5
   --pidfile
   ${TMP}/var/run/td-agent/td-agent.pid
   --name
