@@ -25,11 +25,11 @@ Vagrant.configure('2') do |config|
     ubuntu-14.04
     debian-6.0.10
     debian-7.7
-    centos-5.10
-    centos-5.10-i386
-    centos-6.5
-    centos-6.5-i386
-    centos-7.0
+    centos-5.11
+    centos-5.11-i386
+    centos-6.6
+    centos-6.6-i386
+    centos-7.1
   }.each_with_index do |platform, index|
     project_build_user = 'vagrant'
     guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
