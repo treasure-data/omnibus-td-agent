@@ -13,11 +13,12 @@ teardown() {
 }
 
 @test "stop td-agent successfully (debian)" {
-  stub_path /sbin/start-stop-daemon "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
-  stub log_end_msg "0 : true"
+  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
+Stopping td-agent: 
 start-stop-daemon
   --stop
   --quiet
@@ -30,27 +31,27 @@ EOS
   assert_success
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_success_msg
 }
 
 @test "stop td-agent but it has already been stopped (debian)" {
-  stub_path /sbin/start-stop-daemon "true"
-  stub log_end_msg "0 : true"
+  stub_path /sbin/start-stop-daemon "false"
+  stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_success
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_success_msg
 }
 
 @test "failed to stop td-agent (debian)" {
   stub_path /sbin/start-stop-daemon "exit 2"
-  stub log_end_msg "1 : false"
+  stub log_failure_msg "td-agent : true"
 
   run_service stop
   assert_failure
 
   unstub_path /sbin/start-stop-daemon
-  unstub log_end_msg
+  unstub log_failure_msg
 }

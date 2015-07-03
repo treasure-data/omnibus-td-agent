@@ -11,21 +11,21 @@ teardown() {
 }
 
 custom_run() {
-  stub log_end_msg "0 : true"
   cat > "${TMP}/etc/default/td-agent"
   run_service "${1:-start}"
   assert_success
-  unstub log_end_msg
 }
 
 @test "start td-agent with additional arguments successfully (debian)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
   stub_debian
-  stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
   custom_run <<EOS
 DAEMON_ARGS="--verbose --verbose"
 EOS
   assert_output <<EOS
+Starting td-agent: 
 start-stop-daemon
   --start
   --quiet
@@ -48,6 +48,7 @@ start-stop-daemon
   ${TMP}/var/run/td-agent/td-agent.pid
 EOS
   unstub_path /sbin/start-stop-daemon
+  unstub log_success_msg
   unstub_debian
 }
 
@@ -56,12 +57,12 @@ EOS
   stub chown "true" \
              "true"
   stub getent "group : echo custom_td_agent_group:x:501:"
-  stub log_daemon_msg true
-  stub_path /sbin/start-stop-daemon "true" \
-                                    "echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   mkdir -p "${TMP}/path/to"
+  rm -f "${TMP}/path/to/custom_td_agent_pid_file"
+  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
   touch "${TMP}/path/to/custom_td_agent_ruby"
   chmod +x "${TMP}/path/to/custom_td_agent_ruby"
+  stub log_success_msg "custom_td_agent_name : true"
   custom_run <<EOS
 TD_AGENT_NAME="custom_td_agent_name"
 TD_AGENT_HOME="${TMP}/path/to/custom_td_agent_home"
@@ -75,6 +76,7 @@ TD_AGENT_PID_FILE="${TMP}/path/to/custom_td_agent_pid_file"
 TD_AGENT_OPTIONS="--use-v0-config --no-supervisor"
 EOS
   assert_output <<EOS
+Starting custom_td_agent_name: 
 start-stop-daemon
   --start
   --quiet
@@ -96,7 +98,7 @@ start-stop-daemon
   ${TMP}/path/to/custom_td_agent_pid_file
 EOS
   unstub_path /sbin/start-stop-daemon
+  unstub log_success_msg
   unstub getent
   unstub chown
-  unstub log_daemon_msg
 }

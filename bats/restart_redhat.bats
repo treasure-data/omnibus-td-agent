@@ -23,8 +23,7 @@ teardown() {
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -38,19 +37,18 @@ EOS
 @test "restart td-agent regardless of stop failure (redhat)" {
   stub_path /usr/sbin/td-agent "true"
   stub killproc "false"
-  stub failure "false"
+  stub success "true"
   stub daemon "true"
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub failure
+  unstub success
   unstub daemon
 }
 
@@ -66,20 +64,19 @@ EOS
 @test "failed to restart td-agent by start failure (redhat)" {
   stub_path /usr/sbin/td-agent "true"
   stub killproc "true"
-  stub success "true"
+  stub failure "false"
   stub daemon "false"
 
   run_service restart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_failure
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub success
+  unstub failure
   unstub daemon
 }
 
@@ -94,8 +91,7 @@ EOS
 
   run_service condrestart
   assert_output <<EOS
-Shutting down td-agent: 
-Starting td-agent: 
+Restarting td-agent: 
 EOS
   assert_success
   [ -f "${TMP}/var/lock/subsys/td-agent" ]

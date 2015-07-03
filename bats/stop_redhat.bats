@@ -16,13 +16,14 @@ teardown() {
   echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   touch "${TMP}/var/lock/subsys/td-agent"
 
-  stub kill "1234 : true" \
+  stub kill "-TERM 1234 : true" \
+             "-0 1234 : false" \
              "-0 1234 : false"
   stub success "true"
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -35,12 +36,12 @@ EOS
   echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
   touch "${TMP}/var/lock/subsys/td-agent"
 
-  stub kill "1234 : false"
+  stub kill "-TERM 1234 : false"
   stub failure "false"
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_failure # TODO: change this to success for compatibility between debian
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -57,7 +58,8 @@ EOS
 STOPTIMEOUT=3
 SH
 
-  stub kill "1234 : true" \
+  stub kill "-TERM 1234 : true" \
+            "-0 1234 : true" \
             "-0 1234 : true" \
             "-0 1234 : true" \
             "-0 1234 : true"
@@ -66,7 +68,7 @@ SH
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: Timeout error occurred trying to stop td-agent...
+Stopping td-agent: Timeout error occurred trying to stop td-agent...
 EOS
   assert_failure
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -84,7 +86,7 @@ EOS
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
@@ -102,7 +104,7 @@ EOS
 
   run_service stop
   assert_output <<EOS
-Shutting down td-agent: 
+Stopping td-agent: 
 EOS
   assert_failure
   [ -f "${TMP}/var/lock/subsys/td-agent" ]

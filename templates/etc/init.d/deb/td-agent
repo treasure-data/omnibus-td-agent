@@ -2,11 +2,11 @@
 ### BEGIN INIT INFO
 # Provides:          <%= project_name %>
 # Required-Start:    $network $local_fs
-# Required-Stop:
+# Required-Stop:     $network $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: data collector for Treasure Data
-# Description:       Treasure Data Support <support@treasure-data.com>
+# Description:       <%= project_name %> is a data collector
 ### END INIT INFO
 <% require "shellwords" %>
 set -e
@@ -87,6 +87,21 @@ if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
   export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
 
+kill_by_file() {
+  local sig="$1"
+  shift 1
+  local pid="$(cat "$@" 2>/dev/null || true)"
+  if [ -n "${pid}" ]; then
+    if <%= Shellwords.shellescape(File.join(root_path, "bin/kill")) %> "${sig}" "${pid}" 1>/dev/null 2>&1; then
+      return 0
+    else
+      return 2
+    fi
+  else
+    return 1
+  fi
+}
+
 #
 # Function that starts the daemon/service
 #
@@ -99,12 +114,13 @@ do_start() {
   #   0 if daemon has been started
   #   1 if daemon was already running
   #   2 if daemon could not be started
-  start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-    ${START_STOP_DAEMON_ARGS} --test > /dev/null \
-    || return 1
-  start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-    ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
-    || return 2
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    return 1
+  else
+    start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
+      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
+      || return 2
+  fi
   # Add code here, if necessary, that waits for the process to be ready
   # to handle requests from services started subsequently which depend
   # on this one.  As a last resort, sleep for some time.
@@ -136,7 +152,25 @@ do_reload() {
   # restarting (for example, when it is sent a SIGHUP),
   # then implement that here.
   #
-  start-stop-daemon --stop --signal 1 --quiet --pidfile "${TD_AGENT_PID_FILE}" --name ruby
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || return 1
+}
+
+do_restart() {
+  if ! do_configtest; then
+    return 1
+  fi
+  local val=0
+  do_stop || val="$?"
+  case "${val}" in
+  0 | 1 )
+    if ! do_start; then
+      return 1
+    fi
+    ;;
+  * ) # Failed to stop
+    return 1
+    ;;
+  esac
 }
 
 do_configtest() {
@@ -146,19 +180,29 @@ do_configtest() {
 RETVAL=0
 case "$1" in
 "start" )
-  log_daemon_msg "Starting ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Starting ${TD_AGENT_NAME}: "
   do_start || RETVAL="$?"
   case "$RETVAL" in
-  0 | 1 ) log_end_msg 0 ;;
-      2 ) log_end_msg 1 ;;
+  0 | 1 )
+    log_success_msg "${TD_AGENT_NAME}"
+    ;;
+  * )
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+    ;;
   esac
   ;;
 "stop" )
-  log_daemon_msg "Stopping ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
+  echo -n "Stopping ${TD_AGENT_NAME}: "
   do_stop || RETVAL="$?"
   case "$RETVAL" in
-  0 | 1 ) log_end_msg 0 ;;
-      2 ) log_end_msg 1 ;;
+  0 | 1 )
+    log_success_msg "${TD_AGENT_NAME}"
+    ;;
+  * )
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+    ;;
   esac
   ;;
 "reload" | "force-reload" )
@@ -166,41 +210,46 @@ case "$1" in
   # If do_reload() is not implemented then leave this commented out
   # and leave 'force-reload' as an alias for 'restart'.
   #
-  log_daemon_msg "Reloading ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
-  do_configtest || log_end_msg 1
-  do_reload || RETVAL="$?"
-  log_end_msg "$RETVAL"
+  echo -n "Reloading ${TD_AGENT_NAME}: "
+  if ! do_configtest; then
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
+  if do_reload; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
   ;;
 "restart" )
   #
   # If the "reload" option is implemented then remove the
   # 'force-reload' alias
   #
-  log_daemon_msg "Restarting ${TD_AGENT_NAME} " "${TD_AGENT_NAME}"
-  do_configtest || log_end_msg 1
-  do_stop || RETVAL="$?"
-  case "$RETVAL" in
-  0 | 1 )
-    RETVAL=0
-    do_start || RETVAL="$?"
-    case "$RETVAL" in
-    0 ) log_end_msg 0 ;;
-    1 ) log_end_msg 1 ;; # Old process is still running
-    * ) log_end_msg 1 ;; # Failed to start
-    esac
-    ;;
-  * )
-    # Failed to stop
-    log_end_msg 1
-    ;;
-  esac
+  echo -n "Restarting ${TD_AGENT_NAME}: "
+  if do_restart; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
   ;;
 "status" )
-  status_of_proc "${TD_AGENT_RUBY}" "${TD_AGENT_NAME}"
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    log_success_msg "${TD_AGENT_NAME} is running"
+  else
+    log_failure_msg "${TD_AGENT_NAME} is not running"
+    exit 1
+  fi
   ;;
 "configtest" )
-  do_configtest || RETVAL="$?"
-  log_end_msg "$RETVAL"
+  if do_configtest; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
   ;;
 * )
   echo "Usage: $0 {start|stop|reload|restart|force-reload|status|configtest}" >&2
