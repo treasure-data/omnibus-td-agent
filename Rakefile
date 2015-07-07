@@ -1,7 +1,8 @@
 require 'rake'
 require 'rspec/core/rake_task'
+require 'shellwords'
 
-task :spec    => 'spec:all'
+task :spec    => ['spec:all', 'bats:all']
 task :default => :spec
 
 namespace :spec do

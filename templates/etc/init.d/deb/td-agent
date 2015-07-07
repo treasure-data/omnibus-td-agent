@@ -2,198 +2,257 @@
 ### BEGIN INIT INFO
 # Provides:          <%= project_name %>
 # Required-Start:    $network $local_fs
-# Required-Stop:
+# Required-Stop:     $network $local_fs
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: data collector for Treasure Data
-# Description:       Treasure Data Support <support@treasure-data.com>
+# Description:       <%= project_name %> is a data collector
 ### END INIT INFO
-
-# Author: Kazuki Ohta <k@treasure-data.com>
+<% require "shellwords" %>
 set -e
 
-# Introduce the short server's name here
-NAME=<%= project_name %>
+export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
+
+TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
+TD_AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
+TD_AGENT_USER=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
+TD_AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
+TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
+TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
+TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+TD_AGENT_OPTIONS="--use-v1-config --suppress-repeated-stacktrace"
+
+# timeout can be overridden from <%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
+STOPTIMEOUT=120
 
 # Read configuration variable file if it is present
-[ -r /etc/default/$NAME ] && . /etc/default/$NAME
+if [ -f "${TD_AGENT_DEFAULT}" ]; then
+  . "${TD_AGENT_DEFAULT}"
+fi
 
-# PATH should only include /usr/* if it runs after the mountnfs.sh script
-PATH=/sbin:/usr/sbin:/bin:/usr/bin
-USER=root                   # Running user
-GROUP=root                  # Running group
-DESC=<%= project_name %>                   # Introduce a short description here
-PIDFILE=/var/run/$NAME/$NAME.pid
-DAEMON=<%= install_path %>/embedded/bin/ruby # Introduce the server's location here
+if [ -n "${NAME}" ]; then
+  # backward compatibility with omnibus-td-agent <= 2.2.0. will be deleted from future release.
+  echo "Warning: Declaring \$NAME in ${TD_AGENT_DEFAULT} for customizing \$PIDFILE has been deprecated. Use \$TD_AGENT_PID_FILE instead." 1>&2
+  TD_AGENT_PID_FILE="<%= root_path %>/var/run/${NAME}/${NAME}.pid"
+fi
+
+if [ -n "${DAEMON_ARGS}" ]; then
+# TODO: Show warning on use of `DAEMON_ARGS`
+# echo "Warning: Declaring \$DAEMON_ARGS in ${TD_AGENT_DEFAULT} has been deprecated. Use \$TD_AGENT_OPTIONS instead." 1>&2
+  TD_AGENT_OPTIONS="${DAEMON_ARGS} ${TD_AGENT_OPTIONS}"
+fi
+
 # Arguments to run the daemon with
-DAEMON_ARGS="/usr/sbin/<%= project_name %> $DAEMON_ARGS --daemon $PIDFILE --log /var/log/<%= project_name %>/<%= project_name %>.log --use-v1-config --suppress-repeated-stacktrace"
-SCRIPTNAME=/etc/init.d/$NAME
+TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
 START_STOP_DAEMON_ARGS=""
 
 # Exit if the package is not installed
-[ -x $DAEMON ] || exit 0
+[ -x "${TD_AGENT_RUBY}" ] || exit 0
 
-# Load the VERBOSE setting and other rcS variables
-# . /lib/init/vars.sh
-VERBOSE="yes"
-
+# Source function library.
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. /lib/lsb/init-functions
+. <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %>
 
 # Check the user
-if [ -n "${USER}" ]; then
-	if ! getent passwd | grep -q "^${USER}:"; then
-		echo "$0: user for running <%= project_name %> doesn't exist: ${USER}" >&2
-		exit 1
-	fi
-	if [ ! -d $(dirname ${PIDFILE}) ]; then
-		mkdir -p $(dirname ${PIDFILE})
-	fi
-	chown -R ${USER} $(dirname ${PIDFILE})
-	START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} -c ${USER}"
+if [ -n "${TD_AGENT_USER}" ]; then
+  if ! getent passwd | grep -q "^${TD_AGENT_USER}:"; then
+    echo "$0: user for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_USER}" >&2
+    exit 1
+  fi
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} -c ${TD_AGENT_USER}"
 fi
-if [ -n "${GROUP}" ]; then
-	if ! getent group | grep -q "^${GROUP}:"; then
-		echo "$0: group for running <%= project_name %> doesn't exist: ${GROUP}" >&2
-		exit 1
-	fi
-	START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --group ${GROUP}"
+
+if [ -n "${TD_AGENT_GROUP}" ]; then
+  if ! getent group | grep -q "^${TD_AGENT_GROUP}:"; then
+    echo "$0: group for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_GROUP}" >&2
+    exit 1
+  fi
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --group ${TD_AGENT_GROUP}"
+fi
+
+if [ -n "${TD_AGENT_PID_FILE}" ]; then
+  mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
+  chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 
 # 2012/04/17 Kazuki Ohta <k@treasure-data.com>
 # Use jemalloc to avoid memory fragmentation
-if [ -f "<%= install_path %>/embedded/lib/libjemalloc.so" ]; then
-	export LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
+if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
+  export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
 fi
+
+kill_by_file() {
+  local sig="$1"
+  shift 1
+  local pid="$(cat "$@" 2>/dev/null || true)"
+  if [ -n "${pid}" ]; then
+    if <%= Shellwords.shellescape(File.join(root_path, "bin/kill")) %> "${sig}" "${pid}" 1>/dev/null 2>&1; then
+      return 0
+    else
+      return 2
+    fi
+  else
+    return 1
+  fi
+}
 
 #
 # Function that starts the daemon/service
 #
-do_start()
-{
-	# Set Max number of file descriptors for the safety sake
-	# see http://docs.fluentd.org/en/articles/before-install
-	ulimit -n 65536
+do_start() {
+  # Set Max number of file descriptors for the safety sake
+  # see http://docs.fluentd.org/en/articles/before-install
+  ulimit -n 65536 1>/dev/null 2>&1 || true
 
-	# Return
-	#   0 if daemon has been started
-	#   1 if daemon was already running
-	#   2 if daemon could not be started
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
-	${START_STOP_DAEMON_ARGS} --test > /dev/null \
-		|| return 1
-	start-stop-daemon --start --quiet --pidfile $PIDFILE --exec $DAEMON \
-	${START_STOP_DAEMON_ARGS} -- $DAEMON_ARGS \
-		|| return 2
-	# Add code here, if necessary, that waits for the process to be ready
-	# to handle requests from services started subsequently which depend
-	# on this one.  As a last resort, sleep for some time.
+  # Return
+  #   0 if daemon has been started
+  #   1 if daemon was already running
+  #   2 if daemon could not be started
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    return 1
+  else
+    start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
+      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
+      || return 2
+  fi
+  # Add code here, if necessary, that waits for the process to be ready
+  # to handle requests from services started subsequently which depend
+  # on this one.  As a last resort, sleep for some time.
 }
 
 #
 # Function that stops the daemon/service
 #
-do_stop()
-{
-	# Return
-	#   0 if daemon has been stopped
-	#   1 if daemon was already stopped
-	#   2 if daemon could not be stopped
-	#   other if a failure occurred
-	local RETVAL=0
-	start-stop-daemon --stop --quiet --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name ruby || RETVAL="$?"
-	[ "$RETVAL" = 2 ] && return 2
-	# Wait for children to finish too if this is a daemon that forks
-	# and if the daemon is only ever run from this initscript.
-	# If the above conditions are not satisfied then add some other code
-	# that waits for the process to drop all resources that could be
-	# needed by services started subsequently.  A last resort is to
-	# sleep for some time.
-	start-stop-daemon --stop --quiet --oknodo --retry=0/30/KILL/5 --exec $DAEMON || RETVAL="$?"
-	[ "$RETVAL" = 2 ] && return 2
-	# Many daemons don't delete their pidfiles when they exit.
-	rm -f $PIDFILE
-	return "$RETVAL"
+do_stop() {
+  # Return
+  #   0 if daemon has been stopped
+  #   1 if daemon was already stopped
+  #   2 if daemon could not be stopped
+  #   other if a failure occurred
+  local RETVAL=0
+  start-stop-daemon --stop --quiet --retry="TERM/${STOPTIMEOUT}/KILL/5" --pidfile "${TD_AGENT_PID_FILE}" --name ruby || RETVAL="$?"
+  [ "$RETVAL" = 2 ] && return 2
+  # Many daemons don't delete their pidfiles when they exit.
+  rm -f "${TD_AGENT_PID_FILE}"
+  return "$RETVAL"
 }
 
 #
 # Function that sends a SIGHUP to the daemon/service
 #
 do_reload() {
-	#
-	# If the daemon can reload its configuration without
-	# restarting (for example, when it is sent a SIGHUP),
-	# then implement that here.
-	#
-	start-stop-daemon --stop --signal 1 --quiet --pidfile $PIDFILE --name ruby
+  #
+  # If the daemon can reload its configuration without
+  # restarting (for example, when it is sent a SIGHUP),
+  # then implement that here.
+  #
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || return 1
+}
+
+do_restart() {
+  if ! do_configtest; then
+    return 1
+  fi
+  local val=0
+  do_stop || val="$?"
+  case "${val}" in
+  0 | 1 )
+    if ! do_start; then
+      return 1
+    fi
+    ;;
+  * ) # Failed to stop
+    return 1
+    ;;
+  esac
 }
 
 do_configtest() {
-	eval "$DAEMON_ARGS --user ${USER} --group ${GROUP} --dry-run -q"
+  eval "${TD_AGENT_ARGS} --user ${TD_AGENT_USER} --group ${TD_AGENT_GROUP} --dry-run -q"
 }
 
 RETVAL=0
 case "$1" in
-  start)
-    [ "$VERBOSE" != no ] && log_daemon_msg "Starting $DESC " "$NAME"
-    do_start || RETVAL="$?"
-    case "$RETVAL" in
-		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-	esac
+"start" )
+  echo -n "Starting ${TD_AGENT_NAME}: "
+  do_start || RETVAL="$?"
+  case "$RETVAL" in
+  0 | 1 )
+    log_success_msg "${TD_AGENT_NAME}"
+    ;;
+  * )
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+    ;;
+  esac
   ;;
-  stop)
-	[ "$VERBOSE" != no ] && log_daemon_msg "Stopping $DESC" "$NAME"
-	do_stop || RETVAL="$?"
-	case "$RETVAL" in
-		0|1) [ "$VERBOSE" != no ] && log_end_msg 0 ;;
-		2) [ "$VERBOSE" != no ] && log_end_msg 1 ;;
-	esac
-	;;
-  status)
-       status_of_proc "$DAEMON" "$NAME"
-       ;;
-  reload|force-reload)
-	#
-	# If do_reload() is not implemented then leave this commented out
-	# and leave 'force-reload' as an alias for 'restart'.
-	#
-	log_daemon_msg "Reloading $DESC" "$NAME"
-  do_configtest && do_reload || RETVAL="$?"
-	log_end_msg "$RETVAL"
-	;;
-  restart|force-reload)
-	#
-	# If the "reload" option is implemented then remove the
-	# 'force-reload' alias
-	#
-	log_daemon_msg "Restarting $DESC" "$NAME"
-	do_configtest && do_stop || RETVAL="$?"
-	case "$RETVAL" in
-	  0|1)
-		RETVAL=0
-		do_start || RETVAL="$?"
-		case "$RETVAL" in
-			0) log_end_msg 0 ;;
-			1) log_end_msg 1 ;; # Old process is still running
-			*) log_end_msg 1 ;; # Failed to start
-		esac
-		;;
-	  *)
-	  	# Failed to stop
-		log_end_msg 1
-		;;
-	esac
-	;;
-  configtest)
-	do_configtest || RETVAL="$?"
-		log_end_msg "$RETVAL"
-	;;
-  *)
-	echo "Usage: $SCRIPTNAME {start|stop|status|restart|force-reload|configtest}" >&2
-	exit 3
-	;;
+"stop" )
+  echo -n "Stopping ${TD_AGENT_NAME}: "
+  do_stop || RETVAL="$?"
+  case "$RETVAL" in
+  0 | 1 )
+    log_success_msg "${TD_AGENT_NAME}"
+    ;;
+  * )
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+    ;;
+  esac
+  ;;
+"reload" | "force-reload" )
+  #
+  # If do_reload() is not implemented then leave this commented out
+  # and leave 'force-reload' as an alias for 'restart'.
+  #
+  echo -n "Reloading ${TD_AGENT_NAME}: "
+  if ! do_configtest; then
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
+  if do_reload; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
+  ;;
+"restart" )
+  #
+  # If the "reload" option is implemented then remove the
+  # 'force-reload' alias
+  #
+  echo -n "Restarting ${TD_AGENT_NAME}: "
+  if do_restart; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
+  ;;
+"status" )
+  if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+    log_success_msg "${TD_AGENT_NAME} is running"
+  else
+    log_failure_msg "${TD_AGENT_NAME} is not running"
+    exit 1
+  fi
+  ;;
+"configtest" )
+  if do_configtest; then
+    log_success_msg "${TD_AGENT_NAME}"
+  else
+    log_failure_msg "${TD_AGENT_NAME}"
+    exit 1
+  fi
+  ;;
+* )
+  echo "Usage: $0 {start|stop|reload|restart|force-reload|status|configtest}" >&2
+  exit 1
+  ;;
 esac
-
-:

@@ -10,10 +10,10 @@ build do
   block do
     # setup related files
     pkg_type = project.packager.id.to_s
+    root_path = "/" # for ERB
     install_path = project.install_dir # for ERB
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
-    project_name_snake_upcase = project_name_snake.upcase
     gem_dir_version = "2.1.0"
 
     template = ->(*parts) { File.join('templates', *parts) }
