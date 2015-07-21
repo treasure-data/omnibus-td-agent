@@ -316,9 +316,9 @@ case "$1" in
   ;;
 "status" )
   if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
-    log_success_msg "${TD_AGENT_NAME} is running"
+    echo "${TD_AGENT_NAME} is running"
   else
-    log_failure_msg "${TD_AGENT_NAME} is not running"
+    echo "${TD_AGENT_NAME} is not running"
     exit 1
   fi
   ;;
