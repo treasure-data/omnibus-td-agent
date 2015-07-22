@@ -19,7 +19,7 @@ TD_AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "default
 TD_AGENT_USER=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_GROUP=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
-TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", "td-agent")) %>
+TD_AGENT_BIN_FILE=<%= Shellwords.shellescape(File.join(root_path, "usr", "sbin", project_name)) %>
 TD_AGENT_LOG_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %>
 TD_AGENT_PID_FILE=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 TD_AGENT_OPTIONS="--use-v1-config"
