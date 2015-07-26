@@ -5,7 +5,7 @@ source 'https://api.berkshelf.com'
 cookbook 'apt', '~> 2.3'
 cookbook 'yum-epel', '~> 0.3'
 
-cookbook 'omnibus'
+cookbook 'omnibus', '2.6.8'
 
 # Uncomment to use the latest version of the Omnibus cookbook from GitHub
 # cookbook 'omnibus', github: 'opscode-cookbooks/omnibus'
