@@ -184,6 +184,18 @@ do_start() {
   # Set Max number of file descriptors for the safety sake
   # see http://docs.fluentd.org/en/articles/before-install
   ulimit -n 65536 1>/dev/null 2>&1 || true
+
+  # Return
+  #   0 if daemon has been started or is already running
+  #   3 if daemon was not supposed to be started
+  #   other if daemon could not be started or a failure occurred
+
+  GOOGLE_LOGGING_ENABLE=$(curl --silent -f -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/project/attributes/google-logging-enable 2>/dev/null)
+  if [ -n "$GOOGLE_LOGGING_ENABLE" -a "$GOOGLE_LOGGING_ENABLE" = "0" ]; then
+      echo "Disabled via metadata"
+      return 3
+  fi
+
   local RETVAL=0
   daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} "${TD_AGENT_RUBY}" ${TD_AGENT_ARGS} || RETVAL="$?"
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
