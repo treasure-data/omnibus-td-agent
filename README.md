@@ -237,3 +237,7 @@ $ bundle exec kitchen login default-ubuntu-1204
 
 For a complete list of all commands and platforms, run `kitchen list` or
 `kitchen help`.
+
+# License
+
+Treasure Agent package is released under the Apache2 license.
