@@ -118,7 +118,7 @@ do_start() {
   if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
     return 1
   else
-    GOOGLE_LOGGING_ENABLE=$(curl --silent -f -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/project/attributes/google-logging-enable 2>/dev/null)
+    GOOGLE_LOGGING_ENABLE=$(curl --silent -f -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/attributes/google-logging-enable 2>/dev/null)
     if [ -n "$GOOGLE_LOGGING_ENABLE" -a "$GOOGLE_LOGGING_ENABLE" = "0" ]; then
         log_warning_msg "Disabled via metadata"
         return 3
