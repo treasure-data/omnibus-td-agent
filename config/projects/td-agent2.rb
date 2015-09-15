@@ -22,8 +22,6 @@ override :postgresql, :version => '9.3.5'
 if ohai['platform_family'] == 'rhel' && ohai['platform_version'].split('.').first.to_i == 7
   override :liblzma, :version => '5.1.2alpha'
 end
-# workaround until https://github.com/chef/omnibus-software/pull/473 is live.
-override :ncurses, :version => '5.9'
 
 # td-agent dependencies/components
 dependency "td-agent"
