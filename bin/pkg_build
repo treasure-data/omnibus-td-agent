@@ -28,6 +28,7 @@ end
 
 unless ARGV.include?('--without-debian')
   platforms += [
+    "debian-8.1",
     "debian-7.7",
     "debian-6.0.10"
   ]
