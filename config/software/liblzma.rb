@@ -15,10 +15,12 @@
 #
 
 name "liblzma"
-default_version "5.0.5"
+default_version "5.0.8"
 
 version('5.0.5') { source md5: "19d924e066b6fff0bc9d1981b4e53196" }
+version('5.0.8') { source md5: "d19507f40e0d904d0a1b7914b173800e" }
 version('5.1.2alpha') { source md5: "9bad1e249537ce69b206815cf28ca87b" }
+version('5.2.2') { source md5: "7cf6a8544a7dae8e8106fdf7addfa28c" }
 
 source url: "http://tukaani.org/xz/xz-#{version}.tar.gz"
 
