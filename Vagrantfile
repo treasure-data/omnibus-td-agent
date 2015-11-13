@@ -137,11 +137,13 @@ Vagrant.configure('2') do |config|
     c.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-      aws.keypair_name = "treasure-data"
+      aws.keypair_name = "td-agent-build"
 
-      aws.ami = "ami-1ecae776"
+      aws.ami = "ami-60b6c60a"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
+      aws.security_groups = ['td-agent-build']
+      aws.user_data  =  "#!/bin/bash\nsed -i -e 's/^Defaults.*requiretty/# Defaults requiretty/g' /etc/sudoers"
 
       override.ssh.username = project_build_user
       override.ssh.private_key_path = ENV["AWS_SSH_KEY_PATH"]
