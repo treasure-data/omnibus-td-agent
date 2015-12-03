@@ -23,6 +23,7 @@ custom_run() {
   stub getent "group : echo nogroup:x:100:"
   rm -f "${TMP}/path/to/td-agent.pid"
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
   custom_run <<EOS
 DAEMON_ARGS="--user nobody -10"
 PIDFILE="${TMP}/path/to/td-agent.pid"
@@ -51,6 +52,7 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
   unstub getent
   unstub chown
+  unstub log_success_msg
 }
 
 @test "start td-agent with --user=... and --group=... in configuration variables successfully (redhat)" {
@@ -60,6 +62,7 @@ EOS
   stub getent "group : echo nogroup:x:100:"
   rm -f "${TMP}/path/to/td-agent.pid"
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
   custom_run <<EOS
 DAEMON_ARGS="--user=nobody"
 PIDFILE="${TMP}/path/to/td-agent.pid"
@@ -87,6 +90,7 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
   unstub getent
   unstub chown
+  unstub log_success_msg
 }
 
 @test "start td-agent with custom configurations successfully (redhat)" {
@@ -99,6 +103,7 @@ EOS
   chmod +x "${TMP}/path/to/custom_td_agent_ruby"
   rm -f "${TMP}/path/to/td-agent.pid"
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "custom_td_agent_name : true"
   custom_run <<EOS
 TD_AGENT_NAME="custom_td_agent_name"
 TD_AGENT_HOME="${TMP}/path/to/custom_td_agent_home"
@@ -131,4 +136,5 @@ EOS
   [ -f "${TMP}/path/to/custom_td_agent_lock_file" ]
   unstub getent
   unstub chown
+  unstub log_success_msg
 }

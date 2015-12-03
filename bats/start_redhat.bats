@@ -16,6 +16,7 @@ teardown() {
   rm -f "${TMP}/etc/sysconfig/td-agent"
 
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
 
   run_service start
   assert_output <<EOS
@@ -37,10 +38,12 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub daemon
+  unstub log_success_msg
 }
 
 @test "failed to start td-agent (redhat)" {
   stub daemon "false"
+  stub log_failure_msg "td-agent : false"
 
   run_service start
   assert_output <<EOS
@@ -50,4 +53,5 @@ EOS
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub daemon
+  unstub log_failure_msg
 }

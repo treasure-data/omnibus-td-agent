@@ -18,8 +18,8 @@ teardown() {
 
   stub_path /usr/sbin/td-agent "true"
   stub killproc "true"
-  stub success "true"
   stub daemon "true"
+  stub log_success_msg "td-agent : true"
 
   run_service restart
   assert_output <<EOS
@@ -30,15 +30,15 @@ EOS
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub success
   unstub daemon
+  unstub log_success_msg
 }
 
 @test "restart td-agent regardless of stop failure (redhat)" {
   stub_path /usr/sbin/td-agent "true"
   stub killproc "false"
-  stub success "true"
   stub daemon "true"
+  stub log_success_msg "td-agent : true"
 
   run_service restart
   assert_output <<EOS
@@ -48,24 +48,26 @@ EOS
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub success
   unstub daemon
+  unstub log_success_msg
 }
 
 @test "failed to restart td-agent by configuration test failure (redhat)" {
   stub_path /usr/sbin/td-agent "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service restart
   assert_failure
 
   unstub_path /usr/sbin/td-agent
+  unstub log_failure_msg
 }
 
 @test "failed to restart td-agent by start failure (redhat)" {
   stub_path /usr/sbin/td-agent "true"
   stub killproc "true"
-  stub failure "false"
   stub daemon "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service restart
   assert_output <<EOS
@@ -76,8 +78,8 @@ EOS
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub failure
   unstub daemon
+  unstub log_failure_msg
 }
 
 @test "conditional restart of td-agent (redhat)" {
@@ -86,8 +88,8 @@ EOS
 
   stub_path /usr/sbin/td-agent "true"
   stub killproc "true"
-  stub success "true"
   stub daemon "true"
+  stub log_success_msg "td-agent : true"
 
   run_service condrestart
   assert_output <<EOS
@@ -98,8 +100,8 @@ EOS
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub success
   unstub daemon
+  unstub log_success_msg
 }
 
 @test "conditional restart do nothing if lock file doesn't exist (redhat)" {
