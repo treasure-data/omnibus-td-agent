@@ -134,6 +134,12 @@ $ vagrant plugin install vagrant-berkshelf --plugin-version=2.0.1
 $ vagrant plugin install vagrant-omnibus
 ```
 
+Exceute `berks` command to setup cookbooks
+
+```shell
+$ berks vendor cookbooks
+```
+
 Once the pre-requisites are installed you can build your package across all
 platforms with the following command:
 
