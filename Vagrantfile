@@ -76,7 +76,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => project_build_user,
             'build_dir' => guest_project_path,
-            'ruby_version' => '2.1.2',
+            'ruby_version' => '2.1.8',
             'install_dir' => "/opt/#{project_name}"
           }
         }
@@ -144,6 +144,7 @@ Vagrant.configure('2') do |config|
       aws.tags = {'Name' => 'td-agent-build'}
       aws.security_groups = ['td-agent-build']
       aws.user_data  =  "#!/bin/bash\nsed -i -e 's/^Defaults.*requiretty/# Defaults requiretty/g' /etc/sudoers"
+      aws.block_device_mapping = [{'DeviceName' => '/dev/xvda', 'Ebs.VolumeSize' => 20}]
 
       override.ssh.username = project_build_user
       override.ssh.private_key_path = ENV["AWS_SSH_KEY_PATH"]
@@ -161,7 +162,7 @@ Vagrant.configure('2') do |config|
         'omnibus' => {
           'build_user' => project_build_user,
           'build_dir' => guest_project_path,
-          'ruby_version' => '2.1.2',
+          'ruby_version' => '2.1.8',
           'install_dir' => "/opt/#{project_name}"
         }
       }
