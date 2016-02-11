@@ -23,14 +23,15 @@ Vagrant.configure('2') do |config|
     ubuntu-12.04
     ubuntu-12.04-i386
     ubuntu-14.04
+    ubuntu-14.04-i386
     debian-6.0.10
-    debian-7.7
-    debian-8.1
+    debian-7.9
+    debian-8.2
     centos-5.11
     centos-5.11-i386
-    centos-6.6
-    centos-6.6-i386
-    centos-7.1
+    centos-6.7
+    centos-6.7-i386
+    centos-7.2
   }.each_with_index do |platform, index|
     project_build_user = 'vagrant'
     guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
@@ -69,6 +70,11 @@ Vagrant.configure('2') do |config|
       config.ssh.forward_agent = true
       config.vm.synced_folder '.', '/vagrant', :id => 'vagrant-root', :nfs => use_nfs
       config.vm.synced_folder host_project_path, guest_project_path, :nfs => use_nfs
+      if platform == 'ubuntu-14.04-i386'
+        config.vbguest.auto_update = true
+      else
+        config.vbguest.auto_update = false
+      end
 
       c.vm.provision :chef_solo do |chef|
         chef.synced_folder_type = "nfs" if use_nfs
