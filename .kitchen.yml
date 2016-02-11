@@ -1,34 +1,44 @@
 driver:
   name: vagrant
+  forward_agent: yes
   customize:
     cpus: 2
     memory: 4096
   synced_folders:
-    - ['.', '/home/vagrant/td-agent']
-  #vagrantfile_erb: Vagrantfile.erb
+    - ['.', '/home/vagrant/omnibus-td-agent']
 
 provisioner:
-  require_chef_omnibus: 11.16.4
+  name: chef_zero
+  require_chef_omnibus: 12.4.1
 
 platforms:
-  # converge failed on 14.04 because libcurl4-gnutls-dev causes an error.
+  - name: centos-7.1
+    run_list: yum-epel::default
+  - name: centos-6.6
+    run_list: yum-epel::default
+  - name: centos-5.11
+    run_list: yum-epel::default
+  - name: debian-7.8
+    run_list: apt::default
+  - name: debian-6.0.10
+    run_list: apt::default
+  - name: freebsd-10.1
+    run_list: freebsd::portsnap
+  - name: freebsd-9.3
+    run_list:
+      - freebsd::portsnap
+      - freebsd::pkgng
   - name: ubuntu-14.04
     run_list: apt::default
   - name: ubuntu-12.04
     run_list: apt::default
-  - name: ubuntu-10.04
-    run_list: apt::default
-  - name: centos-5.10
-    run_list: yum-epel::default
-  - name: centos-6.5
-    run_list: yum-epel::default
 
 suites:
   - name: default
     run_list: omnibus::default
     attributes:
       omnibus:
-        build_user:  vagrant
-        build_dir:   /home/vagrant/td-agent
-        install_dir: /opt/td-agent
-        ruby_version: 2.1.2
+        build_user:          vagrant
+        build_user_group:    vagrant
+        build_user_password: vagrant
+        install_dir:         /opt/omnibus-td-agent
