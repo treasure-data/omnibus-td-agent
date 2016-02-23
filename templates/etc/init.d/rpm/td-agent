@@ -253,13 +253,8 @@ do_restart() {
       return 1
     fi
     ;;
-  * )
-# TODO: change the behavior on stop failure
-#   return 1
-    val=0
-    if ! do_start; then
-      return 1
-    fi
+  * ) # Failed to stop
+    return 1
     ;;
   esac
 }

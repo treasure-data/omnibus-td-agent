@@ -43,7 +43,7 @@ EOS
 
 @test "failed to start td-agent (redhat)" {
   stub daemon "false"
-  stub log_failure_msg "td-agent : false"
+  stub log_failure_msg "td-agent : true"
 
   run_service start
   assert_output <<EOS

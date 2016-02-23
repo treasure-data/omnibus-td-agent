@@ -34,22 +34,21 @@ EOS
   unstub log_success_msg
 }
 
-@test "restart td-agent regardless of stop failure (redhat)" {
+@test "failed to restart td-agent due to stop failure (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
   stub killproc "false"
-  stub daemon "true"
-  stub log_success_msg "td-agent : true"
+  stub log_failure_msg "td-agent : true"
 
   run_service restart
   assert_output <<EOS
 Restarting td-agent: 
 EOS
-  assert_success
+  assert_failure
 
   unstub_path /usr/sbin/td-agent
   unstub killproc
-  unstub daemon
-  unstub log_success_msg
+  unstub log_failure_msg
 }
 
 @test "failed to restart td-agent by configuration test failure (redhat)" {
@@ -63,7 +62,8 @@ EOS
   unstub log_failure_msg
 }
 
-@test "failed to restart td-agent by start failure (redhat)" {
+@test "failed to restart td-agent due to start failure (redhat)" {
+  rm -f "${TMP}/var/run/td-agent/td-agent.pid"
   stub_path /usr/sbin/td-agent "true"
   stub killproc "true"
   stub daemon "false"
