@@ -9,7 +9,6 @@
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
 <% require "shellwords" %>
-set -e
 
 export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
 
