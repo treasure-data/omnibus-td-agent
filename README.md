@@ -110,9 +110,9 @@ that will allow you to build your projects on the following platforms:
 * Ubuntu 12.04 64-bit
 * Ubuntu 12.04 32-bit
 * Ubuntu 14.04 64-bit
-* Debian 6.0.10 64-bit
-* Debian 7.7 64-bit
-* Amazon Linux 2015.03 64-bit
+* Debian 7.9 64-bit
+* Debian 8.2 64-bit
+* Amazon Linux 2015.09 64-bit
 
 Please note this build-lab is only meant to get you up and running quickly;
 there's nothing inherent in Omnibus that restricts you to just building CentOS
@@ -130,8 +130,15 @@ The [vagrant-berkshelf](https://github.com/RiotGames/vagrant-berkshelf) and
 are also required and can be installed easily with the following commands:
 
 ```shell
-$ vagrant plugin install vagrant-berkshelf --plugin-version=2.0.1
+$ vagrant plugin install vagrant-berkshelf
 $ vagrant plugin install vagrant-omnibus
+$ vagrant plugin install vagrant-vbguest
+```
+
+Exceute `berks` command to setup cookbooks
+
+```shell
+$ berks vendor cookbooks
 ```
 
 Once the pre-requisites are installed you can build your package across all
@@ -167,10 +174,10 @@ You can build all environments via `bin/pkg_build` command.
 ./bin/pkg_build
 ```
 
-After that, each package is stored in `built_pkg` directory.
+After that, each package is stored in `td_agent2_pkg` directory.
 
 ```sh
-% ls built_pkg/
+% ls td_agent2_pkg/
 centos-5.10/  centos-6.5/   ubuntu-10.04/ ubuntu-12.04/
 ```
 
@@ -178,17 +185,17 @@ centos-5.10/  centos-6.5/   ubuntu-10.04/ ubuntu-12.04/
 
 ```sh
 % vagrant --version
-Vagrant 1.6.1
+Vagrant 1.7.4
 
 % VBoxHeadless --version
-Oracle VM VirtualBox Headless Interface 4.3.10
-(C) 2008-2014 Oracle Corporation
+Oracle VM VirtualBox Headless Interface 5.0.4
+(C) 2008-2015 Oracle Corporation
 All rights reserved.
 
-4.3.10r93012
+5.0.4r102546
 
 % ruby --version
-ruby 2.1.2p95 (2014-05-08 revision 45877) [x86_64-darwin13.0]
+ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-darwin13.0]
 ```
 
 ### NOTE

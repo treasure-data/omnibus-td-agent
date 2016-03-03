@@ -23,14 +23,15 @@ Vagrant.configure('2') do |config|
     ubuntu-12.04
     ubuntu-12.04-i386
     ubuntu-14.04
+    ubuntu-14.04-i386
     debian-6.0.10
-    debian-7.7
-    debian-8.1
+    debian-7.9
+    debian-8.2
     centos-5.11
     centos-5.11-i386
-    centos-6.6
-    centos-6.6-i386
-    centos-7.1
+    centos-6.7
+    centos-6.7-i386
+    centos-7.2
   }.each_with_index do |platform, index|
     project_build_user = 'vagrant'
     guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
@@ -69,6 +70,11 @@ Vagrant.configure('2') do |config|
       config.ssh.forward_agent = true
       config.vm.synced_folder '.', '/vagrant', :id => 'vagrant-root', :nfs => use_nfs
       config.vm.synced_folder host_project_path, guest_project_path, :nfs => use_nfs
+      if platform == 'ubuntu-14.04-i386'
+        config.vbguest.auto_update = true
+      else
+        config.vbguest.auto_update = false
+      end
 
       c.vm.provision :chef_solo do |chef|
         chef.synced_folder_type = "nfs" if use_nfs
@@ -76,7 +82,7 @@ Vagrant.configure('2') do |config|
           'omnibus' => {
             'build_user' => project_build_user,
             'build_dir' => guest_project_path,
-            'ruby_version' => '2.1.2',
+            'ruby_version' => '2.1.8',
             'install_dir' => "/opt/#{project_name}"
           }
         }
@@ -137,11 +143,14 @@ Vagrant.configure('2') do |config|
     c.vm.provider :aws do |aws, override|
       aws.access_key_id = ENV['AWS_ACCESS_KEY_ID']
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
-      aws.keypair_name = "treasure-data"
+      aws.keypair_name = "td-agent-build"
 
-      aws.ami = "ami-1ecae776"
+      aws.ami = "ami-60b6c60a"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
+      aws.security_groups = ['td-agent-build']
+      aws.user_data  =  "#!/bin/bash\nsed -i -e 's/^Defaults.*requiretty/# Defaults requiretty/g' /etc/sudoers"
+      aws.block_device_mapping = [{'DeviceName' => '/dev/xvda', 'Ebs.VolumeSize' => 20}]
 
       override.ssh.username = project_build_user
       override.ssh.private_key_path = ENV["AWS_SSH_KEY_PATH"]
@@ -159,7 +168,7 @@ Vagrant.configure('2') do |config|
         'omnibus' => {
           'build_user' => project_build_user,
           'build_dir' => guest_project_path,
-          'ruby_version' => '2.1.2',
+          'ruby_version' => '2.1.8',
           'install_dir' => "/opt/#{project_name}"
         }
       }
