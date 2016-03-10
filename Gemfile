@@ -3,6 +3,9 @@ source 'https://rubygems.org'
 # Use Berkshelf for resolving cookbook dependencies
 gem 'berkshelf', '~> 3.0'
 
+# Fork to allow for a recent version of multipart-post.
+gem 'pedump', git: 'https://github.com/ksubrama/pedump', branch: 'patch-1'
+
 # Install omnibus software
 #gem 'omnibus', '~> 5.0'
 gem 'omnibus', :github => 'chef/omnibus' # for latest omnibus-software
