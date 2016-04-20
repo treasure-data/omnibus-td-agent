@@ -7,6 +7,17 @@ dependency "nokogiri"
 dependency "postgresql"
 dependency "fluentd"
 
+case ohai["platform"]
+when "linux"
+  case ohai["platform_family"]
+  when "debian"
+    dependency "lsb-base"
+  when "rhel"
+    dependency "initscripts"
+    dependency "redhat-lsb"
+  end
+end
+
 env = {}
 
 build do

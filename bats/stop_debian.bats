@@ -13,45 +13,60 @@ teardown() {
 }
 
 @test "stop td-agent successfully (debian)" {
-  stub_path /sbin/start-stop-daemon "echo; echo start-stop-daemon; for arg; do echo \"  \$arg\"; done"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+
+  stub kill "-TERM 1234 : true" \
+             "-0 1234 : false" \
+             "-0 1234 : false"
   stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
 Stopping td-agent: 
-start-stop-daemon
-  --stop
-  --quiet
-  --retry=TERM/120/KILL/5
-  --pidfile
-  ${TMP}/var/run/td-agent/td-agent.pid
-  --name
-  ruby
 EOS
   assert_success
 
-  unstub_path /sbin/start-stop-daemon
+  unstub kill
   unstub log_success_msg
 }
 
 @test "stop td-agent but it has already been stopped (debian)" {
-  stub_path /sbin/start-stop-daemon "false"
-  stub log_success_msg "td-agent : true"
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
 
-  run_service stop
-  assert_success
-
-  unstub_path /sbin/start-stop-daemon
-  unstub log_success_msg
-}
-
-@test "failed to stop td-agent (debian)" {
-  stub_path /sbin/start-stop-daemon "exit 2"
+  stub kill "-TERM 1234 : false"
   stub log_failure_msg "td-agent : true"
 
   run_service stop
+  assert_output <<EOS
+Stopping td-agent: 
+EOS
   assert_failure
 
-  unstub_path /sbin/start-stop-daemon
+  unstub kill
+  unstub log_failure_msg
+}
+
+@test "failed to stop td-agent (debian)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+
+  cat <<SH > "${TMP}/etc/default/td-agent"
+STOPTIMEOUT=3
+SH
+
+  stub kill "-TERM 1234 : true" \
+            "-0 1234 : true" \
+            "-0 1234 : true" \
+            "-0 1234 : true" \
+            "-0 1234 : true"
+  stub sleep "1 : true"
+  stub log_failure_msg "td-agent : true"
+
+  run_service stop
+  assert_output <<EOS
+Stopping td-agent: Timeout error occurred trying to stop td-agent...
+EOS
+  assert_failure
+
+  unstub kill
   unstub log_failure_msg
 }

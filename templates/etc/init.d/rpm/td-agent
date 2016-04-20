@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          <%= project_name %>
 # Required-Start:    $network $local_fs
@@ -131,6 +131,10 @@ START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
 # Source function library.
 . <%= File.join(root_path, "etc/init.d/functions") %>
 
+# Define LSB log_* functions.
+# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
+. <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %>
+
 # Check the user
 if [ -n "${TD_AGENT_USER}" ]; then
   if ! getent passwd | grep -q "^${TD_AGENT_USER}:"; then
@@ -249,13 +253,8 @@ do_restart() {
       return 1
     fi
     ;;
-  * )
-# TODO: change the behavior on stop failure
-#   return 1
-    val=0
-    if ! do_start; then
-      return 1
-    fi
+  * ) # Failed to stop
+    return 1
     ;;
   esac
 }
@@ -271,10 +270,10 @@ case "$1" in
   do_start || RETVAL="$?"
   case "$RETVAL" in
   0 )
-    echo
+    log_success_msg "${TD_AGENT_NAME}"
     ;;
   * )
-    echo
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
     ;;
   esac
@@ -284,10 +283,10 @@ case "$1" in
   do_stop || RETVAL="$?"
   case "$RETVAL" in
   0 )
-    echo "$(success)"
+    log_success_msg "${TD_AGENT_NAME}"
     ;;
   * )
-    echo "$(failure)"
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
     ;;
   esac
@@ -295,30 +294,30 @@ case "$1" in
 "reload" )
   echo -n "Reloading ${TD_AGENT_NAME}: "
   if ! do_configtest; then
-    echo
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
   fi
   if do_reload; then
-    echo
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    echo
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
   fi
   ;;
 "restart" )
   echo -n "Restarting ${TD_AGENT_NAME}: "
   if do_restart; then
-    echo "$(success)"
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    echo "$(failure)"
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
   fi
   ;;
 "status" )
   if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
-    echo "${TD_AGENT_NAME} is running"
+    log_success_msg "${TD_AGENT_NAME} is running"
   else
-    echo "${TD_AGENT_NAME} is not running"
+    log_failure_msg "${TD_AGENT_NAME} is not running"
     exit 1
   fi
   ;;
@@ -326,18 +325,18 @@ case "$1" in
   if [ -f "${TD_AGENT_LOCK_FILE}" ]; then
     echo -n "Restarting ${TD_AGENT_NAME}: "
     if do_restart; then
-      echo "$(success)"
+      log_success_msg "${TD_AGENT_NAME}"
     else
-      echo "$(failure)"
+      log_failure_msg "${TD_AGENT_NAME}"
       exit 1
     fi
   fi
   ;;
 "configtest" )
   if do_configtest; then
-    echo
+    log_success_msg "${TD_AGENT_NAME}"
   else
-    echo
+    log_failure_msg "${TD_AGENT_NAME}"
     exit 1
   fi
   ;;

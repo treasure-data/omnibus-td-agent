@@ -9,7 +9,6 @@
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
 <% require "shellwords" %>
-set -e
 
 export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
 
@@ -135,24 +134,40 @@ do_stop() {
   #   1 if daemon was already stopped
   #   2 if daemon could not be stopped
   #   other if a failure occurred
-  local RETVAL=0
-  start-stop-daemon --stop --quiet --retry="TERM/${STOPTIMEOUT}/KILL/5" --pidfile "${TD_AGENT_PID_FILE}" --name ruby || RETVAL="$?"
-  [ "$RETVAL" = 2 ] && return 2
-  # Many daemons don't delete their pidfiles when they exit.
-  rm -f "${TD_AGENT_PID_FILE}"
-  return "$RETVAL"
+  if [ -e "${TD_AGENT_PID_FILE}" ]; then
+    # Use own process termination instead of killproc because killproc can't wait SIGTERM
+    if kill_by_file -TERM "${TD_AGENT_PID_FILE}"; then
+      local i
+      for i in $(seq "${STOPTIMEOUT}"); do
+        if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+          sleep 1
+        else
+          break
+        fi
+      done
+      if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
+        echo -n "Timeout error occurred trying to stop ${TD_AGENT_NAME}..."
+        return 2
+      else
+        rm -f "${TD_AGENT_PID_FILE}"
+      fi
+    else
+      return 1
+    fi
+  else
+    if killproc "${TD_AGENT_PROG_NAME:-${TD_AGENT_NAME}}"; then
+      rm -f "${TD_AGENT_PID_FILE}"
+    else
+      return 2
+    fi
+  fi
 }
 
 #
 # Function that sends a SIGHUP to the daemon/service
 #
 do_reload() {
-  #
-  # If the daemon can reload its configuration without
-  # restarting (for example, when it is sent a SIGHUP),
-  # then implement that here.
-  #
-  kill_by_file -HUP "${TD_AGENT_PID_FILE}" || return 1
+  kill_by_file -HUP "${TD_AGENT_PID_FILE}"
 }
 
 do_restart() {
@@ -162,7 +177,7 @@ do_restart() {
   local val=0
   do_stop || val="$?"
   case "${val}" in
-  0 | 1 )
+  0 )
     if ! do_start; then
       return 1
     fi
@@ -196,7 +211,7 @@ case "$1" in
   echo -n "Stopping ${TD_AGENT_NAME}: "
   do_stop || RETVAL="$?"
   case "$RETVAL" in
-  0 | 1 )
+  0 )
     log_success_msg "${TD_AGENT_NAME}"
     ;;
   * )
@@ -206,10 +221,6 @@ case "$1" in
   esac
   ;;
 "reload" | "force-reload" )
-  #
-  # If do_reload() is not implemented then leave this commented out
-  # and leave 'force-reload' as an alias for 'restart'.
-  #
   echo -n "Reloading ${TD_AGENT_NAME}: "
   if ! do_configtest; then
     log_failure_msg "${TD_AGENT_NAME}"
@@ -223,10 +234,6 @@ case "$1" in
   fi
   ;;
 "restart" )
-  #
-  # If the "reload" option is implemented then remove the
-  # 'force-reload' alias
-  #
   echo -n "Restarting ${TD_AGENT_NAME}: "
   if do_restart; then
     log_success_msg "${TD_AGENT_NAME}"
