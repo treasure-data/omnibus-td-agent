@@ -145,7 +145,7 @@ Vagrant.configure('2') do |config|
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
       aws.keypair_name = "td-agent-build"
 
-      aws.ami = "ami-60b6c60a"
+      aws.ami = "ami-08111162"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
       aws.security_groups = ['td-agent-build']
