@@ -18,3 +18,8 @@ download "fluent-plugin-webhdfs", "0.4.1"
 download "string-scrub", "0.0.5"
 download "fluent-plugin-rewrite-tag-filter", "1.5.4"
 download "fluent-plugin-td-monitoring", "0.2.2"
+download "statsd-ruby", "1.3.0"
+download "fluent-plugin-statsd", "1.0.3"
+download "fluent-plugin-secure-forward", "0.3.4"
+download "fluent-plugin-aws-elasticsearch-service", "0.1.4"
+
