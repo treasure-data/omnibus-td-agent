@@ -29,6 +29,17 @@ dependency "td-agent-cleanup"
 # version manifest file
 dependency "version-manifest"
 
+case ohai["os"]
+when "linux"
+  case ohai["platform_family"]
+  when "debian"
+    runtime_dependency "lsb-base"
+  when "rhel"
+    runtime_dependency "initscripts"
+    runtime_dependency "redhat-lsb-core"
+  end
+end
+
 exclude "\.git*"
 exclude "bundler\/git"
 
