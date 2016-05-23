@@ -25,6 +25,7 @@ At first, you should download dependent gems using downloder. This is for avodin
 ```shell
 $ bin/gem_downloader core_gems.rb
 $ bin/gem_downloader plugin_gems.rb
+$ bin/gem_downloader ui_gems.rb
 ```
 
 Create required directory and add permission
