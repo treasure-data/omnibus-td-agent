@@ -36,7 +36,11 @@ when "linux"
     runtime_dependency "lsb-base"
   when "rhel"
     runtime_dependency "initscripts"
-    runtime_dependency "redhat-lsb-core"
+    if ohai["platform_version"][0] == "5"
+      runtime_dependency "redhat-lsb"
+    else
+      runtime_dependency "redhat-lsb-core"
+    end
   end
 end
 
