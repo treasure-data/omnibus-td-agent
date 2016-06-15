@@ -170,6 +170,10 @@ build do
      patch source: 'ruby-fix-reserve-stack-segfault.patch', plevel: 1, env: patch_env
   end
 
+  if version.start_with?('2.1')
+    patch source: 'ruby-2.1-openssl-mode-patch.patch', plevel: 1, env: patch_env
+  end
+
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
                        "--enable-shared",
                        "--enable-libedit",
