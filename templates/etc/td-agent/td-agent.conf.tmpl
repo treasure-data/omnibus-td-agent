@@ -9,7 +9,7 @@
 #
 # This section matches events whose tag is td.DATABASE.TABLE
 <match td.*.*>
-  type tdlog
+  @type tdlog
   apikey YOUR_API_KEY
 
   auto_create_table
@@ -17,14 +17,14 @@
   buffer_path /var/log/<%= project_name %>/buffer/td
 
   <secondary>
-    type file
+    @type file
     path /var/log/<%= project_name %>/failed_records
   </secondary>
 </match>
 
 ## match tag=debug.** and dump to console
 <match debug.**>
-  type stdout
+  @type stdout
 </match>
 
 ####
@@ -34,12 +34,12 @@
 ## built-in TCP input
 ## @see http://docs.fluentd.org/articles/in_forward
 <source>
-  type forward
+  @type forward
 </source>
 
 ## built-in UNIX socket input
 #<source>
-#  type unix
+#  @type unix
 #</source>
 
 # HTTP input
@@ -47,13 +47,13 @@
 # POST http://localhost:8888/td.myapp.login?json={"user"%3A"me"}
 # @see http://docs.fluentd.org/articles/in_http
 <source>
-  type http
+  @type http
   port 8888
 </source>
 
 ## live debugging agent
 <source>
-  type debug_agent
+  @type debug_agent
   bind 127.0.0.1
   port 24230
 </source>
@@ -65,7 +65,7 @@
 ## File input
 ## read apache logs continuously and tags td.apache.access
 #<source>
-#  type tail
+#  @type tail
 #  format apache
 #  path /var/log/httpd-access.log
 #  tag td.apache.access
@@ -74,14 +74,14 @@
 ## File output
 ## match tag=local.** and write to file
 #<match local.**>
-#  type file
+#  @type file
 #  path /var/log/<%= project_name %>/access
 #</match>
 
 ## Forwarding
 ## match tag=system.** and forward to another <%= project_name %> server
 #<match system.**>
-#  type forward
+#  @type forward
 #  host 192.168.0.11
 #  # secondary host is optional
 #  <secondary>
@@ -92,16 +92,16 @@
 ## Multiple output
 ## match tag=td.*.* and output to Treasure Data AND file
 #<match td.*.*>
-#  type copy
+#  @type copy
 #  <store>
-#    type tdlog
+#    @type tdlog
 #    apikey API_KEY
 #    auto_create_table
 #    buffer_type file
 #    buffer_path /var/log/<%= project_name %>/buffer/td
 #  </store>
 #  <store>
-#    type file
+#    @type file
 #    path /var/log/<%= project_name %>/td-%Y-%m-%d/%H.log
 #  </store>
 #</match>
