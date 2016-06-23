@@ -101,7 +101,7 @@ build do
   # embedded and non-embedded libs get into a fight (libiconv, openssl, etc)
   # and ruby trying to set LD_LIBRARY_PATH itself gets it wrong.
   if version.to_f >= 2.1
-    patch source: "ruby-2_1_3-no-mkmf.patch", plevel: 1, env: patch_env
+    patch source: "ruby-mkmf.patch", plevel: 1, env: patch_env
     # should intentionally break and fail to apply on 2.2, patch will need to
     # be fixed.
   end
