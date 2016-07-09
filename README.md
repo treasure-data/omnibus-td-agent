@@ -10,7 +10,7 @@ td-agent package is based on [Omnibus-ruby](https://github.com/opscode/omnibus-r
 
 ## Installation
 
-We'll assume you have Ruby 1.9+ and Bundler installed. First ensure all required gems are installed and ready to use:
+We'll assume you have Ruby 2.1+ and Bundler installed. First ensure all required gems are installed and ready to use:
 
 ```shell
 $ bundle install --binstubs
@@ -46,6 +46,11 @@ The platform/architecture type of the package created will match the platform
 where the `build project` command is invoked. So running this command on say a
 MacBook Pro will generate a Mac OS X specific package. After the build
 completes packages will be available in `pkg/`.
+
+#### Build on CentOS 5
+
+td-agent build doesn't work on CentOS 5 by OpenSSL related issues.
+Follow this setup instruction before use omnibus: https://gist.github.com/repeatedly/97d4746e83a5ec135abf3eb77f46ff30
 
 ### Clean
 
@@ -101,19 +106,16 @@ NOTE: edit `project_name` in Vagrantfile if required.
 td-agent omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
 that will allow you to build your projects on the following platforms:
 
-* CentOS 5 64-bit
-* CentOS 5 32-bit
 * CentOS 6 64-bit
 * CentOS 6 32-bit
 * CentOS 7 64-bit
-* Ubuntu 10.04 64-bit
-* Ubuntu 10.04 32-bit
 * Ubuntu 12.04 64-bit
 * Ubuntu 12.04 32-bit
 * Ubuntu 14.04 64-bit
-* Debian 7.9 64-bit
-* Debian 8.2 64-bit
-* Amazon Linux 2015.09 64-bit
+* Ubuntu 16.04 64-bit
+* Debian 7.10 64-bit
+* Debian 8.4 64-bit
+* Amazon Linux 2016.03 64-bit
 
 Please note this build-lab is only meant to get you up and running quickly;
 there's nothing inherent in Omnibus that restricts you to just building CentOS
@@ -179,7 +181,7 @@ After that, each package is stored in `td_agent2_pkg` directory.
 
 ```sh
 % ls td_agent2_pkg/
-centos-5.10/  centos-6.5/   ubuntu-10.04/ ubuntu-12.04/
+centos-6.7/   centos-7.2/   debian-7.10/  debian-8.4/   ubuntu-12.04/ ubuntu-14.04/ ubuntu-16.04/
 ```
 
 ### Tested environment
@@ -196,7 +198,7 @@ All rights reserved.
 5.0.4r102546
 
 % ruby --version
-ruby 2.1.3p242 (2014-09-19 revision 47630) [x86_64-darwin13.0]
+ruby 2.3.1p112 (2016-04-26 revision 54768) [x86_64-darwin15]
 ```
 
 ### NOTE

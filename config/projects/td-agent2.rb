@@ -8,13 +8,13 @@ homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
 install_dir     "/opt/td-agent"
-build_version   "2.3.1"
+build_version   "2.3.2"
 build_iteration 0
 
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.1.8'
+override :ruby, :version => '2.1.10'
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.4.8'
 override :postgresql, :version => '9.3.5'
@@ -36,7 +36,11 @@ when "linux"
     runtime_dependency "lsb-base"
   when "rhel"
     runtime_dependency "initscripts"
-    runtime_dependency "redhat-lsb-core"
+    if ohai["platform_version"][0] == "5"
+      runtime_dependency "redhat-lsb"
+    else
+      runtime_dependency "redhat-lsb-core"
+    end
   end
 end
 

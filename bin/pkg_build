@@ -8,6 +8,7 @@ end
 platforms = []
 unless ARGV.include?('--without-deb')
   platforms += [
+    "ubuntu-16.04",
     "ubuntu-14.04",
     "ubuntu-12.04",
     #"ubuntu-10.04",
@@ -29,9 +30,8 @@ end
 
 unless ARGV.include?('--without-debian')
   platforms += [
-    "debian-8.2",
-    "debian-7.9",
-    #"debian-6.0.10"
+    "debian-8.4",
+    "debian-7.10",
   ]
 end
 
