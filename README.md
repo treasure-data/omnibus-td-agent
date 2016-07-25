@@ -126,7 +126,7 @@ The only requirements for standing up this virtualized build lab are:
 * VirtualBox - native packages exist for most platforms and can be downloaded
 from the [VirtualBox downloads page](https://www.virtualbox.org/wiki/Downloads).
 * Vagrant 1.2.1+ - native packages exist for most platforms and can be downloaded
-from the [Vagrant downloads page](http://downloads.vagrantup.com/).
+from the [Vagrant downloads page](https://www.vagrantup.com/downloads.html).
 
 The [vagrant-berkshelf](https://github.com/RiotGames/vagrant-berkshelf) and
 [vagrant-omnibus](https://github.com/schisamo/vagrant-omnibus) Vagrant plugins
