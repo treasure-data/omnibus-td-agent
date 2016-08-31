@@ -10,7 +10,7 @@ end
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
-bootstrap_chef_version = '11.16.4'
+bootstrap_chef_version = '12.10.24'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"
@@ -117,6 +117,7 @@ Vagrant.configure('2') do |config|
 
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
+        export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
         sudo mkdir -p /opt/#{project_name}
         sudo chown #{project_build_user} /opt/#{project_name}
         cd #{guest_project_path}
@@ -182,6 +183,7 @@ Vagrant.configure('2') do |config|
     REMOVE_OMNIBUS
 
     config.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
+      export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
       sudo mkdir -p /opt/#{project_name}
       sudo chown #{project_build_user} /opt/#{project_name}
       cd #{guest_project_path}
