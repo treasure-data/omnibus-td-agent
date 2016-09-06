@@ -14,6 +14,7 @@ teardown() {
 
 @test "configuration test success (redhat)" {
   stub_path /usr/sbin/td-agent "echo td-agent; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "td-agent : true"
 
   run_service configtest
   assert_output <<EOS
@@ -33,13 +34,16 @@ EOS
   assert_success
 
   unstub_path /usr/sbin/td-agent
+  unstub log_success_msg
 }
 
 @test "configuration test failure (redhat)" {
   stub_path /usr/sbin/td-agent "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service configtest
   assert_failure
 
   unstub_path /usr/sbin/td-agent
+  unstub log_failure_msg
 }

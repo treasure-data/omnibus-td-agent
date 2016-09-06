@@ -19,7 +19,7 @@ teardown() {
   stub kill "-TERM 1234 : true" \
              "-0 1234 : false" \
              "-0 1234 : false"
-  stub success "true"
+  stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -29,7 +29,7 @@ EOS
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub kill
-  unstub success
+  unstub log_success_msg
 }
 
 @test "stop td-agent but it has already been stopped (redhat)" {
@@ -37,7 +37,7 @@ EOS
   touch "${TMP}/var/lock/subsys/td-agent"
 
   stub kill "-TERM 1234 : false"
-  stub failure "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -47,7 +47,7 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub kill
-  unstub failure
+  unstub log_failure_msg
 }
 
 @test "failed to stop td-agent (redhat)" {
@@ -64,7 +64,7 @@ SH
             "-0 1234 : true" \
             "-0 1234 : true"
   stub sleep "1 : true"
-  stub failure "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -74,7 +74,7 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub kill
-  unstub failure
+  unstub log_failure_msg
 }
 
 @test "stop td-agent by name successfully (redhat)" {
@@ -82,7 +82,7 @@ EOS
   touch "${TMP}/var/lock/subsys/td-agent"
 
   stub killproc "td-agent : true"
-  stub success "true"
+  stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -92,7 +92,7 @@ EOS
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub killproc
-  unstub success
+  unstub log_success_msg
 }
 
 @test "failed to stop td-agent by name (redhat)" {
@@ -100,7 +100,7 @@ EOS
   touch "${TMP}/var/lock/subsys/td-agent"
 
   stub killproc "td-agent : false"
-  stub failure "false"
+  stub log_failure_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -110,5 +110,5 @@ EOS
   [ -f "${TMP}/var/lock/subsys/td-agent" ]
 
   unstub killproc
-  unstub failure
+  unstub log_failure_msg
 }

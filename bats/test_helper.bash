@@ -85,6 +85,9 @@ init_redhat() {
   render "${BATS_TEST_DIRNAME}/../templates/etc/init.d/rpm/td-agent" > "${TMP}/etc/init.d/td-agent"
   chmod +x "${TMP}/etc/init.d/td-agent"
 
+  mkdir -p "${TMP}/lib/lsb"
+  touch "${TMP}/lib/lsb/init-functions"
+
   mkdir -p "${TMP}/etc/sysconfig"
 
   mkdir -p "${TMP}/sbin"

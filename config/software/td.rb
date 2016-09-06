@@ -8,7 +8,7 @@ dependency "td-agent-files"
 build do
   block do
     # setup related files
-    pkg_type = project.packager.id.to_s
+    pkg_type = project.packagers_for_system.first.id.to_s
     install_path = project.install_dir # for ERB
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB

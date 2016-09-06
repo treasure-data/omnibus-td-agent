@@ -24,6 +24,7 @@ prog="custom_prog"
 EOS
 
   stub daemon "echo; for arg; do echo \"  \$arg\"; done"
+  stub log_success_msg "custom_name : true"
 
   run_service start
   assert_output <<EOS
@@ -48,6 +49,7 @@ EOS
   [ -f "${TMP}/var/lock/subsys/custom_prog" ]
 
   unstub daemon
+  unstub log_success_msg
 }
 
 @test "stop td-agent with backward-compatible configuration (redhat)" {
@@ -58,7 +60,7 @@ prog="custom_prog"
 EOS
 
   stub killproc "custom_prog : true"
-  stub success "true"
+  stub log_success_msg "td-agent : true"
 
   run_service stop
   assert_output <<EOS
@@ -69,5 +71,5 @@ EOS
   [ ! -f "${TMP}/var/lock/subsys/custom_prog" ]
 
   unstub killproc
-  unstub success
+  unstub log_success_msg
 }

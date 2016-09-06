@@ -10,7 +10,7 @@ end
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
-bootstrap_chef_version = '11.16.4'
+bootstrap_chef_version = '12.10.24'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"
@@ -24,9 +24,9 @@ Vagrant.configure('2') do |config|
     ubuntu-12.04-i386
     ubuntu-14.04
     ubuntu-14.04-i386
-    debian-6.0.10
-    debian-7.9
-    debian-8.2
+    ubuntu-16.04
+    debian-7.10
+    debian-8.4
     centos-5.11
     centos-5.11-i386
     centos-6.7
@@ -117,6 +117,7 @@ Vagrant.configure('2') do |config|
 
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
+        export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
         sudo mkdir -p /opt/#{project_name}
         sudo chown #{project_build_user} /opt/#{project_name}
         cd #{guest_project_path}
@@ -145,7 +146,7 @@ Vagrant.configure('2') do |config|
       aws.secret_access_key = ENV['AWS_SECRET_ACCESS_KEY']
       aws.keypair_name = "td-agent-build"
 
-      aws.ami = "ami-60b6c60a"
+      aws.ami = "ami-08111162"
       aws.instance_type = 'm3.large'
       aws.tags = {'Name' => 'td-agent-build'}
       aws.security_groups = ['td-agent-build']
@@ -182,6 +183,7 @@ Vagrant.configure('2') do |config|
     REMOVE_OMNIBUS
 
     config.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
+      export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
       sudo mkdir -p /opt/#{project_name}
       sudo chown #{project_build_user} /opt/#{project_name}
       cd #{guest_project_path}

@@ -1,0 +1,13 @@
+diff --git a/ext/openssl/ossl_ssl.c b/ext/openssl/ossl_ssl.c
+index 0ec5250..767dff0 100644
+--- a/ext/openssl/ossl_ssl.c
++++ b/ext/openssl/ossl_ssl.c
+@@ -164,7 +164,7 @@ static VALUE
+ ossl_sslctx_s_alloc(VALUE klass)
+ {
+     SSL_CTX *ctx;
+-    long mode = SSL_MODE_ENABLE_PARTIAL_WRITE;
++    long mode = SSL_MODE_ENABLE_PARTIAL_WRITE | SSL_MODE_ACCEPT_MOVING_WRITE_BUFFER;
+ 
+ #ifdef SSL_MODE_RELEASE_BUFFERS
+     mode |= SSL_MODE_RELEASE_BUFFERS;
