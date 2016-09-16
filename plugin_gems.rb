@@ -22,4 +22,4 @@ download "statsd-ruby", "1.3.0"
 download "fluent-plugin-statsd", "1.0.3"
 download "fluent-plugin-secure-forward", "0.3.4"
 download "fluent-plugin-aws-elasticsearch-service", "0.1.4"
-
+download "fluent-plugin-cloudwatch-logs", "0.3.3"
