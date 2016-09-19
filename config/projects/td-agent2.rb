@@ -15,7 +15,7 @@ build_iteration 3
 dependency "preparation"
 
 override :ruby, :version => '2.1.8'
-override :zlib, :version => '1.2.8'
+override :zlib, :version => '1.2.8', source: {url: 'http://downloads.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz'}
 override :rubygems, :version => '2.4.8'
 override :postgresql, :version => '9.3.5'
 
