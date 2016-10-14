@@ -27,7 +27,7 @@
 ; Absolute location of the uninstaller.
 !define UNINSTALLER_LOCATION "$INSTDIR\uninstall.exe"
 
-; Directory used to install all files into.  This makes uninstall easier and safer.
+; Directory to install all files into.  This makes uninstall easier and safer.
 !define MAIN_INSTDIR "$INSTDIR\Main"
 
 ; The name of fluentd config template file, this is bundled into the script.
@@ -66,7 +66,7 @@ RequestExecutionLevel admin
 !include "StrFunc.nsh" ; Needed for StrTrimNewLines
 !include "WordFunc.nsh" ; Needed for WordFind
 
-; Stackdriver includes
+; Stackdriver includes.
 !include "stackdriver_language_util.nsh"
 !include "stackdriver_ui.nsh"
 !include "stackdriver_util.nsh"
@@ -105,10 +105,10 @@ Function .onInit
   ReadEnvStr $0 SYSTEMDRIVE
   StrCpy $INSTDIR "$0\${COMPRESSED_NAME}"
 
-  ; Display the language selection dialog
+  ; Display the language selection dialog.
   !insertmacro MUI_LANGDLL_DISPLAY
 
-  ; Check for a previously installed installed version.  If one exists
+  ; Check for a previously installed version.  If one exists
   ; prompt the user to remove it before continuing.
   ReadRegStr $0 SHCTX "${STACKDRIVER_UNINST_REG_KEY}" "UninstallString"
   ${If} $0 != ""
@@ -157,7 +157,7 @@ Section "Install"
   ; Include the custom fluentd config to capture windows event logs.
   File "${FLUENTD_CONFIG_TEMPLATE}"
 
-  ; Include the main zip file
+  ; Include the main zip file.
   File "${ZIP_FILE}"
 
   ; Create an uninstaller and show status.
@@ -235,7 +235,7 @@ Section "Install"
   ; Get the size of the install directory.  This is used to give a proper estimate
   ; in the add/remove programs menu.
   ; "/S=0K" Gets the size in KB
-  ; $0 = size, $1 = number of files, $2 = number of directories
+  ; $0 = size, $1 = number of files, $2 = number of directories.
   ${GetSize} "$INSTDIR" "/S=0K" $0 $1 $2
 
   ; Register the software so it will appear in the add/remove programs menu.
@@ -257,7 +257,7 @@ Section "Install"
       --reg-winsvc-fluentdopt $\"-c $\'${FLUENTD_CONFIG_LOCATION}$\'$\""
 
   ; All done!
-  ${Print} "Instalation Complete"
+  ${Print} "Installation Complete"
 SectionEnd
 
 
@@ -281,12 +281,12 @@ Section "Uninstall"
   ; this provides a cleaner install when files are being removed.
   SetDetailsPrint listonly
 
-  ; Stop the fluentd service and show status
+  ; Stop the fluentd service and show status.
   ;   '--reg-winsvc u'          -> Uninstall
   ${UnPrint} "Stopping the ${DISPLAY_NAME}..."
   ${UnExecuteCommand} "${MAIN_INSTDIR}\bin\fluentd.bat" "--reg-winsvc u"
 
-  ; Remove the software from the register.
+  ; Remove the software from the registry.
   ${UnPrint} "Unregistering the ${DISPLAY_NAME}..."
   ${RemoveRegisterUninstallSoftware} "${DISPLAY_NAME}"
 
