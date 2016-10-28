@@ -7,6 +7,7 @@ if Vagrant::VERSION.to_f < 1.5
   raise "The Omnibus Build Lab only supports Vagrant >= 1.5.0"
 end
 
+td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 2).to_i
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
@@ -122,7 +123,7 @@ Vagrant.configure('2') do |config|
         sudo chown #{project_build_user} /opt/#{project_name}
         cd #{guest_project_path}
         bundle install --path=/home/#{project_build_user}/.bundler
-        bundle exec omnibus build #{project_name}2
+        bundle exec omnibus build #{project_name}#{td_agent_version}
       OMNIBUS_BUILD
     end # config.vm.define.platform
   end # each_with_index
@@ -188,7 +189,7 @@ Vagrant.configure('2') do |config|
       sudo chown #{project_build_user} /opt/#{project_name}
       cd #{guest_project_path}
       bundle install --path=/home/#{project_build_user}/.bundler
-      bundle exec omnibus build #{project_name}2
+      bundle exec omnibus build #{project_name}#{td_agent_version}
     OMNIBUS_BUILD
   end # config.vm.define.platform
 end # Vagrant.configure
