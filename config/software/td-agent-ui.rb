@@ -4,8 +4,6 @@ name "td-agent-ui"
 dependency "fluentd-ui"
 dependency "td-agent-files"
 
-# for 'td-agent-ui' command
-
 build do
   block do
     # setup related files
@@ -14,7 +12,8 @@ build do
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
     project_name_snake_upcase = project_name_snake.upcase
-    gem_dir_version = "2.1.0"
+    rb_major, rb_minor, rb_teeny = project.overrides[:ruby][:version].split("-", 2).first.split(".", 3)
+    gem_dir_version = "#{rb_major}.#{rb_minor}.0" # gem path's teeny version is always 0
 
     template = ->(*parts) { File.join('templates', *parts) }
     generate_from_template = ->(dst, src, erb_binding, opts={}) {

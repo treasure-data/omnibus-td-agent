@@ -14,7 +14,8 @@ build do
     install_path = project.install_dir # for ERB
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
-    gem_dir_version = "2.1.0"
+    rb_major, rb_minor, rb_teeny = project.overrides[:ruby][:version].split("-", 2).first.split(".", 3)
+    gem_dir_version = "#{rb_major}.#{rb_minor}.0" # gem path's teeny version is always 0
 
     template = ->(*parts) { File.join('templates', *parts) }
     generate_from_template = ->(dst, src, erb_binding, opts={}) {
