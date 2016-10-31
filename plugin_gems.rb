@@ -1,7 +1,7 @@
 dir 'plugin_gems'
 download "httpclient", "2.8.2.4"
 download "td-client", "0.8.84"
-download "td", "0.15.0"
+download "td", "0.15.1"
 download "fluent-plugin-td", "0.10.29"
 download "uuidtools", "2.1.5"
 download "aws-sdk", "2.6.3"
