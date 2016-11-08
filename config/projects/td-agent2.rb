@@ -7,7 +7,7 @@ maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 license "Apache-2.0"
-license_file "https://raw.githubusercontent.com/treasure-data/omnibus-td-agent/master/LICENSE"
+license_file "LICENSE"
 
 install_dir     "/opt/td-agent"
 build_version   "2.3.3"
