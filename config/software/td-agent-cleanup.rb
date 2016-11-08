@@ -11,5 +11,11 @@ build do
 
     # remove unnecessary files
     FileUtils.rm_f(Dir.glob("/opt/#{project_name}/embedded/lib/ruby/gems/#{gem_dir_version}/cache/*.gem"))
+    FileUtils.rm_rf(Dir.glob("/opt/#{project_name}/embedded/share/{doc,gtk-doc,terminfo}"))
+    Dir.glob("/opt/#{project_name}/embedded/lib/ruby/gems/#{gem_dir_version}/gems/*").each { |gem_dir|
+      if File.exist?("#{gem_dir}/ext")
+        FileUtils.rm_f(Dir.glob("#{gem_dir}/ext/**/*.o"))
+      end
+    }
   end
 end
