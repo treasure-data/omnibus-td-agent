@@ -16,6 +16,7 @@ build do
       if File.exist?("#{gem_dir}/ext")
         FileUtils.rm_f(Dir.glob("#{gem_dir}/ext/**/*.o"))
       end
+      FileUtils.rm_rf(["#{gem_dir}/test", "{gem_dir}/spec"])
     }
   end
 end
