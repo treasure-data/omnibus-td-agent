@@ -46,7 +46,10 @@ build do
     else
       # templates/etc/init.d/xxxx/td-agent -> ./resources/etc/init.d/td-agent
       initd_file_path = File.join(project.resources_path, 'etc', 'init.d', project.name)
-      generate_from_template.call initd_file_path, template.call('etc', 'init.d', pkg_type, 'td-agent'), binding, mode: 0755
+      template_path = template.call('etc', 'init.d', pkg_type, 'td-agent')
+      if File.exist?(template_path)
+        generate_from_template.call initd_file_path, template_path, binding, mode: 0755
+      end
     end
 
     # setup /etc/td-agent
