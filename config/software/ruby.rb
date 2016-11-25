@@ -33,7 +33,7 @@ dependency "patch" if solaris_10?
 dependency "ncurses" unless windows? || version.satisfies?(">= 2.1")
 dependency "zlib"
 dependency "openssl"
-dependency "libedit"
+dependency "libedit" unless windows?
 dependency "libffi"
 dependency "libyaml"
 # Needed for chef_gem installs of (e.g.) nokogiri on upgrades -
@@ -179,7 +179,6 @@ build do
 
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
                        "--enable-shared",
-                       "--enable-libedit",
                        "--disable-install-doc",
                        "--without-gmp",
                        "--without-gdbm",
@@ -187,6 +186,7 @@ build do
                        "--disable-dtrace"]
   configure_command << "--with-ext=psych" if version.satisfies?("< 2.3")
   configure_command << "--with-bundled-md5" if fips_enabled
+  configure_command << "--enable-libedit" unless windows?
 
   if aix?
     # need to patch ruby's configure file so it knows how to find shared libraries

@@ -22,8 +22,8 @@ license_file "COPYRIGHT"
 
 dependency "zlib"
 dependency "openssl"
-dependency "libedit"
-dependency "ncurses"
+dependency "libedit" unless windows?
+dependency "ncurses" unless windows?
 dependency "config_guess"
 
 version "9.2.14" do
