@@ -175,6 +175,7 @@ build do
 
   if version.start_with?('2.1')
     patch source: 'ruby-2.1-openssl-mode-patch.patch', plevel: 1, env: patch_env
+    patch source: 'ruby-2.4.0-preview3-broken-RSTRUCT_PTR.patch', plevel: 0, env: patch_env
   end
 
   if version == "2.4.0-preview3"
