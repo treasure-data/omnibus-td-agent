@@ -177,6 +177,10 @@ build do
     patch source: 'ruby-2.1-openssl-mode-patch.patch', plevel: 1, env: patch_env
   end
 
+  if version == "2.4.0-preview3"
+    patch source: 'ruby-2.4.0-preview3-mingw64-compile-error.patch', plevel: 0, env: patch_env
+  end
+
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
                        "--enable-shared",
                        "--disable-install-doc",
