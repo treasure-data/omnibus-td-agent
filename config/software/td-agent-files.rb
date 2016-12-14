@@ -70,7 +70,9 @@ build do
 
     # Windows Shortcut
     if windows?
-      FileUtils.cp(File.join(project.resources_path, 'msi', 'td-agent-prompt.bat'), install_path)
+      f = File.join(install_path, 'td-agent-prompt.bat')
+      FileUtils.rm_f(f) if File.file?(f)
+      FileUtils.cp(File.join(project.resources_path, 'msi', 'td-agent-prompt.bat'), f)
     end
   end
 end
