@@ -88,10 +88,7 @@ Then, do installation as written in `README.md` of omnibus-td-agent.
 
 The build process is a little difference from `README.me`.
 
-1. td.gem 0.15.1 seems not available now.
-   Therefore, you have to change the version to `0.15.0` in `gem_plugin.rb`.
-
-2. Download gems as below:
+1. Download gems as below:
 
        C:\[your work dir]> bundle exec ruby bin\gem_downloader core_gems.rb
        
@@ -100,7 +97,7 @@ The build process is a little difference from `README.me`.
        C:\[your work dir]> bundle exec ruby bin\gem_downloader ui_gems.rb
        
 
-3. You don't have to create cache directory of omnibus on Windows.
+2. You don't have to create cache directory of omnibus on Windows.
    It'll be automatically made by Omnibus at `C:\omnibus-ruby`.
 
    But you have to create install directory as a symbolic link as an administrator.
@@ -110,7 +107,7 @@ The build process is a little difference from `README.me`.
        C:\> mklink /D \opt C:\DevKit\opt
        
 
-4. Build
+3. Build
 
    Do as below:
 
