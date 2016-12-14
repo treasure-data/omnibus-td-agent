@@ -67,5 +67,10 @@ build do
     FileUtils.remove_entry_secure(File.join(install_path, 'etc'), true)
     # ./resources/etc -> INSTALL_PATH/etc
     FileUtils.cp_r(File.join(project.resources_path, 'etc'), install_path)
+
+    # Windows Shortcut
+    if windows?
+      FileUtils.cp(File.join(project.resources_path, 'msi', 'td-agent-prompt.bat'), install_path)
+    end
   end
 end
