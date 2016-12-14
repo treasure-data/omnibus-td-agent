@@ -85,8 +85,8 @@
     <!-- Shortcut on Start Menu -->
     <DirectoryRef Id="ApplicationProgramFolder">
       <Component Id="ApplicationShortcut" Guid="*">
-        <Shortcut Id="ApplicationStartMenuShortcut" Name="!(loc.ProductName) Command Prompt" Description="Open !(loc.ProductName) Command Prompt" Target="%comspec%" Arguments="/k [APPLICATIONROOTDIRECTORY]td-agent-prompt.bat" WorkingDirectory="APPLICATIONROOTDIRECTORY" />
-        <RemoveFolder Id="ApplicationProgramsFolder" On="uninstall"/>
+        <Shortcut Id="ApplicationShortcut" Name="!(loc.ProductName) Command Prompt" Description="Open !(loc.ProductName) Command Prompt" Target="[SystemFolder]cmd.exe" Arguments="/k [PROJECTLOCATION]td-agent-prompt.bat" WorkingDirectory="PROJECTLOCATION" />
+        <RemoveFolder Id="ApplicationProgramFolder" On="uninstall" />
         <RegistryValue Root="HKCU" Key="Software\[Manufacturer]\[ProductName]" Name="installed" Type="integer" Value="1" KeyPath="yes" />
       </Component>
     </DirectoryRef>
