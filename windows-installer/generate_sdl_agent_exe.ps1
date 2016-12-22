@@ -146,7 +146,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 & $GEM_BAT update --system 2.4.8
 & $GEM_BAT install fluentd:0.14.1 --no-ri --no-rdoc --no-document
 & $GEM_BAT install windows-pr:1.2.5 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
-& $GEM_BAT install fluent-plugin-google-cloud:0.5.2 --no-ri --no-rdoc --no-document
+& $GEM_BAT install fluent-plugin-google-cloud:0.5.3 --no-ri --no-rdoc --no-document
 
 
 ##############################
