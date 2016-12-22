@@ -15,6 +15,7 @@ export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shelle
 TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
 TD_AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "sysconfig", project_name)) %>
+TD_AGENT_NAME_AND_VERSION="$(head -1 ${TD_AGENT_HOME}/version-manifest.txt)"
 TD_AGENT_USER=root
 TD_AGENT_GROUP=root
 TD_AGENT_RUBY=<%= Shellwords.shellescape(File.join(root_path, install_path, "embedded", "bin", "ruby")) %>
@@ -278,7 +279,7 @@ do_configtest() {
 RETVAL=0
 case "$1" in
 "start" )
-  echo -n "Starting ${TD_AGENT_NAME}: "
+  echo -n "Starting ${TD_AGENT_NAME_AND_VERSION}: "
   do_start || RETVAL="$?"
   case "$RETVAL" in
   0 )
