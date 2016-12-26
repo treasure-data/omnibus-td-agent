@@ -42,6 +42,7 @@ dependency "libyaml"
 # and that's the only one we will ever use.
 dependency "libiconv"
 
+version("2.4.0") { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
 version("2.4.0-rc1") { source sha256: "e41ada7650eed2a5800534d1201ba7c88f1627085659df994f47ab4c5e327745" }
 version("2.4.0-preview3") { source sha256: "c35fe752ccfabf69bf48e6aab5111c25a05938b428936f780638e2111934c9dd" }
 version("2.4.0-preview2") { source sha256: "fec544836428aada2dc593a8cc42ce330798a805e49ecb807a0e21b386fd0b14" }
