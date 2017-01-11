@@ -1,5 +1,5 @@
 name "fluentd-ui"
-default_version 'bd37b6393c25d3bcf941a12b42545488127703e0'
+default_version '7848500e6af4bb1b90f19f7c6cce765a004ae0e2'
 
 dependency "ruby"
 
