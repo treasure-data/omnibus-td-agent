@@ -47,6 +47,7 @@ version("2.4.0-rc1") { source sha256: "e41ada7650eed2a5800534d1201ba7c88f1627085
 version("2.4.0-preview3") { source sha256: "c35fe752ccfabf69bf48e6aab5111c25a05938b428936f780638e2111934c9dd" }
 version("2.4.0-preview2") { source sha256: "fec544836428aada2dc593a8cc42ce330798a805e49ecb807a0e21b386fd0b14" }
 
+version("2.3.3")      { source sha256: "241408c8c555b258846368830a06146e4849a1d58dcaf6b14a3b6a73058115b7" }
 version("2.3.1")      { source sha256: "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd" }
 version("2.3.0")      { source md5: "e81740ac7b14a9f837e9573601db3162" }
 
