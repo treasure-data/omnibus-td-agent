@@ -42,6 +42,10 @@ version "9.2.8" do
   source md5: "c5c65a9b45ee53ead0b659be21ca1b97"
 end
 
+version "9.5.5" do
+  source md5: "e75b182d250ad1fcdd71b280f146db4c"
+end
+
 version "9.5.1" do
   source md5: "11e037afaa4bd0c90bb3c3d955e2b401"
 end
