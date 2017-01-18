@@ -33,7 +33,7 @@ dependency "patch" if solaris_10?
 dependency "ncurses" unless windows? || version.satisfies?(">= 2.1")
 dependency "zlib"
 dependency "openssl"
-dependency "libedit"
+dependency "libedit" unless windows?
 dependency "libffi"
 dependency "libyaml"
 # Needed for chef_gem installs of (e.g.) nokogiri on upgrades -
@@ -43,9 +43,6 @@ dependency "libyaml"
 dependency "libiconv"
 
 version("2.4.0") { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
-version("2.4.0-rc1") { source sha256: "e41ada7650eed2a5800534d1201ba7c88f1627085659df994f47ab4c5e327745" }
-version("2.4.0-preview3") { source sha256: "c35fe752ccfabf69bf48e6aab5111c25a05938b428936f780638e2111934c9dd" }
-version("2.4.0-preview2") { source sha256: "fec544836428aada2dc593a8cc42ce330798a805e49ecb807a0e21b386fd0b14" }
 
 version("2.3.3")      { source sha256: "241408c8c555b258846368830a06146e4849a1d58dcaf6b14a3b6a73058115b7" }
 version("2.3.1")      { source sha256: "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd" }
@@ -182,7 +179,6 @@ build do
 
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
                        "--enable-shared",
-                       "--enable-libedit",
                        "--disable-install-doc",
                        "--without-gmp",
                        "--without-gdbm",
@@ -190,6 +186,7 @@ build do
                        "--disable-dtrace"]
   configure_command << "--with-ext=psych" if version.satisfies?("< 2.3")
   configure_command << "--with-bundled-md5" if fips_enabled
+  configure_command << "--enable-libedit" unless windows?
 
   if aix?
     # need to patch ruby's configure file so it knows how to find shared libraries
@@ -250,15 +247,13 @@ build do
       dlls << "libgcc_s_seh-1"
     end
     dlls.each do |dll|
-      arch_suffix = windows_arch_i386? ? "32" : "64"
-      windows_path = "C:/msys2/mingw#{arch_suffix}/bin/#{dll}.dll"
-      if File.exist?(windows_path)
-        copy windows_path, "#{install_dir}/embedded/bin/#{dll}.dll"
-      else
-        raise "Cannot find required DLL needed for dynamic linking: #{windows_path}"
+      ENV["Path"].split(/;/).each do |dir|
+        windows_path = File.expand_path("#{dll}.dll", dir)
+        if File.exist?(windows_path)
+          copy windows_path, "#{install_dir}/embedded/bin/#{dll}.dll"
+          break
+        end
       end
     end
-  else
   end
-
 end

@@ -1,10 +1,10 @@
 name "td-agent"
 #version '' # git ref
 
-dependency "jemalloc"
+dependency "jemalloc" unless windows?
 dependency "ruby"
 dependency "nokogiri"
-dependency "postgresql"
+dependency "postgresql" unless windows?
 dependency "fluentd"
 
 build do

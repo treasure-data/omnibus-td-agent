@@ -14,7 +14,11 @@ build_iteration 0
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.4.0'
+if windows?
+  override :ruby, :version => '2.3.3'
+else
+  override :ruby, :version => '2.4.0'
+end
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.6.7'
 override :postgresql, :version => '9.5.5'
@@ -48,4 +52,8 @@ exclude "\.git*"
 exclude "bundler\/git"
 
 compress :dmg do
+end
+
+package :msi do
+  upgrade_code "76dcb0b2-81ad-4a07-bf3b-1db567594171"
 end

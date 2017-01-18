@@ -2,6 +2,7 @@ name "td-agent-cleanup"
 #version '' # git ref
 
 dependency "td-agent"
+dependency "td-agent-files"
 
 build do
   block do
@@ -18,5 +19,9 @@ build do
       end
       FileUtils.rm_rf(["#{gem_dir}/test", "{gem_dir}/spec"])
     }
+
+    if windows?
+      FileUtils.rm_rf("/opt/#{project_name}/etc/init.d")
+    end
   end
 end

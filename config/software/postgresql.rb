@@ -22,8 +22,8 @@ license_file "COPYRIGHT"
 
 dependency "zlib"
 dependency "openssl"
-dependency "libedit"
-dependency "ncurses"
+dependency "libedit" unless windows?
+dependency "ncurses" unless windows?
 dependency "config_guess"
 
 version "9.2.14" do
@@ -107,12 +107,14 @@ build do
 
   update_config_guess(target: "config")
 
-  command "./configure" \
-          " --prefix=#{install_dir}/embedded" \
-          " --with-libedit-preferred" \
-          " --with-openssl" \
-          " --with-includes=#{install_dir}/embedded/include" \
-          " --with-libraries=#{install_dir}/embedded/lib", env: env
+  configure_cmd = [
+    "--prefix=#{install_dir}/embedded",
+    "--with-openssl",
+    "--with-includes=#{install_dir}/embedded/include",
+    "--with-libraries=#{install_dir}/embedded/lib",
+  ]
+  configure_cmd << "--with-libedit-preferred" unless windows?
+  configure *configure_cmd, env: env
 
   make "world -j #{workers}", env: env
   make "install-world", env: env
