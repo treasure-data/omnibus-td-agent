@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby
 
+td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 2).to_s
+
 arg = ''
 if ARGV.include?('--with-provision')
   arg << '--provision'
@@ -11,11 +13,11 @@ unless ARGV.include?('--without-deb')
     "ubuntu-16.04",
     "ubuntu-14.04",
     "ubuntu-12.04",
-    #"ubuntu-10.04",
+    "ubuntu-10.04",
     "ubuntu-16.04-i386",
     "ubuntu-14.04-i386",
     "ubuntu-12.04-i386",
-    #"ubuntu-10.04-i386"
+    "ubuntu-10.04-i386"
   ]
 end
 
@@ -23,9 +25,9 @@ unless ARGV.include?('--without-rpm')
   platforms += [
     "centos-7.2",
     "centos-6.7",
-    #"centos-5.11",
+    "centos-5.11",
     "centos-6.7-i386",
-    #"centos-5.11-i386"
+    "centos-5.11-i386"
   ]
 end
 
@@ -47,7 +49,7 @@ puts "Build packages: #{platforms.join(', ')}"
 
 platforms.each { |platform|
   `rm -rf ./pkg`
-  system("vagrant up #{platform} #{arg}")
+  system({"BUILD_TD_AGENT_VERSION" => td_agent_version}, "vagrant up #{platform} #{arg}")
   if File.exist?('./pkg')
     `mkdir -p ./td-agent2-pkg/#{get_env(platform)}`
     `cp -rf ./pkg/* ./td-agent2-pkg/#{get_env(platform)}`
