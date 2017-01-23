@@ -6,7 +6,7 @@
 
  The installer assumes that all NSIS files (.nsi, .nsh, and needed image files)
  are in the same folder as the installer script.  The script will output the
- complete Stackdriver Logging Agent Installer named StackdriverLoggingAgent_unsigned.exe.
+ complete Stackdriver Logging Agent Installer named GoogleStackdriverLoggingAgent_unsigned.exe.
 #>
 
 ##############################
@@ -18,7 +18,10 @@ $BASE_INSTALLER_DIR = "C:"
 
 # The path of where ruby and all gems will be.  This is the portion that will be
 # packaged and zipped up.
-$SD_LOGGING_AGENT_DIR = $BASE_INSTALLER_DIR + "\StackdriverLoggingAgent"
+$SD_LOGGING_AGENT_DIR = $BASE_INSTALLER_DIR + "\GoogleStackdriverLoggingAgent"
+
+# The bin of dir of the agent.
+$SD_LOGGING_AGENT_DIR_BIN = $SD_LOGGING_AGENT_DIR + "\bin"
 
 # The ruby dev kit location.  This will add to the ruby install.
 $RUBY_DEV_DIR = $BASE_INSTALLER_DIR + "\rubydevkit"
@@ -45,7 +48,7 @@ $NSIS_UNZU_ZIP = $BASE_INSTALLER_DIR + "\NSISunzU.zip"
 
 
 # Links for each installer.
-$RUBY_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.1.9.exe"
+$RUBY_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.3.3.exe"
 $RUBY_DEV_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-32-4.7.2-20130224-1151-sfx.exe"
 $NSIS_INSTALLER_LINK = "http://downloads.sourceforge.net/project/nsis/NSIS%203/3.0/nsis-3.0-setup.exe"
 $NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/NSISunzU.zip"
@@ -55,14 +58,18 @@ $NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/N
 #  VARIABLES - FILE LOCATIONS
 ##############################
 
-# The locaiton of the ruby executable, used to set up the ruby dev kit.
+# The location of the ruby executable, used to set up the ruby dev kit.
 $RUBY_EXE = $SD_LOGGING_AGENT_DIR + "\bin\ruby.exe"
 
-# The locaiton of the gem batch file, used to download gems.
-$GEM_BAT = $SD_LOGGING_AGENT_DIR + "\bin\gem.bat"
+# The location of the gem batch file, used to download gems.
+$GEM_CMD = $SD_LOGGING_AGENT_DIR + "\bin\gem.cmd"
 
 # The location of the ruby dev kit.
 $RUBY_DEV_KIT = $RUBY_DEV_DIR + "\dk.rb"
+
+# The location of the libgcc dll.
+# See: https://github.com/google/protobuf/issues/2247.
+$LIB_GCC_DLL = $RUBY_DEV_DIR + "\mingw\bin\libgcc_s_sjlj-1.dll"
 
 # The location of the executable to compile an NSIS installer.
 $NSIS_MAKE = $NSIS_DIR + "\makensis.exe"
@@ -72,7 +79,7 @@ $NSIS_UNZU_DLL = $NSIS_UNZU_DIR + "\NSISunzU\Plugin unicode\nsisunz.dll"
 
 # Output location of the zip compliled into the installer. It will place where ever
 # this script it run from.
-$STACKDRIVER_ZIP = $PSScriptRoot + "\StackdriverLoggingAgent.zip"
+$STACKDRIVER_ZIP = $PSScriptRoot + "\GoogleStackdriverLoggingAgent.zip"
 
 # The location of the Stackdriver Logging Agent installer script. It will look
 # where ever this script is run from.
@@ -143,10 +150,15 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # unneeded docs that bloat the file size (and also seem to cause issues with unzipping).
 ###############################
 
-& $GEM_BAT update --system 2.4.8
-& $GEM_BAT install fluentd:0.14.1 --no-ri --no-rdoc --no-document
-& $GEM_BAT install windows-pr:1.2.5 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
-& $GEM_BAT install fluent-plugin-google-cloud:0.5.3 --no-ri --no-rdoc --no-document
+# Freeze serverengine version, as there is a compatibility issue with later versions.
+# See: https://github.com/fluent/fluentd/issues/1195.
+& $GEM_CMD install serverengine:1.6.4 fluentd:0.14.1 --no-ri --no-rdoc --no-document
+& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
+& $GEM_CMD install protobuf:3.6 google-protobuf:3.0 grpc:1.0.1 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.5.4 --no-ri --no-rdoc --no-document
+
+# TODO(talarico): Remove this once the bug is fixed.
+# See: https://github.com/google/protobuf/issues/2247.
+cp $LIB_GCC_DLL $SD_LOGGING_AGENT_DIR_BIN
 
 
 ##############################
@@ -161,7 +173,7 @@ Add-Type -Assembly System.IO.Compression.FileSystem
 #  STEP 7 - INSTALL NSIS.
 ##############################
 
-# Install SISI and wait for it to finish.
+# Install NSIS and wait for it to finish.
 & $NSIS_INSTALLER /S /D=$NSIS_DIR | Out-Null
 
 # Unpack the nsis unzip plugin.

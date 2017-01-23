@@ -10,16 +10,19 @@
 ;--------------------------------
 
 ; Company or Publisher name.
-!define COMPANY "Stackdriver"
+!define COMPANY "Google"
+
+; The parent product.
+!define PRODUCT "Stackdriver"
 
 ; Software name used for display to users.
-!define DISPLAY_NAME "${COMPANY} Logging Agent"
+!define DISPLAY_NAME "${COMPANY} ${PRODUCT} Logging Agent"
 
 ; Software name with no white space.
-!define COMPRESSED_NAME "${COMPANY}LoggingAgent"
+!define COMPRESSED_NAME "${COMPANY}${PRODUCT}LoggingAgent"
 
 ; Registry entry key to store arbitrary information.
-!define REG_KEY "Software\${COMPANY}\LoggingAgent"
+!define REG_KEY "Software\${COMPANY}\${PRODUCT}\LoggingAgent"
 
 ; Uninstaller registry key, used to register the agent.
 !define STACKDRIVER_UNINST_REG_KEY "${UNINST_REG_KEY}\${COMPRESSED_NAME}"
@@ -241,7 +244,7 @@ Section "Install"
   ; Register the software so it will appear in the add/remove programs menu.
   ${Print} "Registering ${DISPLAY_NAME}..."
   ${RegisterUninstallSoftware} \
-      "${DISPLAY_NAME}" "${UNINSTALLER_LOCATION}" "${UI_ICON}" "${COMPANY}" "$0"
+      "${DISPLAY_NAME}" "${COMPRESSED_NAME}" "${UNINSTALLER_LOCATION}" "${UI_ICON}" "${COMPANY}" "$0"
 
   ; Update the paths in ruby files.
   ${ExecuteCommand} "${MAIN_INSTDIR}\bin\ruby.exe" "'${MAIN_INSTDIR}\bin\gem' \
@@ -288,7 +291,7 @@ Section "Uninstall"
 
   ; Remove the software from the registry.
   ${UnPrint} "Unregistering the ${DISPLAY_NAME}..."
-  ${RemoveRegisterUninstallSoftware} "${DISPLAY_NAME}"
+  ${RemoveRegisterUninstallSoftware} "${COMPRESSED_NAME}"
 
   ; Clean up any other registry entires used.
   DeleteRegKey HKCU "${REG_KEY}"

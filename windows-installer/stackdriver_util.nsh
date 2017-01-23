@@ -90,14 +90,10 @@
     ; Get the absolute location of the cmd.exe executable.
     ReadEnvStr $2 COMSPEC
 
-    ; Using nsExec::Exex over Exec as it hides the cmd pop up.
+    ; Using nsExec::Exec over Exec as it hides the cmd pop up.
     nsExec::Exec '"$2" /C "$\"$0$\" $1"'
-    
-    ; Restore $0, $1, $2
-    ; Stack: [orig $2, orig $1, orig $0, ...] -> [...] 
-    Pop $2
-    Pop $1
-    Pop $0
+
+    ; The stack is restored by the macros.
   FunctionEnd
 !macroend
 !insertmacro _STACKDRIVER_EXECUTE_COMMAND_FUNC_MACRO ""
@@ -109,6 +105,16 @@
   Push "${Parameters}"
   Push "${Command}"
   Call ExecuteCommand
+  
+  ; Get and log the return value of nsExec::Exec
+  Pop $0
+  ${Print} "nsExec::Exec return code: $0"
+
+  ; Restore $0, $1, $2
+  ; Stack: [orig $2, orig $1, orig $0, ...] -> [...] 
+  Pop $2
+  Pop $1
+  Pop $0
 !macroend
 
 ; Macro for UnExecuteCommand to help pass along the parameters.
@@ -117,6 +123,16 @@
   Push "${Parameters}"
   Push "${Command}"
   Call un.ExecuteCommand
+  
+  ; Get and log the return value of nsExec::Exec
+  Pop $0
+  ${UnPrint} "nsExec::Exec return code: $0"
+
+  ; Restore $0, $1, $2
+  ; Stack: [orig $2, orig $1, orig $0, ...] -> [...] 
+  Pop $2
+  Pop $1
+  Pop $0
 !macroend
 
 ; Define the ExecuteCommand/UnExecuteCommand functions for ease of calling.
@@ -172,16 +188,16 @@
 ; user or for the local machine based on install preferences.
 ; 
 ; Call with:
-;   ${RegisterUninstallSoftware} "Software Name" "Uninstaller location"
+;   ${RegisterUninstallSoftware} "Software Name" "SoftwareName" "Uninstaller location"
 ;       "Absolute path to icon" "Company name" "Estimated size in KB"
 ;--------------------------------
-!macro _STACKDRIVER_REGISTER_UNINSTALL_SOFTWARE_MACRO name uninstaller icon company sizeKB
+!macro _STACKDRIVER_REGISTER_UNINSTALL_SOFTWARE_MACRO displayName compressedName uninstaller icon company sizeKB
   ; Store global var $0 on the stack and copy the reg key to $0
   Push $0
-  StrCpy $0 "${UNINST_REG_KEY}\${name}"
+  StrCpy $0 "${UNINST_REG_KEY}\${compressedName}"
   
   ; Write all the needed register information
-  WriteRegStr SHCTX "$0" "DisplayName" "${name}"
+  WriteRegStr SHCTX "$0" "DisplayName" "${displayName}"
   WriteRegStr SHCTX "$0" "UninstallString" "${uninstaller}"
   WriteRegStr SHCTX "$0" "QuietUninstallString" "${uninstaller} /S"
   WriteRegStr SHCTX "$0" "DisplayIcon" "${icon}"
@@ -209,7 +225,7 @@
 ; Removes the registration for the software in the uninstall registry.
 ; 
 ; Call with:
-;   ${RemoveRegisterUninstallSoftware} "Software Name"
+;   ${RemoveRegisterUninstallSoftware} "SoftwareName"
 ;--------------------------------
 !macro _STACKDRIVER_REMOVE_REGISTER_UNINSTALL_SOFTWARE_MACRO name 
   DeleteRegKey SHCTX "${UNINST_REG_KEY}\${name}"
