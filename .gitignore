@@ -11,8 +11,6 @@ resources/**/cache/
 vendor/cookbooks
 
 # td-agent specific package
-core_gems/*
-plugin_gems/*
 package-scripts/td-agent/makeselfinst
 package-scripts/td-agent/postinst
 package-scripts/td-agent/postrm
