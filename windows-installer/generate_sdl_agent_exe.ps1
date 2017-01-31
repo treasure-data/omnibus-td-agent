@@ -150,10 +150,8 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # unneeded docs that bloat the file size (and also seem to cause issues with unzipping).
 ###############################
 
-# Freeze serverengine version, as there is a compatibility issue with later versions.
-# See: https://github.com/fluent/fluentd/issues/1195.
-& $GEM_CMD install serverengine:1.6.4 fluentd:0.14.1 --no-ri --no-rdoc --no-document
-& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
+& $GEM_CMD install fluentd:0.14.14 --no-ri --no-rdoc --no-document
+& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
 & $GEM_CMD install protobuf:3.6 google-protobuf:3.0 grpc:1.0.1 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.5.4 --no-ri --no-rdoc --no-document
 
 # TODO(talarico): Remove this once the bug is fixed.
