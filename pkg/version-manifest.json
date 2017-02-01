@@ -1,0 +1,262 @@
+{
+  "manifest_format": 1,
+  "software": {
+    "preparation": {
+      "locked_version": "1.0.0",
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": "1.0.0"
+    },
+    "jemalloc": {
+      "locked_version": "2.2.5",
+      "locked_source": {
+        "md5": "a5c4332705ed0e3fff1ac73cfe975640",
+        "url": "http://www.canonware.com/download/jemalloc/jemalloc-2.2.5.tar.bz2"
+      },
+      "source_type": "url",
+      "described_version": "2.2.5"
+    },
+    "zlib": {
+      "locked_version": "1.2.8",
+      "locked_source": {
+        "md5": "44d667c142d7cda120332623eab69f40",
+        "url": "http://downloads.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "1.2.8"
+    },
+    "ncurses": {
+      "locked_version": "5.9",
+      "locked_source": {
+        "md5": "8cb9c412e5f2d96bc6f459aa8c6282a1",
+        "url": "http://ftp.gnu.org/gnu/ncurses/ncurses-5.9.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "5.9"
+    },
+    "libedit": {
+      "locked_version": "20120601-3.0",
+      "locked_source": {
+        "md5": "e50f6a7afb4de00c81650f7b1a0f5aea",
+        "url": "http://www.thrysoee.dk/editline/libedit-20120601-3.0.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "20120601-3.0"
+    },
+    "cacerts": {
+      "locked_version": "2016.01.20",
+      "locked_source": {
+        "md5": "36eee0e80373937dd90a9a334ae42817",
+        "url": "https://raw.githubusercontent.com/bagder/ca-bundle/dfcc02c918b7bf40ed3a7f27a634c74ef4e80829/ca-bundle.crt"
+      },
+      "source_type": "url",
+      "described_version": "2016.01.20"
+    },
+    "xproto": {
+      "locked_version": "7.0.25",
+      "locked_source": {
+        "url": "http://xorg.freedesktop.org/releases/individual/proto/xproto-7.0.25.tar.gz",
+        "md5": "a47db46cb117805bd6947aa5928a7436"
+      },
+      "source_type": "url",
+      "described_version": "7.0.25"
+    },
+    "util-macros": {
+      "locked_version": "1.18.0",
+      "locked_source": {
+        "url": "http://xorg.freedesktop.org/releases/individual/util/util-macros-1.18.0.tar.gz",
+        "md5": "fd0ba21b3179703c071bbb4c3e5fb0f4"
+      },
+      "source_type": "url",
+      "described_version": "1.18.0"
+    },
+    "pkg-config-lite": {
+      "locked_version": "0.28-1",
+      "locked_source": {
+        "md5": "61f05feb6bab0a6bbfab4b6e3b2f44b6",
+        "url": "http://downloads.sourceforge.net/project/pkgconfiglite/0.28-1/pkg-config-lite-0.28-1.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "0.28-1"
+    },
+    "makedepend": {
+      "locked_version": "1.0.5",
+      "locked_source": {
+        "url": "http://xorg.freedesktop.org/releases/individual/util/makedepend-1.0.5.tar.gz",
+        "md5": "efb2d7c7e22840947863efaedc175747"
+      },
+      "source_type": "url",
+      "described_version": "1.0.5"
+    },
+    "openssl": {
+      "locked_version": "1.0.1r",
+      "locked_source": {
+        "url": "https://www.openssl.org/source/openssl-1.0.1r.tar.gz",
+        "extract": "lax_tar",
+        "md5": "1abd905e079542ccae948af37e393d28"
+      },
+      "source_type": "url",
+      "described_version": "1.0.1r"
+    },
+    "libyaml": {
+      "locked_version": "0.1.6",
+      "locked_source": {
+        "url": "http://pyyaml.org/download/libyaml/yaml-0.1.6.tar.gz",
+        "md5": "5fe00cda18ca5daeb43762b80c38e06e"
+      },
+      "source_type": "url",
+      "described_version": "0.1.6"
+    },
+    "libiconv": {
+      "locked_version": "1.14",
+      "locked_source": {
+        "url": "http://ftp.gnu.org/pub/gnu/libiconv/libiconv-1.14.tar.gz",
+        "md5": "e34509b1623cec449dfeb73d7ce9c6c6"
+      },
+      "source_type": "url",
+      "described_version": "1.14"
+    },
+    "libtool": {
+      "locked_version": "2.4",
+      "locked_source": {
+        "md5": "b32b04148ecdd7344abc6fe8bd1bb021",
+        "url": "http://ftp.gnu.org/gnu/libtool/libtool-2.4.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "2.4"
+    },
+    "libffi": {
+      "locked_version": "3.2.1",
+      "locked_source": {
+        "md5": "83b89587607e3eb65c70d361f13bab43",
+        "url": "ftp://sourceware.org/pub/libffi/libffi-3.2.1.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "3.2.1"
+    },
+    "gdbm": {
+      "locked_version": "1.8.3",
+      "locked_source": {
+        "md5": "1d1b1d5c0245b1c00aff92da751e9aa1",
+        "url": "http://ftp.gnu.org/gnu/gdbm/gdbm-1.8.3.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "1.8.3"
+    },
+    "ruby": {
+      "locked_version": "2.1.8",
+      "locked_source": {
+        "md5": "091b62f0a9796a3c55de2a228a0e6ef3",
+        "url": "http://cache.ruby-lang.org/pub/ruby/2.1/ruby-2.1.8.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "2.1.8"
+    },
+    "liblzma": {
+      "locked_version": "5.2.2",
+      "locked_source": {
+        "url": "http://tukaani.org/xz/xz-5.2.2.tar.gz",
+        "md5": "7cf6a8544a7dae8e8106fdf7addfa28c"
+      },
+      "source_type": "url",
+      "described_version": "5.2.2"
+    },
+    "libxml2": {
+      "locked_version": "2.9.3",
+      "locked_source": {
+        "md5": "daece17e045f1c107610e137ab50c179",
+        "url": "ftp://xmlsoft.org/libxml2/libxml2-2.9.3.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "2.9.3"
+    },
+    "libxslt": {
+      "locked_version": "1.1.28",
+      "locked_source": {
+        "md5": "9667bf6f9310b957254fdcf6596600b7",
+        "url": "ftp://xmlsoft.org/libxml2/libxslt-1.1.28.tar.gz"
+      },
+      "source_type": "url",
+      "described_version": "1.1.28"
+    },
+    "rubygems": {
+      "locked_version": "2.4.8",
+      "locked_source": {
+        "git": "https://github.com/rubygems/rubygems.git",
+        "md5": "dc77b51449dffe5b31776bff826bf559",
+        "url": "http://production.cf.rubygems.org/rubygems/rubygems-2.4.8.tgz"
+      },
+      "source_type": "url",
+      "described_version": "2.4.8"
+    },
+    "nokogiri": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "postgresql": {
+      "locked_version": "9.3.5",
+      "locked_source": {
+        "md5": "5059857c7d7e6ad83b6d55893a121b59",
+        "url": "http://ftp.postgresql.org/pub/source/v9.3.5/postgresql-9.3.5.tar.bz2"
+      },
+      "source_type": "url",
+      "described_version": "9.3.5"
+    },
+    "fluentd": {
+      "locked_version": "f68a60a6254b51f2fb7ab19ec0e701625f8c1b8c",
+      "locked_source": {
+        "git": "https://github.com/fluent/fluentd.git"
+      },
+      "source_type": "git",
+      "described_version": "v0.14.11"
+    },
+    "td-agent": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "td-agent-files": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "fluentd-ui": {
+      "locked_version": "8a322e7716370a1e2fdf69fda3266a1be477f221",
+      "locked_source": {
+        "git": "https://github.com/fluent/fluentd-ui.git"
+      },
+      "source_type": "git",
+      "described_version": "8a322e7716370a1e2fdf69fda3266a1be477f221"
+    },
+    "td": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "td-agent-ui": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "td-agent-cleanup": {
+      "locked_version": null,
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": null
+    },
+    "version-manifest": {
+      "locked_version": "0.0.1",
+      "locked_source": null,
+      "source_type": "project_local",
+      "described_version": "0.0.1"
+    }
+  },
+  "build_version": "0.0.0",
+  "build_git_revision": "9cdd2641c85aeeb770ad840db7cf23029f7a7bb3"
+}
