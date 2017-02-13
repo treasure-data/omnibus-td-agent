@@ -1,7 +1,7 @@
 name "fluentd"
 #default_version 'aee8086e9fcd3b45fa11b83e866fd758cb79bffb'
 #default_version 'v0.14.11'
-default_version '92dbf54d85fba22e86b015853875e6116d73eabc' # https://github.com/fluent/fluentd/issues/1449
+default_version 'master' # https://github.com/fluent/fluentd/issues/1449
 
 dependency "ruby"
 #dependency "bundler"
