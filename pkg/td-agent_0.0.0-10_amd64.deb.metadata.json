@@ -1,9 +1,9 @@
 {
   "basename": "td-agent_0.0.0-10_amd64.deb",
-  "md5": "dfd3ec7c6f05107ff22f184734587ae3",
-  "sha1": "9661fd37191558a36cced105032b9fa628d59f2b",
-  "sha256": "b8d1f847c23370d6fc2c3069aa1c0e136045c82e21d9a1ce77331f94e2acb973",
-  "sha512": "24c4813c0350bab3e85da672a816994a230e9cc26e4cb1e47201eff8b0f6d96825934ca9d64d088d9f8cb77f4a94618882dd964e4a77bbb365ebfbb8d3b167b6",
+  "md5": "7b0175b7c9bb1164397d4762814c46cd",
+  "sha1": "5e264c1bcd1d80262ca84e5ecc8b76da96aa35a1",
+  "sha256": "21cfa30affb468e2d9eecc9bbc95d700241117d808d80e9c2b44bbbbce147c65",
+  "sha512": "046c6c8b0aadd127037f33f4eb77627bf4e3961fe3ecac634fc3c8bac3385717283debf38f2f33bfbb477532ee4b70cb64e8c816ced5cd86cd2ec170f4d9252b",
   "platform": "ubuntu",
   "platform_version": "14.04",
   "arch": "x86_64",
