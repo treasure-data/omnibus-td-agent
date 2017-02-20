@@ -10,14 +10,15 @@ license "Apache-2.0"
 license_file "LICENSE"
 
 install_dir     "/opt/td-agent"
-build_version   "2.3.4"
+build_version   "6.6.6"
 build_iteration 0
 
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.1.10' # This override version is used for gem_dir_version. See td-agent-files.rb
-override :zlib, :version => '1.2.8'
+
+override :ruby, :version => '2.1.8'
+override :zlib, :version => '1.2.8', source: {url: 'http://downloads.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz'}
 override :rubygems, :version => '2.4.8'
 override :postgresql, :version => '9.3.5'
 override :fluentd, :version => '93b8edbabe78693aa4bbf1b0454e15cdc3cc5d12' # v0.12.31

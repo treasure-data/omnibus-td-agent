@@ -1,3 +1,11 @@
+# BGCH Local Notes
+
+This package includes custom builds of the `fluent-plugin-cloudwatch` and `fluent-plugin-elasticsearch` gems. This is necessary due to inactive upstream maintainers. Hence, the build artefacts have all been committed, against common convention.
+
+* *fluent-plugin-cloudwatch*: has additional work from [this source](https://github.com/sampointer/fluent-plugin-cloudwatch-logs/commits/master) added, which includes a 3rd parties changes to support various small fixes and ms timestamp resolution. It also includes my (Sam Pointer) changes to allow cross-account IAM authentication via AWS STS. PRs for this work remain in upstream [here](https://github.com/ryotarai/fluent-plugin-cloudwatch-logs/pull/55) and [here](https://github.com/ryotarai/fluent-plugin-cloudwatch-logs/pull/56).
+
+* *fluent-plugin-elasticsearch*: is built from [this fork](https://github.com/uken/fluent-plugin-elasticsearch/pull/223/files)
+
 # About
 
 [![Build Status](https://travis-ci.org/treasure-data/omnibus-td-agent.svg)](https://travis-ci.org/treasure-data/omnibus-td-agent)
