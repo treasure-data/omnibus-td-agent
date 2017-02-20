@@ -8,8 +8,8 @@ homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
 install_dir     "/opt/td-agent"
-build_version   "0.0.0"
-build_iteration 11
+build_version   "6.6.6"
+build_iteration 0
 
 # creates required build directories
 dependency "preparation"
