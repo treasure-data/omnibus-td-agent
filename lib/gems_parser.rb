@@ -23,4 +23,8 @@ class GemsParser
   def download(name, ver)
     @target_files << [name, ver]
   end
+
+  def windows?
+    /mswin|mingw/ =~ RUBY_PLATFORM
+  end
 end

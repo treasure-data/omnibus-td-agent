@@ -7,10 +7,11 @@ if Vagrant::VERSION.to_f < 1.5
   raise "The Omnibus Build Lab only supports Vagrant >= 1.5.0"
 end
 
+td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 2).to_i
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
-bootstrap_chef_version = '11.16.4'
+bootstrap_chef_version = '12.10.24'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"
@@ -24,9 +25,10 @@ Vagrant.configure('2') do |config|
     ubuntu-12.04-i386
     ubuntu-14.04
     ubuntu-14.04-i386
-    debian-6.0.10
-    debian-7.9
-    debian-8.2
+    ubuntu-16.04
+    ubuntu-16.04-i386
+    debian-7.10
+    debian-8.4
     centos-5.11
     centos-5.11-i386
     centos-6.7
@@ -117,11 +119,12 @@ Vagrant.configure('2') do |config|
 
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
+        export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
         sudo mkdir -p /opt/#{project_name}
         sudo chown #{project_build_user} /opt/#{project_name}
         cd #{guest_project_path}
         bundle install --path=/home/#{project_build_user}/.bundler
-        bundle exec omnibus build #{project_name}2
+        bundle exec omnibus build #{project_name}#{td_agent_version}
       OMNIBUS_BUILD
     end # config.vm.define.platform
   end # each_with_index
@@ -182,11 +185,12 @@ Vagrant.configure('2') do |config|
     REMOVE_OMNIBUS
 
     config.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
+      export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
       sudo mkdir -p /opt/#{project_name}
       sudo chown #{project_build_user} /opt/#{project_name}
       cd #{guest_project_path}
       bundle install --path=/home/#{project_build_user}/.bundler
-      bundle exec omnibus build #{project_name}2
+      bundle exec omnibus build #{project_name}#{td_agent_version}
     OMNIBUS_BUILD
   end # config.vm.define.platform
 end # Vagrant.configure

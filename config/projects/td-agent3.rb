@@ -6,28 +6,29 @@ name "td-agent"
 maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
-license "Apache-2.0"
-license_file "LICENSE"
 
 install_dir     "/opt/td-agent"
-build_version   "6.6.6"
+build_version   "3.0.0"
 build_iteration 0
 
 # creates required build directories
 dependency "preparation"
 
-
-override :ruby, :version => '2.1.8'
-override :zlib, :version => '1.2.8', source: {url: 'http://downloads.sourceforge.net/project/libpng/zlib/1.2.8/zlib-1.2.8.tar.gz'}
-override :rubygems, :version => '2.4.8'
-override :postgresql, :version => '9.3.5'
-override :fluentd, :version => '93b8edbabe78693aa4bbf1b0454e15cdc3cc5d12' # v0.12.31
+if windows?
+  override :ruby, :version => '2.3.3'
+else
+  override :ruby, :version => '2.4.0'
+end
+override :zlib, :version => '1.2.8'
+override :rubygems, :version => '2.6.7'
+override :postgresql, :version => '9.5.5'
+override :fluentd, :version => '0d6a3276b790951dedcfcacf870422a08b27adfe' # v0.14.11
 
 # td-agent dependencies/components
 dependency "td-agent"
 dependency "td-agent-files"
 dependency "td"
-dependency "td-agent-ui"
+#dependency "td-agent-ui" # fluentd-ui doesn't work with ruby 2.4 because some gems depend on json 1.8
 dependency "td-agent-cleanup"
 
 # version manifest file
@@ -52,4 +53,8 @@ exclude "\.git*"
 exclude "bundler\/git"
 
 compress :dmg do
+end
+
+package :msi do
+  upgrade_code "76dcb0b2-81ad-4a07-bf3b-1db567594171"
 end
