@@ -7,7 +7,7 @@ if td_agent_2?
 else
   download "td-client", "1.0.0"
   download "td", "0.15.2"
-  download "fluent-plugin-td", "0.11.0.rc1"
+  download "fluent-plugin-td", "1.0.0.rc1"
 end
 download "uuidtools", "2.1.5"
 download "aws-sdk", "2.6.46"
