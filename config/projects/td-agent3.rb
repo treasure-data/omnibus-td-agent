@@ -17,7 +17,7 @@ dependency "preparation"
 if windows?
   override :ruby, :version => '2.3.3'
 else
-  override :ruby, :version => '2.4.0'
+  override :ruby, :version => '2.4.1'
 end
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.6.7'
