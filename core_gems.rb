@@ -1,6 +1,6 @@
 dir 'core_gems'
 download "bundler", "1.10.6"
-download "json", "1.8.1"
+download "json", "1.8.3"
 download "msgpack", "0.5.11"
 download "cool.io", "1.4.4"
 download "http_parser.rb", "0.6.0"
