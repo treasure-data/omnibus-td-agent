@@ -16,7 +16,7 @@
 !define PRODUCT "Stackdriver"
 
 ; Software name used for display to users.
-!define DISPLAY_NAME "${COMPANY} ${PRODUCT} Logging Agent - ${VERSION}"
+!define DISPLAY_NAME "${COMPANY} ${PRODUCT} Logging Agent ${VERSION}"
 
 ; Software name with no white space.
 !define COMPRESSED_NAME "${COMPANY}${PRODUCT}LoggingAgent"

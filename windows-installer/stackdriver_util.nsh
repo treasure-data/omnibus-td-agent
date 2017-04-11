@@ -189,7 +189,7 @@
 ; 
 ; Call with:
 ;   ${RegisterUninstallSoftware} "Software Name" "SoftwareName" "Uninstaller location"
-;       "Absolute path to icon" "Company name" "Estimated size in KB" "version of agent"
+;       "Absolute path to icon" "Company name" "Estimated size in KB" "Version of agent"
 ;--------------------------------
 !macro _STACKDRIVER_REGISTER_UNINSTALL_SOFTWARE_MACRO displayName compressedName uninstaller icon company sizeKB version
   ; Store global var $0 on the stack and copy the reg key to $0
