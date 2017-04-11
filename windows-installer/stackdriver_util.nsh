@@ -189,24 +189,25 @@
 ; 
 ; Call with:
 ;   ${RegisterUninstallSoftware} "Software Name" "SoftwareName" "Uninstaller location"
-;       "Absolute path to icon" "Company name" "Estimated size in KB"
+;       "Absolute path to icon" "Company name" "Estimated size in KB" "Version of agent"
 ;--------------------------------
-!macro _STACKDRIVER_REGISTER_UNINSTALL_SOFTWARE_MACRO displayName compressedName uninstaller icon company sizeKB
+!macro _STACKDRIVER_REGISTER_UNINSTALL_SOFTWARE_MACRO displayName compressedName uninstaller icon company sizeKB version
   ; Store global var $0 on the stack and copy the reg key to $0
   Push $0
   StrCpy $0 "${UNINST_REG_KEY}\${compressedName}"
   
   ; Write all the needed register information
-  WriteRegStr SHCTX "$0" "DisplayName" "${displayName}"
-  WriteRegStr SHCTX "$0" "UninstallString" "${uninstaller}"
-  WriteRegStr SHCTX "$0" "QuietUninstallString" "${uninstaller} /S"
-  WriteRegStr SHCTX "$0" "DisplayIcon" "${icon}"
-  WriteRegStr SHCTX "$0" "Publisher" "${company}"
-  WriteRegDWORD SHCTX "$0" "EstimatedSize" "${sizeKB}"
+  WriteRegStr HKLM "$0" "DisplayName" "${displayName}"
+  WriteRegStr HKLM "$0" "UninstallString" "${uninstaller}"
+  WriteRegStr HKLM "$0" "QuietUninstallString" "${uninstaller} /S"
+  WriteRegStr HKLM "$0" "DisplayIcon" "${icon}"
+  WriteRegStr HKLM "$0" "Publisher" "${company}"
+  WriteRegDWORD HKLM "$0" "EstimatedSize" "${sizeKB}"
+  WriteRegStr HKLM "$0" "Version" "${version}"
   
   ; We do not allow modifying or reparing an install
-  WriteRegDWORD SHCTX "$0" "NoModify" 1
-  WriteRegDWORD SHCTX "$0" "NoRepair" 1
+  WriteRegDWORD HKLM "$0" "NoModify" 1
+  WriteRegDWORD HKLM "$0" "NoRepair" 1
   
   ; Restore the $0 global var
   Pop $0
@@ -228,7 +229,7 @@
 ;   ${RemoveRegisterUninstallSoftware} "SoftwareName"
 ;--------------------------------
 !macro _STACKDRIVER_REMOVE_REGISTER_UNINSTALL_SOFTWARE_MACRO name 
-  DeleteRegKey SHCTX "${UNINST_REG_KEY}\${name}"
+  DeleteRegKey HKLM "${UNINST_REG_KEY}\${name}"
 !macroend
  
  ; Define the RemoveRegisterUninstallSoftware function for ease of calling.

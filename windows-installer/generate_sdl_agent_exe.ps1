@@ -10,6 +10,18 @@
 #>
 
 ##############################
+#  ARGUMENTS
+##############################
+
+Param([string]$version = "")
+
+if ($version -eq "")
+{
+  Write-Output "No version set. Usage: .\generate_sdl_agent_exe.ps1 -version v1-4"
+  exit
+}
+
+##############################
 #  VARIABLES - DIRECTORIES
 ##############################
 
@@ -185,4 +197,4 @@ cp $NSIS_UNZU_DLL $NSIS_UNICODE_PLUGIN_DIR
 #  STEP 8 - COMPILE THE NSIS SCRIPT.
 ##############################
 
-& $NSIS_MAKE $STACKDRIVER_NSI
+& $NSIS_MAKE /DVERSION=$version $STACKDRIVER_NSI
