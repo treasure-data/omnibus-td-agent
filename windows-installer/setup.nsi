@@ -16,7 +16,7 @@
 !define PRODUCT "Stackdriver"
 
 ; Software name used for display to users.
-!define DISPLAY_NAME "${COMPANY} ${PRODUCT} Logging Agent"
+!define DISPLAY_NAME "${COMPANY} ${PRODUCT} Logging Agent - ${VERSION}"
 
 ; Software name with no white space.
 !define COMPRESSED_NAME "${COMPANY}${PRODUCT}LoggingAgent"
@@ -54,7 +54,7 @@ Unicode true
 Name "${DISPLAY_NAME}"
 
 ; Output location/name of the installer executable.
-OutFile "${COMPRESSED_NAME}_unsigned.exe"
+OutFile "${COMPRESSED_NAME}-${VERSION}_unsigned.exe"
 
 ; Require admin level logs access, this is required as we need to read event logs.
 RequestExecutionLevel admin
@@ -113,7 +113,7 @@ Function .onInit
 
   ; Check for a previously installed version.  If one exists
   ; prompt the user to remove it before continuing.
-  ReadRegStr $0 SHCTX "${STACKDRIVER_UNINST_REG_KEY}" "UninstallString"
+  ReadRegStr $0 HKLM "${STACKDRIVER_UNINST_REG_KEY}" "UninstallString"
   ${If} $0 != ""
     ${RemoveOldVersion} "${DISPLAY_NAME}" $0
   ${EndIf}
@@ -244,7 +244,7 @@ Section "Install"
   ; Register the software so it will appear in the add/remove programs menu.
   ${Print} "Registering ${DISPLAY_NAME}..."
   ${RegisterUninstallSoftware} \
-      "${DISPLAY_NAME}" "${COMPRESSED_NAME}" "${UNINSTALLER_LOCATION}" "${UI_ICON}" "${COMPANY}" "$0"
+      "${DISPLAY_NAME}" "${COMPRESSED_NAME}" "${UNINSTALLER_LOCATION}" "${UI_ICON}" "${COMPANY}" "$0" "${VERSION}"
 
   ; Update the paths in ruby files.
   ${ExecuteCommand} "${MAIN_INSTDIR}\bin\ruby.exe" "'${MAIN_INSTDIR}\bin\gem' \
@@ -294,7 +294,7 @@ Section "Uninstall"
   ${RemoveRegisterUninstallSoftware} "${COMPRESSED_NAME}"
 
   ; Clean up any other registry entires used.
-  DeleteRegKey HKCU "${REG_KEY}"
+  DeleteRegKey HKLM "${REG_KEY}"
 
   ${UnPrint} "Cleaning up files in $INSTDIR..."
 
