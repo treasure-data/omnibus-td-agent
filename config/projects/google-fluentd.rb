@@ -9,7 +9,7 @@ description "Google Fluentd: A data collector for Google Cloud Logging"
 
 install_dir     "/opt/google-fluentd"
 build_version   "1.5.14"
-build_iteration 1
+build_iteration 2
 
 # creates required build directories
 dependency "preparation"
