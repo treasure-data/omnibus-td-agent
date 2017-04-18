@@ -32,7 +32,7 @@ EOS
   assert_output <<EOS
 Warning: Declaring \$PIDFILE in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_PIDFILE instead.
 Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead.
-Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
+Warning: Declaring --group in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
 Starting td-agent: 
   --pidfile=${TMP}/path/to/td-agent.pid
   -10
@@ -71,7 +71,7 @@ EOS
   assert_output <<EOS
 Warning: Declaring \$PIDFILE in ${TMP}/etc/sysconfig/td-agent has been deprecated. Use \$TD_AGENT_PIDFILE instead.
 Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead.
-Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
+Warning: Declaring --group in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead.
 Starting td-agent: 
   --pidfile=${TMP}/path/to/td-agent.pid
   --user
