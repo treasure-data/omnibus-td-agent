@@ -5,7 +5,7 @@ download "cool.io", "1.4.6"
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.3.0"
 download "sigdump", "0.2.4"
-if td_agent_2
+if td_agent_2?
   download "oj", "2.18.1"
 else
   download "oj", "2.18.5"
