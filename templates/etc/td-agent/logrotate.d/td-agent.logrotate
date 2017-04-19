@@ -8,6 +8,9 @@
   sharedscripts
   postrotate
     pid=/var/run/<%= project_name %>/<%= project_name %>.pid
-    test -s $pid && kill -USR1 "$(cat $pid)"
+    if [ -s "$pid" ]
+    then
+      kill -USR1 "$(cat $pid)"
+    fi
   endscript
 }
