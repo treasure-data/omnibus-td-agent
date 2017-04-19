@@ -94,20 +94,20 @@ if [ -n "${TD_AGENT_ARGS}" ]; then
     while [ -n "$1" ]; do
       case "$1" in
       "--group="?* )
-        echo "Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
+        echo "Warning: Declaring --group in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
         TD_AGENT_GROUP="${1#*=}"
         ;;
       "--group" )
-        echo "Warning: Declaring --group in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
+        echo "Warning: Declaring --group in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_GROUP instead." 1>&2
         shift 1
         TD_AGENT_GROUP="$1"
         ;;
       "--user="?* )
-        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        echo "Warning: Declaring --user in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
         TD_AGENT_USER="${1#*=}"
         ;;
       "--user" )
-        echo "Warning: Declaring --user in \$DAEMON_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
+        echo "Warning: Declaring --user in \$TD_AGENT_ARGS has been deprecated. Use \$TD_AGENT_USER instead." 1>&2
         shift 1
         TD_AGENT_USER="$1"
         ;;
