@@ -62,6 +62,9 @@ Name "${DISPLAY_NAME}"
 ; Output location/name of the installer executable.
 OutFile "${COMPRESSED_NAME}-${VERSION}_unsigned.exe"
 
+; Default install location.
+InstallDir "$PROGRAMFILES\Stackdriver\LoggingAgent"
+
 ; Require admin level logs access, this is required as we need to read event logs.
 RequestExecutionLevel admin
 
@@ -98,7 +101,7 @@ ${StrRep}
 !insertmacro STACKDRIVER_SAVE_USER_LANGUAGE "${REG_KEY}"
 
 ; Configures the UI and pages for the installer. See stackdriver_ui.nsh.
-!insertmacro STACKDRIVER_UI "true"
+!insertmacro STACKDRIVER_UI "false"
 
 ; Adds all supported languages. See stackdriver_language_util.nsh.
 !insertmacro STACKDRIVER_INCLUDE_ALL_LANGUAGES
@@ -110,11 +113,6 @@ ${StrRep}
 
 ; Function called as soon as the installer is initialized, before the GUI.
 Function .onInit
-  ; Set the install directory, we cannot do this at compile time as we are
-  ; using a runtime variable.
-  ReadEnvStr $0 SYSTEMDRIVE
-  StrCpy $INSTDIR "$0\${COMPRESSED_NAME}"
-
   ; Display the language selection dialog.
   !insertmacro MUI_LANGDLL_DISPLAY
 
@@ -127,20 +125,6 @@ Function .onInit
 
   ; Temporary directory used during install and automatically cleaned up after.
   InitPluginsDir
-FunctionEnd
-
-; Verify the install directory is correct.  There is a bug in a gem
-; that this install relies on: if the file path has a space in it, it
-; will fail to install.  For now we disable the UI to change the path
-; but also need to disable it here in case of silent installs.
-Function .onVerifyInstDir
-  ; Check that the install direcotry has not changed.  If it has, notify
-  ; the user and abort.
-  ReadEnvStr $0 SYSTEMDRIVE
-  ${If} $INSTDIR != "$0\${COMPRESSED_NAME}"
-    MessageBox MB_OK "Invalid install directory '$INSTDIR', must be '$0\${COMPRESSED_NAME}'"
-    Abort
-  ${EndIf}
 FunctionEnd
 
 
