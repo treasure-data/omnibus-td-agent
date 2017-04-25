@@ -1,10 +1,12 @@
 dir 'plugin_gems'
 download "httpclient", "2.8.2.4"
-download "td-client", "1.0.0"
-download "td", "0.15.2"
 if td_agent_2?
+  download "td-client", "0.8.85"
+  download "td", "0.15.2"
   download "fluent-plugin-td", "0.10.29"
 else
+  download "td-client", "1.0.0"
+  download "td", "0.15.2"
   download "fluent-plugin-td", "1.0.0.rc1"
 end
 download "uuidtools", "2.1.5"
