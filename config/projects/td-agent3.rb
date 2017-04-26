@@ -22,7 +22,7 @@ end
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.6.7'
 override :postgresql, :version => '9.5.5'
-override :fluentd, :version => '776c7faff361638e7fbdba3c786efc6ddd66214b' # v0.14.13
+override :fluentd, :version => '491049b0cda8c14e9cc4ae1f587000dd5563c7f7' # v0.14.15
 
 # td-agent dependencies/components
 dependency "td-agent"
