@@ -1,7 +1,11 @@
 dir 'core_gems'
 download "bundler", "1.14.5"
 download "msgpack", "1.0.3"
-download "cool.io", "1.4.6"
+if td_agent_2?
+  download "cool.io", "1.4.6"
+else
+  download "cool.io", "1.5.0"
+end
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.3.0"
 download "sigdump", "0.2.4"
