@@ -296,7 +296,7 @@ Section "Uninstall"
   ; Stop the fluentd service and show status.
   ;   '--reg-winsvc u'          -> Uninstall
   ${UnPrint} "Stopping the ${DISPLAY_NAME}..."
-  ${UnExecuteCommand} "${MAIN_INSTDIR}\bin\fluentd.bat" "--reg-winsvc u"
+  ${UnExecuteCommand} "${MAIN_INSTDIR}\bin\fluentd.bat" "--reg-winsvc u --winsvc-name $\"${PRODUCT}Logging$\""
 
   ; Remove the software from the registry.
   ${UnPrint} "Unregistering the ${DISPLAY_NAME}..."
