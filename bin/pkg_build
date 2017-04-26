@@ -43,7 +43,7 @@ def get_env(platform)
   "#{f}-#{v}"
 end
 
-`rm -rf ./td-agent2-pkg; mkdir td-agent2-pkg`
+`rm -rf ./td-agent2-pkg; mkdir td-agent#{td_agent_version}-pkg`
 
 puts "Build packages: #{platforms.join(', ')}"
 
@@ -51,8 +51,8 @@ platforms.each { |platform|
   `rm -rf ./pkg`
   system({"BUILD_TD_AGENT_VERSION" => td_agent_version}, "vagrant up #{platform} #{arg}")
   if File.exist?('./pkg')
-    `mkdir -p ./td-agent2-pkg/#{get_env(platform)}`
-    `cp -rf ./pkg/* ./td-agent2-pkg/#{get_env(platform)}`
+    `mkdir -p ./td-agent#{td_agent_version}-pkg/#{get_env(platform)}`
+    `cp -rf ./pkg/* ./td-agent#{td_agent_version}-pkg/#{get_env(platform)}`
   end
   system "vagrant halt #{platform}" # should be destroy?
 }
