@@ -20,7 +20,7 @@ unless td_agent_2?
   download 'serverengine', '2.0.5'
 end
 if windows?
-  download 'ffi', '1.9.17'
+  download 'ffi', '1.9.18'
   download 'ffi-win32-extensions', '1.0.3'
   download 'win32-ipc', '0.7.0'
   download 'win32-event', '0.6.3'
