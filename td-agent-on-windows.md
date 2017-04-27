@@ -64,6 +64,7 @@ And answer `Y` when you are asked to install.
 There is no mention about this in the document of Omnibus, but WiX Toolset is required by Omnibus when creating MSI.
 
 Download [WiX Toolset](http://wixtoolset.org/releases/) and install it.
+If you use Windows Server 2012 R2, use version 3.10. 3.11 doesn't work on Window Server 2012 by .NET version mismatch.
 
 It seems that the installer does not set `PATH` environment variable.
 Therefore, you have to set `PATH` to `%WIX%\bin`.
@@ -82,7 +83,7 @@ Therefore, you have to set `PATH` to `C:\Program Files (x86)\Windows Kits\10\bin
 Build td-agent-3
 ----------------
 
-First, get [omnibus-td-agent](https://github.com/treasure-data/omnibus-td-agent) GitHub and checkout `td-agent-3` branch.
+First, get [omnibus-td-agent](https://github.com/treasure-data/omnibus-td-agent) GitHub.
 
 Then, do installation as written in `README.md` of omnibus-td-agent.
 
@@ -93,8 +94,6 @@ The build process is a little difference from `README.me`.
        C:\[your work dir]> bundle exec ruby bin\gem_downloader core_gems.rb
        
        C:\[your work dir]> bundle exec ruby bin\gem_downloader plugin_gems.rb
-       
-       C:\[your work dir]> bundle exec ruby bin\gem_downloader ui_gems.rb
        
 
 2. You don't have to create cache directory of omnibus on Windows.
