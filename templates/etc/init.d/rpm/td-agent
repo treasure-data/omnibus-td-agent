@@ -8,8 +8,8 @@
 # Short-Description: data collector for Treasure Data
 # Description:       <%= project_name %> is a data collector
 ### END INIT INFO
-# pidfile:           <%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 <% require "shellwords" %>
+# pidfile:           <%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 
 export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shellescape((xs.map { |x| File.join(root_path, x)} + xs).uniq.join(":")) %>
 
