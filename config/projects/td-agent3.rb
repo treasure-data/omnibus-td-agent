@@ -8,7 +8,7 @@ homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
 install_dir     "/opt/td-agent"
-build_version   "3.0.0"
+build_version   "3.0.1"
 build_iteration 0
 
 # creates required build directories
@@ -22,7 +22,7 @@ end
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.6.7'
 override :postgresql, :version => '9.5.5'
-override :fluentd, :version => '776c7faff361638e7fbdba3c786efc6ddd66214b' # v0.14.13
+override :fluentd, :version => '155ceac05146aea15124917a8bf16f2be0a9937a' # v0.14.16
 
 # td-agent dependencies/components
 dependency "td-agent"

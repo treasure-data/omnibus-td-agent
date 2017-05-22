@@ -1,7 +1,11 @@
 dir 'core_gems'
 download "bundler", "1.14.5"
-download "msgpack", "1.0.3"
-download "cool.io", "1.4.6"
+download "msgpack", "1.1.0"
+if td_agent_2?
+  download "cool.io", "1.4.6"
+else
+  download "cool.io", "1.5.0"
+end
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.3.0"
 download "sigdump", "0.2.4"
@@ -15,8 +19,8 @@ download "tzinfo-data", "1.2017.2"
 unless td_agent_2?
   download 'serverengine', '2.0.5'
 end
+download 'ffi', '1.9.18'
 if windows?
-  download 'ffi', '1.9.17'
   download 'ffi-win32-extensions', '1.0.3'
   download 'win32-ipc', '0.7.0'
   download 'win32-event', '0.6.3'
