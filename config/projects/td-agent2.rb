@@ -11,7 +11,7 @@ license_file "LICENSE"
 
 install_dir     "/opt/td-agent"
 build_version   "2.3.5"
-build_iteration 0
+build_iteration 1
 
 # creates required build directories
 dependency "preparation"
