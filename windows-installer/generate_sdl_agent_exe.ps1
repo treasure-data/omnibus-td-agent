@@ -163,7 +163,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 ###############################
 
 & $GEM_CMD install fluentd:0.14.15 --no-ri --no-rdoc --no-document
-& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.0.4 --no-ri --no-rdoc --no-document
+& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-winevtlog:0.2.1 --no-ri --no-rdoc --no-document
 & $GEM_CMD install protobuf:3.6 google-protobuf:3.0 grpc:1.0.1 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.6.3 --no-ri --no-rdoc --no-document
 
 # TODO(talarico): Remove this once the bug is fixed.
