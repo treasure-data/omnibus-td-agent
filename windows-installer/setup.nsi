@@ -210,7 +210,7 @@ Section "Install"
     ${WordFind} "$3" "WIN_EVT_POS_FILE_PLACE_HOLDER" "#" $4
     ${If} $4 == "1"
       ; Replace the whole line instead of using "StrRep" to avoid unicode issues.
-      StrCpy $2 "  pos_file '${MAIN_INSTDIR}\pos\winevtlog.pos'$\r$\n"
+      StrCpy $2 "    path '${MAIN_INSTDIR}\pos\winevtlog.pos'$\r$\n"
     ${EndIf}
 
     ; Look for 'CUSTOM_CONFIG_PLACE_HOLDER', if found replace it with the

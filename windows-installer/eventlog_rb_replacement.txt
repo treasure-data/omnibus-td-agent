@@ -1,0 +1,7 @@
+          encode_me = buf.read_string.scan(/(?<!%%)(?<=%)(\d+)!S!/)
+          if encode_me != nil && encode_me.length > 0
+              for item in encode_me
+                  index = item[0].to_i - 1
+                  va_list[index] = va_list[index].strip.encode('utf-16le') + "\0\0".force_encoding('utf-16le')
+              end
+          end
