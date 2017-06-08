@@ -1,3 +1,6 @@
+          # TODO: Remove when https://github.com/djberg96/win32-eventlog/pull/24 is released.
+          max_insert = [num, buf.read_string.scan(/(?<!%%)(?<=%)(\d+)/).map{ |x| x[0].to_i }.max].compact.max
+          # TODO: Remove when https://github.com/djberg96/win32-eventlog/pull/23 is merged and released.
           encode_me = buf.read_string.scan(/(?<!%%)(?<=%)(\d+)!S!/)
           if encode_me != nil && encode_me.length > 0
               for item in encode_me

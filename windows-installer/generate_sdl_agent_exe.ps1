@@ -175,12 +175,13 @@ cp $LIB_GCC_DLL $SD_LOGGING_AGENT_DIR_BIN
 #  STEP 5.1 - TEMPORARY HACK TO UPDATE RUBY FILE
 ##############################
 # 
-# TODO: Remove when https://github.com/djberg96/win32-eventlog/pull/23 is merged.
+# TODO: Update $needle and eventlog_rb_replacement.txt when https://github.com/djberg96/win32-eventlog/pull/24 is released.
+# TODO: Remove this step when both https://github.com/djberg96/win32-eventlog/pull/24 and https://github.com/djberg96/win32-eventlog/pull/23 are merged and released.
 ##############################
 
 $eventlog_rb = $SD_LOGGING_AGENT_DIR + '\lib\ruby\gems\2.3.0\gems\win32-eventlog-0.6.6\lib\win32\eventlog.rb'
 $needle = 'max_insert = [num, buf.read_string.scan(/%(\d+)/).map{ |x| x[0].to_i }.max].compact.max'
-$replacement = $needle + "`r`n" + ((Get-Content eventlog_rb_replacement.txt) -join("`r`n"))
+$replacement = (Get-Content eventlog_rb_replacement.txt) -join("`r`n")
 
 (Get-Content $eventlog_rb).replace($needle, $replacement) | Set-Content $eventlog_rb
 
