@@ -14,9 +14,9 @@
 # Configure all sources to output to Google Cloud Logging
 <match **>
   type google_cloud
-  # Set the chunk limit conservatively to avoid exceeding the limit
-  # of 10MB per write request.
-  buffer_chunk_limit 2M
+  # Set the chunk limit conservatively to avoid exceeding the recommended
+  # chunk size of 5MB per write request.
+  buffer_chunk_limit 1M
   flush_interval 5s
   # Never wait longer than 5 minutes between retries.
   max_retry_wait 300
