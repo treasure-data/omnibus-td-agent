@@ -16,6 +16,7 @@ build do
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
     rb_major, rb_minor, rb_teeny = project.overrides[:ruby][:version].split("-", 2).first.split(".", 3)
     gem_dir_version = "#{rb_major}.#{rb_minor}.0" # gem path's teeny version is always 0
+    install_message = nil
 
     template = ->(*parts) { File.join('templates', *parts) }
     generate_from_template = ->(dst, src, erb_binding, opts={}) {
@@ -26,6 +27,10 @@ build do
         f.write ERB.new(File.read(src)).result(erb_binding)
       end
     }
+
+    if File.exist?(template.call('INSTALL_MESSAGE'))
+      install_message = File.read(template.call('INSTALL_MESSAGE'))
+    end
 
     # copy pre/post scripts into omnibus path (./package-scripts/td-agentN)
     FileUtils.mkdir_p(project.package_scripts_path)
