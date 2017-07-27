@@ -25,7 +25,7 @@ license_file "LEGAL"
 #   https://bugs.ruby-lang.org/issues/11869
 # - the current status of 2.3.x is that it downloads but fails to compile.
 # - verify that all ffi libs are available for your version on all platforms.
-default_version "2.1.8"
+default_version "2.2.7"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
@@ -42,9 +42,15 @@ dependency "libyaml"
 # and that's the only one we will ever use.
 dependency "libiconv"
 
+# The checksums below are for the *.tar.gz packages.
+version("2.4.1")      { source sha256: "a330e10d5cb5e53b3a0078326c5731888bb55e32c4abfeb27d9e7f8e5d000250" }
+version("2.4.0")      { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
+
 version("2.3.1")      { source sha256: "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd" }
 version("2.3.0")      { source md5: "e81740ac7b14a9f837e9573601db3162" }
 
+version("2.2.7")      { source sha256: "374184c6c5bbc88fb7bad422368d4053a236fb6587f0eff76146dcba57f93da5" }
+version("2.2.6")      { source sha256: "de8e192791cb157d610c48a9a9ff6e7f19d67ce86052feae62b82e3682cc675f" }
 version("2.2.5")      { source md5: "bd8e349d4fb2c75d90817649674f94be" }
 version("2.2.4")      { source md5: "9a5e15f9d5255ba37ace18771b0a8dd2" }
 version("2.2.3")      { source md5: "150a5efc5f5d8a8011f30aa2594a7654" }
