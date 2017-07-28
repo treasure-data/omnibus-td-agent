@@ -7,6 +7,9 @@ gem 'berkshelf', '~> 3.0'
 gem 'omnibus', '5.5'
 gem 'omnibus-software', :github => 'opscode/omnibus-software' #, :branch => 'omnibus/3.2-stable'
 
+# Use open_uri_redirections to allow HTTPS -> HTTP redirections in omnibus
+gem 'open_uri_redirections', '0.2.1'
+
 # Use Test Kitchen with Vagrant for convering the build environment
 gem 'test-kitchen',    '~> 1.2'
 gem 'kitchen-vagrant', '~> 0.14'
