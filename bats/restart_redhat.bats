@@ -112,3 +112,25 @@ EOS
   assert_success
   [ ! -f "${TMP}/var/lock/subsys/td-agent" ]
 }
+
+@test "restart should success even if the previous process has already stopped (debian)" {
+  echo 1234 > "${TMP}/var/run/td-agent/td-agent.pid"
+  touch "${TMP}/var/lock/subsys/td-agent"
+
+  stub_path /usr/sbin/td-agent "true"
+  stub kill "-TERM 1234 : false"
+  stub daemon "true"
+  stub log_success_msg "td-agent : true"
+
+  run_service restart
+  assert_output <<EOS
+Restarting td-agent: 
+EOS
+  assert_success
+  [ -f "${TMP}/var/lock/subsys/td-agent" ]
+
+  unstub_path /usr/sbin/td-agent
+  unstub kill
+  unstub daemon
+  unstub log_success_msg
+}
