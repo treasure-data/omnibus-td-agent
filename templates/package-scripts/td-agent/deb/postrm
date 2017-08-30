@@ -5,11 +5,15 @@ set -e
 if [ "$1" = "purge" ]; then
         rm -f /etc/default/<%= project_name %>
         rm -f /etc/<%= project_name %>/<%= project_name %>.conf
-	dpkg-statoverride --list /var/run/<%= project_name %> > /dev/null && \
+	dpkg-statoverride --list /etc/<%= project_name %> > /dev/null && \
 		dpkg-statoverride --remove /etc/<%= project_name %>
 	rm -f /var/run/<%= project_name %>/*
 	dpkg-statoverride --list /var/run/<%= project_name %> > /dev/null && \
 		dpkg-statoverride --remove /var/run/<%= project_name %>
+	rm -rf /var/log/<%= project_name %>/buffer
+	rm -rf /var/log/<%= project_name %>/*
+	dpkg-statoverride --list /var/log/<%= project_name %> > /dev/null && \
+		dpkg-statoverride --remove /var/log/<%= project_name %>
 
     rm /etc/init.d/<%= project_name %>
     rm /usr/sbin/<%= project_name %>
