@@ -249,7 +249,7 @@ do_restart() {
   local val=0
   do_stop || val="$?"
   case "${val}" in
-  0 )
+  0 | 1 )
     if ! do_start; then
       return 1
     fi
