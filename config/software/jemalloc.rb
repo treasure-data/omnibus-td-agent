@@ -9,7 +9,7 @@ version("4.2.1") { source :md5 => '094b0a7b8c77c464d0dc8f0643fd3901' }
 # On Mac, this file blocks package building at health check so add to whitelist
 whitelist_file "libjemalloc\.1\.dylib"
 
-source :url => "http://www.canonware.com/download/jemalloc/jemalloc-#{version}.tar.bz2"
+source :url => "https://github.com/jemalloc/jemalloc/releases/download/#{version}/jemalloc-#{version}.tar.bz2"
 relative_path "jemalloc-#{version}"
 
 env = with_standard_compiler_flags(with_embedded_path)
