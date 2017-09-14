@@ -10,7 +10,7 @@ else
   download "fluent-plugin-td", "1.0.0.rc1"
 end
 download "uuidtools", "2.1.5"
-download "aws-sdk", "2.10.36"
+download "aws-sdk", "2.10.45"
 if td_agent_2?
   download "fluent-plugin-s3", "0.8.5"
 else
@@ -30,7 +30,7 @@ else
   download "fluent-plugin-webhdfs", "1.1.1"
 end
 download "fluent-plugin-rewrite-tag-filter", "1.5.6"
-download "ruby-kafka", "0.4.1"
+download "ruby-kafka", "0.4.2"
 download "fluent-plugin-kafka", "0.6.1"
 unless td_agent_2?
   download "elasticsearch", "5.0.4"
