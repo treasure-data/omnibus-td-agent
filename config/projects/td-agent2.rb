@@ -10,8 +10,8 @@ license "Apache-2.0"
 license_file "LICENSE"
 
 install_dir     "/opt/td-agent"
-build_version   "2.3.5"
-build_iteration 1
+build_version   "2.3.6"
+build_iteration 0
 
 # creates required build directories
 dependency "preparation"
