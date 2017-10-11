@@ -42,6 +42,7 @@ dependency "libyaml"
 # and that's the only one we will ever use.
 dependency "libiconv"
 
+version("2.4.2") { source sha256: "93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c" }
 version("2.4.1") { source sha256: "a330e10d5cb5e53b3a0078326c5731888bb55e32c4abfeb27d9e7f8e5d000250" }
 version("2.4.0") { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
 
@@ -176,6 +177,10 @@ build do
 
   if version.start_with?('2.1')
     patch source: 'ruby-2.1-openssl-mode-patch.patch', plevel: 1, env: patch_env
+  end
+
+  if version == '2.4.2'
+    patch source: 'ruby-2.4.2-configure-patch.patch', plevel: 1, env: patch_env
   end
 
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
