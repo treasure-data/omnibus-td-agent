@@ -42,6 +42,10 @@ version "9.2.8" do
   source md5: "c5c65a9b45ee53ead0b659be21ca1b97"
 end
 
+version "9.5.8" do
+  source sha256: "ade57068f134f36710fa953e1ef79185abd96572f8098741413132f79ed37202"
+end
+
 version "9.5.5" do
   source md5: "e75b182d250ad1fcdd71b280f146db4c"
 end
@@ -58,6 +62,10 @@ version "9.5beta1" do
   source md5: "4bd67bfa4dc148e3f9d09f6699b5931f"
 end
 
+version "9.4.13" do
+  source sha256: "0080f55d65194de8b96a2dab153443f8248ff2b2b10e6ab4cda2dcadcac7f2ab"
+end
+
 version "9.4.6" do
   source md5: "0371b9d4fb995062c040ea5c3c1c971e"
 end
@@ -72,6 +80,10 @@ end
 
 version "9.4.0" do
   source md5: "8cd6e33e1f8d4d2362c8c08bd0e8802b"
+end
+
+version "9.3.18" do
+  source sha256: "ad60d12a5a3dd0f6f5904c41b87e43eff49d3f74e45129fe52c5744366ff2fe0"
 end
 
 version "9.3.10" do
