@@ -90,7 +90,7 @@ fi
 kill_by_file() {
   local sig="$1"
   shift 1
-  local pid="$(cat "$@" 2>/dev/null || true)"
+  local pid="$(cat "$@" 2>/dev/null || echo "")"
   if [ -n "${pid}" ]; then
     if <%= Shellwords.shellescape(File.join(root_path, "bin/kill")) %> "${sig}" "${pid}" 1>/dev/null 2>&1; then
       return 0
@@ -118,7 +118,7 @@ do_start() {
   if kill_by_file -0 "${TD_AGENT_PID_FILE}"; then
     return 1
   else
-    GOOGLE_LOGGING_ENABLE=$(curl --silent --connect-timeout 1 -f -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/attributes/google-logging-enable 2>/dev/null)
+    GOOGLE_LOGGING_ENABLE=$(curl --silent --connect-timeout 1 -f -H "Metadata-Flavor: Google" http://169.254.169.254/computeMetadata/v1/instance/attributes/google-logging-enable 2>/dev/null || echo "")
     if [ -n "$GOOGLE_LOGGING_ENABLE" -a "$GOOGLE_LOGGING_ENABLE" = "0" ]; then
         log_warning_msg "Disabled via metadata"
         return 3
