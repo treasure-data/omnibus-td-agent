@@ -31,8 +31,8 @@ Vagrant.configure('2') do |config|
     debian-8.4
     centos-5.11
     centos-5.11-i386
-    centos-6.7
-    centos-6.7-i386
+    centos-6.9
+    centos-6.9-i386
     centos-7.2
   }.each_with_index do |platform, index|
     project_build_user = 'vagrant'
@@ -116,6 +116,18 @@ Vagrant.configure('2') do |config|
       GCC_EXPORT
       else
         export_gcc = ''
+      end
+
+      if platform.start_with?('centos-6')
+        # ruby 2.4 requires newer autoconf to build
+        c.vm.provision :shell, :privileged => true, :inline => <<-UPDATE_AUTOCONF
+        wget http://ftp.gnu.org/gnu/autoconf/autoconf-2.69.tar.gz
+        tar xvfvz autoconf-2.69.tar.gz
+        cd autoconf-2.69
+        ./configure
+        make
+        make install
+      UPDATE_AUTOCONF
       end
 
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
