@@ -13,6 +13,7 @@ build do
     root_path = "/" # for ERB
     install_path = project.install_dir # for ERB
     project_name = project.name # for ERB
+    is_td_agent2 = project.build_version.start_with?('2.')
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
     rb_major, rb_minor, rb_teeny = project.overrides[:ruby][:version].split("-", 2).first.split(".", 3)
     gem_dir_version = "#{rb_major}.#{rb_minor}.0" # gem path's teeny version is always 0
