@@ -24,9 +24,9 @@ end
 unless ARGV.include?('--without-rpm')
   platforms += [
     "centos-7.2",
-    "centos-6.7",
+    "centos-6.9",
     "centos-5.11",
-    "centos-6.7-i386",
+    "centos-6.9-i386",
     "centos-5.11-i386"
   ]
 end
@@ -34,7 +34,7 @@ end
 unless ARGV.include?('--without-debian')
   platforms += [
     "debian-8.4",
-    "debian-7.10",
+    #"debian-7.10",
   ]
 end
 
@@ -49,7 +49,7 @@ puts "Build packages: #{platforms.join(', ')}"
 
 platforms.each { |platform|
   `rm -rf ./pkg`
-  system({"BUILD_TD_AGENT_VERSION" => td_agent_version}, "vagrant up #{platform} #{arg}")
+  system({"BUILD_TD_AGENT_VERSION" => td_agent_version}, "PATH=/opt/chefdk/bin:$PATH; vagrant up #{platform} #{arg}")
   if File.exist?('./pkg')
     `mkdir -p ./td-agent#{td_agent_version}-pkg/#{get_env(platform)}`
     `cp -rf ./pkg/* ./td-agent#{td_agent_version}-pkg/#{get_env(platform)}`
