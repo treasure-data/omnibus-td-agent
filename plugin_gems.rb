@@ -35,7 +35,7 @@ if td_agent_2?
 else
   download "fluent-plugin-webhdfs", "1.2.2"
 end
-download "fluent-plugin-rewrite-tag-filter", "2.0.0"
+download "fluent-plugin-rewrite-tag-filter", "2.0.1"
 download "ruby-kafka", "0.5.1"
 download "fluent-plugin-kafka", "0.6.4"
 unless td_agent_2?
