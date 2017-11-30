@@ -108,6 +108,11 @@ TD_AGENT_OPTIONS=""
 EOF
 fi
 
+if [ -d "/lib/systemd/system/" ]; then
+    cp -f ${<%= project_name_snake %>_dir}/etc/systemd/<%= project_name %>.service /lib/systemd/system/
+    chmod 644 /lib/systemd/system/<%= project_name %>.service
+fi
+
 if [ "$1" = "configure" ]; then
 <% if install_message %>
   echo "<%= install_message %>"

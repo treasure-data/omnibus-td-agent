@@ -55,6 +55,12 @@ build do
       if File.exist?(template_path)
         generate_from_template.call initd_file_path, template_path, binding, mode: 0755
       end
+
+      systemd_file_path = File.join(project.resources_path, 'etc', 'systemd', project.name + ".service")
+      template_path = template.call('etc', 'systemd', 'td-agent.service.erb')
+      if File.exist?(template_path)
+        generate_from_template.call systemd_file_path, template_path, binding, mode: 0755
+      end
     end
 
     # setup /etc/td-agent

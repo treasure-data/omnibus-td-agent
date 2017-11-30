@@ -1,0 +1,26 @@
+[Unit]
+Description=<%= project_name %>: Fluentd based data collector for Treasure Data
+Documentation=https://docs.treasuredata.com/articles/td-agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=<%= Shellwords.shellescape(project_name) %>
+Group=<%= Shellwords.shellescape(project_name) %>
+LimitNOFILE=65536
+Environment=LD_PRELOAD=<%= install_path %>/embedded/lib/libjemalloc.so
+Environment=GEM_HOME=<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/
+Environment=GEM_PATH=<%= install_path %>/embedded/lib/ruby/gems/<%= gem_dir_version %>/
+Environment=FLUENT_CONF=/etc/<%= project_name %>/<%= project_name %>.conf
+Environment=FLUENT_PLUGIN=/etc/<%= project_name %>/plugin
+Environment=FLUENT_SOCKET=/var/run/<%= project_name %>/<%= project_name %>.sock
+PIDFile=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+Type=forking
+ExecStart=/opt/td-agent/embedded/bin/fluentd --log <%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %> --daemon <%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
+ExecStop=/bin/kill -TERM ${MAINPID}
+ExecReload=/bin/kill -HUP ${MAINPID}
+Restart=always
+TimeoutStopSec=120
+
+[Install]
+WantedBy=multi-user.target
