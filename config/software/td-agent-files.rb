@@ -25,7 +25,7 @@ build do
       destination = dst.gsub('td-agent', project.name)
       FileUtils.mkdir_p File.dirname(destination)
       File.open(destination, 'w', mode) do |f|
-        f.write ERB.new(File.read(src)).result(erb_binding)
+        f.write ERB.new(File.read(src), nil, '<>').result(erb_binding)
       end
     }
 
