@@ -47,6 +47,21 @@ where the `build project` command is invoked. So running this command on say a
 MacBook Pro will generate a Mac OS X specific package. After the build
 completes packages will be available in `pkg/`.
 
+#### Build td-agent 3
+
+Add `BUILD_TD_AGENT_VERSION=3` to each command. Note that td-agent 3 doesn't include fluentd-ui for now. So no need `ui_gems.rb` line.
+
+```shell
+$ BUILD_TD_AGENT_VERSION=3 bin/gem_downloader core_gems.rb
+$ BUILD_TD_AGENT_VERSION=3 bin/gem_downloader plugin_gems.rb
+```
+
+And use `td-agent3` instead of `td-agent2` for omnibus command.
+
+```shell
+$ bin/omnibus build td-agent3
+```
+
 #### Build on CentOS 5
 
 td-agent build doesn't work on CentOS 5 by OpenSSL related issues.
