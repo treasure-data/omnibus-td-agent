@@ -26,6 +26,6 @@ if windows?
   download 'win32-event', '0.6.3'
   download 'win32-service', '0.8.10'
   download 'windows-pr', '1.2.6'
-  download 'win32-api', '1.6.1.2-universal-mingw32'
+  download 'win32-api', '1.7.0-universal-mingw32'
   download 'windows-api', '0.4.4'
 end
