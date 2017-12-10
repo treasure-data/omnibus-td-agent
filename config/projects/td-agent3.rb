@@ -20,7 +20,7 @@ else
   override :ruby, :version => '2.4.2'
 end
 override :zlib, :version => '1.2.8'
-override :jemalloc, :version => '5.0.1'
+override :jemalloc, :version => '4.5.0'
 override :rubygems, :version => '2.6.7'
 override :postgresql, :version => '9.5.5'
 override :fluentd, :version => '363b1af858aab34d90d9a98d63107b1206afd141' # v0.14.25
