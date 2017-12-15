@@ -1,6 +1,6 @@
 dir 'core_gems'
 download "bundler", "1.16.0"
-download "msgpack", "1.1.0"
+download "msgpack", "1.2.0"
 if td_agent_2?
   download "cool.io", "1.5.1"
 else
