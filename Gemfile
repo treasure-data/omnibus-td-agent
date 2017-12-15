@@ -5,8 +5,8 @@ gem 'berkshelf', '~> 3.0'
 
 # Install omnibus software
 # gem 'omnibus', '5.5'
-gem 'omnibus', :github => 'chef/omnibus' # for latest omnibus-software
-gem 'omnibus-software', :github => 'opscode/omnibus-software' #, :branch => 'omnibus/3.2-stable'
+gem 'omnibus', :git => 'https://github.com/chef/omnibus.git' # for latest omnibus-software
+gem 'omnibus-software', :git => 'https://github.com/chef/omnibus-software.git'
 
 # Use Test Kitchen with Vagrant for convering the build environment
 gem 'test-kitchen',    '~> 1.2'
