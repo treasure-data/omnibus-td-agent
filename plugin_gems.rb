@@ -40,7 +40,7 @@ download "ruby-kafka", "0.5.1"
 download "fluent-plugin-kafka", "0.6.5"
 unless td_agent_2?
   download "elasticsearch", "5.0.4"
-  download "fluent-plugin-elasticsearch", "2.3.0"
+  download "fluent-plugin-elasticsearch", "2.4.0"
 end
 download "fluent-plugin-td-monitoring", "0.2.3"
 if windows?
