@@ -17,6 +17,7 @@ end
 download "tzinfo", "1.2.4"
 download "tzinfo-data", "1.2017.3"
 unless td_agent_2?
+  download "dig_rb", "1.0.1"
   download 'serverengine', '2.0.5'
 end
 if windows?
