@@ -231,6 +231,12 @@ build do
     configure_command << "ac_cv_func_dl_iterate_phdr=no"
     configure_command << "--with-opt-dir=#{install_dir}/embedded"
   elsif windows?
+    if version.satisfies?(">= 2.3")
+      # Windows Nano Server COM libraries do not support Apartment threading
+      # instead COINIT_MULTITHREADED must be used
+      patch source: "ruby_nano.patch", plevel: 1, env: patch_env
+    end
+
     configure_command << " debugflags=-g"
   else
     configure_command << "--with-opt-dir=#{install_dir}/embedded"
@@ -260,8 +266,21 @@ build do
         if File.exist?(windows_path)
           copy windows_path, "#{install_dir}/embedded/bin/#{dll}.dll"
           break
+        else
+          #raise "Cannot find required DLL needed for dynamic linking: #{windows_path}"
         end
       end
     end
+
+    if version.satisfies?(">= 2.4")
+      %w{erb gem irb rdoc ri}.each do |cmd|
+        copy "#{project_dir}/bin/#{cmd}", "#{install_dir}/embedded/bin/#{cmd}"
+      end
+    end
+
+    # Ruby 2.4 seems to mark rake.bat as read-only.
+    # Mark it as writable so that we can install other version of rake without
+    # running into permission errors.
+    command "attrib -r #{install_dir}/embedded/bin/rake.bat"
   end
 end
