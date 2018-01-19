@@ -26,8 +26,9 @@ license_file "LEGAL"
 # - the current status of 2.3.x is that it downloads but fails to compile.
 # - verify that all ffi libs are available for your version on all platforms.
 # - Note: When updating major version (i.e. 2.2 -> 2.3), gem_dir_version must be
-#   updated in td.rb, td-agent-cleanup.rb, td-agent-files.rb, and td-agent-ui.rb.
-default_version "2.2.7"
+#   updated to 2.X.0 in td.rb, td-agent-cleanup.rb, td-agent-files.rb, and
+#   td-agent-ui.rb.
+default_version "2.4.3"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
@@ -45,6 +46,8 @@ dependency "libyaml"
 dependency "libiconv"
 
 # The checksums below are for the *.tar.gz packages.
+version("2.4.3")      { source sha256: "fd0375582c92045aa7d31854e724471fb469e11a4b08ff334d39052ccaaa3a98" }
+version("2.4.2")      { source sha256: "93b9e75e00b262bc4def6b26b7ae8717efc252c47154abb7392e54357e6c8c9c" }
 version("2.4.1")      { source sha256: "a330e10d5cb5e53b3a0078326c5731888bb55e32c4abfeb27d9e7f8e5d000250" }
 version("2.4.0")      { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
 
