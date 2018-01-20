@@ -43,7 +43,7 @@ def get_env(platform)
   "#{f}-#{v}"
 end
 
-`rm -rf ./td-agent2-pkg; mkdir td-agent#{td_agent_version}-pkg`
+`rm -rf ./td-agent#{td_agent_version}-pkg; mkdir td-agent#{td_agent_version}-pkg`
 
 puts "Build packages: #{platforms.join(', ')}"
 
