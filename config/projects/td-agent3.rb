@@ -7,7 +7,12 @@ maintainer "Treasure Data, Inc"
 homepage "http://treasuredata.com"
 description "Treasure Agent: A data collector for Treasure Data"
 
-install_dir     "/opt/td-agent"
+if windows?
+  install_dir "#{default_root}/opt/#{name}"
+else
+  install_dir "#{default_root}/#{name}"
+end
+
 build_version   "3.1.1"
 build_iteration 0
 
