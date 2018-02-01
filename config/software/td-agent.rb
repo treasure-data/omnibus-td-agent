@@ -6,7 +6,7 @@ dependency "ruby"
 dependency "nokogiri"
 dependency "postgresql"
 dependency "fluentd"
-
+dependency "xz"
 
 env = {}
 
