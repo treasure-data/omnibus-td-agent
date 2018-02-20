@@ -21,6 +21,10 @@ class GemsParser
   end
 
   def download(name, ver)
-    @target_files << [name, ver]
+    @target_files << [name, ver, :download]
+  end
+
+  def fetch(name, ver)
+    @target_files << [name, ver, :fetch]
   end
 end

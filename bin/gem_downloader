@@ -17,10 +17,27 @@ file_format = "%0#{(gp.target_files.length - 1).to_s.length}d-%s-%s.gem"
 FileUtils.remove_dir(gp.target_dir, true)
 Dir.mkdir(gp.target_dir)
 Dir.chdir(gp.target_dir) {
-  gp.target_files.each { |n, v, an|
-    path = sprintf(file_format, index, n, v)
+  gp.target_files.each { |name, version, approach|
+    path = sprintf(file_format, index, name, version)
     loop {
-      `curl -o #{path} -L http://rubygems.org/downloads/#{n}-#{v}.gem`
+      case approach
+      when :fetch
+        # Fetch the pre-compiled gem native extensions instead of building them
+        # from source.
+        # Expected output is in the following format:
+        # "Downloaded <gem_name>-<gem_version>-<gem_platform>"
+        download_status, gem_name_version_platform = (
+            `gem fetch #{name} --version #{version}`.strip.split(' '))
+        fail "Error downloading gem #{name}." unless
+          download_status == 'Downloaded'
+        path = sprintf(file_format, index, name, gem_name_version_platform)
+        `mv #{gem_name_version_platform}.gem #{path}`
+      when :download
+        # Download the native extension code and build from source.
+        `curl -o #{path} -L http://rubygems.org/downloads/#{name}-#{version}.gem`
+      else
+        fail "Unsupported gem approach: #{approach}."
+      end
       `gem install --explain #{path} --no-ri --no-rdoc`
       break if $?.success?
       sleep 1
