@@ -1,5 +1,5 @@
 name "jemalloc"
-default_version "5.0.1"
+default_version "4.5.0"
 
 # for td-agent
 version("2.2.5") do
@@ -17,8 +17,8 @@ version("4.2.1") do
   source :md5 => md5,
          :url => "http://src.fedoraproject.org/repo/pkgs/jemalloc/jemalloc-#{version}.tar.bz2/#{md5}/jemalloc-#{version}.tar.bz2"
 end
-version("5.0.1") do
-  sha512 = '8cb5957a5724eb2bbad120cf0028ea8b2b14b4a416c1751b7c967351a7fd51135058ea0d3c4dc1d127c86f3aa7e9fd5ef101857110aabfdb7789427791c432c3'
+version("4.5.0") do
+  sha512 = '76953363fe1007952232220afa1a91da4c1c33c02369b5ad239d8dd1d0792141197c15e8489a8f4cd301b08494e65cadd8ecd34d025cb0285700dd78d7248821'
   source :sha512 => sha512,
          :url => "http://src.fedoraproject.org/repo/pkgs/jemalloc/jemalloc-#{version}.tar.bz2/sha512/#{sha512}/jemalloc-#{version}.tar.bz2"
 end
