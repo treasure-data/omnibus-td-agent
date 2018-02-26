@@ -13,6 +13,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && find /var/log -name "*.log" -type f -delete
 
-ADD run.sh /run.sh
+ADD entrypoint.sh /entrypoint.sh
 
-CMD /run.sh
+ENTRYPOINT ["/entrypoint.sh"]
+CMD ["/usr/sbin/google-fluentd"]
