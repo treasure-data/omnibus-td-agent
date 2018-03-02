@@ -8,7 +8,7 @@ prevver="$2"
 
 add_system_user() {
     if ! getent passwd <%= project_name %> >/dev/null; then
-        adduser --group --system --no-create-home <%= project_name %>
+        adduser --group --system --home /var/lib/<%= project_name %> <%= project_name %>
     fi
 }
 
