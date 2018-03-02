@@ -19,6 +19,8 @@ if [ "$1" = "purge" ]; then
     rm /usr/sbin/<%= project_name %>
     rm /usr/sbin/<%= project_name %>-gem
 
+    getent passwd <%= project_name %> && userdel -r <%= project_name %>
+
     if [ -f /usr/sbin/<%= project_name %>-ui ]; then
         rm /usr/sbin/<%= project_name %>-ui
     fi
