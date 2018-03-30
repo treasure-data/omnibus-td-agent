@@ -131,6 +131,15 @@ Vagrant.configure('2') do |config|
       UPDATE_AUTOCONF
       end
 
+      if platform.start_with?('debian-9')
+        # https://github.com/chef/omnibus-toolchain/issues/73
+        c.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_TAR
+        rm /opt/omnibus-toolchain/bin/tar
+        rm /opt/omnibus-toolchain/bin/gtar
+        rm /opt/omnibus-toolchain/embedded/bin/tar
+      REMOVE_TAR
+      end
+
       c.vm.provision :shell, :privileged => false, :inline => <<-OMNIBUS_BUILD
         #{export_gcc}
         export PATH="/opt/omnibus-toolchain/embedded/bin/:$PATH"
