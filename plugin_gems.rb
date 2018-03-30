@@ -46,7 +46,7 @@ unless td_agent_2?
   download "elasticsearch", "5.0.4"
   download "fluent-plugin-elasticsearch", "2.4.0"
 end
-download "fluent-plugin-td-monitoring", "0.2.3"
+download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
   download 'fluent-plugin-windows-eventlog', '0.2.2'
