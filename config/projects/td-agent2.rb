@@ -20,7 +20,7 @@ override :ruby, :version => '2.1.10' # This override version is used for gem_dir
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '2.6.13'
 override :postgresql, :version => '9.3.5'
-override :fluentd, :version => '32fd7a5302bea3b9cac0aa20cb9cd55d1e8c24c1' # v0.12.42
+override :fluentd, :version => '062848c652781e9e3c3812479ef39ea8af93cb44' # v0.12.42
 
 # td-agent dependencies/components
 dependency "td-agent"
