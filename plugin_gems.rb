@@ -10,8 +10,8 @@ else
   download "fluent-plugin-td", "1.0.0"
 end
 if td_agent_2?
-  download "aws-sdk", "2.10.91"
-  download "fluent-plugin-s3", "0.8.5"
+  download "aws-sdk", "2.11.22"
+  download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.3.1"
   download "aws-partitions", "1.42.0"
@@ -35,14 +35,18 @@ if td_agent_2?
 else
   download "fluent-plugin-webhdfs", "1.2.2"
 end
-download "fluent-plugin-rewrite-tag-filter", "2.0.1"
-download "ruby-kafka", "0.5.1"
-download "fluent-plugin-kafka", "0.6.5"
+if td_agent_2?
+  download "fluent-plugin-rewrite-tag-filter", "1.6.0"
+else
+  download "fluent-plugin-rewrite-tag-filter", "2.0.1"
+end
+download "ruby-kafka", "0.5.4"
+download "fluent-plugin-kafka", "0.7.2"
 unless td_agent_2?
   download "elasticsearch", "5.0.4"
   download "fluent-plugin-elasticsearch", "2.4.0"
 end
-download "fluent-plugin-td-monitoring", "0.2.3"
+download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
   download 'fluent-plugin-windows-eventlog', '0.2.2'
