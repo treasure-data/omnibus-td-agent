@@ -7,7 +7,7 @@ if Vagrant::VERSION.to_f < 1.5
   raise "The Omnibus Build Lab only supports Vagrant >= 1.5.0"
 end
 
-td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 2).to_i
+td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 3).to_i
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"

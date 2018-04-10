@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 
-td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 2).to_s
+td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 3).to_s
 
 arg = ''
 if ARGV.include?('--with-provision')

@@ -29,6 +29,6 @@ class GemsParser
   end
 
   def td_agent_2?
-    (ENV['BUILD_TD_AGENT_VERSION'] || 2).to_i == 2
+    (ENV['BUILD_TD_AGENT_VERSION'] || 3).to_i == 2
   end
 end
