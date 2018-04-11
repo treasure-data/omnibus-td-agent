@@ -126,7 +126,15 @@ elsif solaris_10?
     env["CFLAGS"] << " -std=c99 -O3 -g -pipe"
   end
 elsif windows?
-  env["CPPFLAGS"] << " -DFD_SETSIZE=2048"
+  env["CFLAGS"] = "-I#{install_dir}/embedded/include -DFD_SETSIZE=2048"
+  if windows_arch_i386?
+    # 32-bit windows can't compile ruby with -O2 due to compiler bugs.
+    env["CFLAGS"] << " -m32 -march=i686 -O"
+  else
+    env["CFLAGS"] << " -m64 -march=x86-64 -O2"
+  end
+  env["CPPFLAGS"] = env["CFLAGS"]
+  env["CXXFLAGS"] = env["CFLAGS"]
 else # including linux
   if version.satisfies?(">= 2.3.0") &&
       rhel? && platform_version.satisfies?("< 6.0")
@@ -171,6 +179,12 @@ build do
     # be fixed.
   end
 
+   # Fix find_proxy with IP format proxy and domain format uri raises an exception.
+  # This only affects 2.4 and the fix is expected to be included in 2.4.2  # https://github.com/ruby/ruby/pull/1513
+  if version == "2.4.0" || version == "2.4.1"
+    patch source: "2.4_no_proxy_exception.patch", plevel: 1, env: patch_env
+  end
+
   # Fix reserve stack segmentation fault when building on RHEL5 or below
   # Currently only affects 2.1.7 and 2.2.3. This patch taken from the fix
   # in Ruby trunk and expected to be included in future point releases.
@@ -188,6 +202,22 @@ build do
 
   if version == '2.4.2'
     patch source: 'ruby-2.4.2-configure-patch.patch', plevel: 1, env: patch_env
+  end
+
+  if rhel? &&
+     platform_version.satisfies?("< 6") &&
+     version.satisfies?(">= 2.4") &&
+     version.satisfies?("< 2.5")
+    patch source: "ruby_no_conversion_warnings.patch", plevel: 1, env: patch_env
+  end
+
+  # RHEL 6's gcc doesn't support `#pragma GCC diagnostic` inside functions, source
+  # we'll guard their inclusion more specifically. As of 2018-01-25 this is fixed
+  # upstream and ought to be in 2.5.1
+  if rhel? &&
+     platform_version.satisfies?("< 7") &&
+     (version == "2.5.0")
+    patch source: "prelude_25_el6_no_pragma.patch", plevel: 0, env: patch_env
   end
 
   configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
