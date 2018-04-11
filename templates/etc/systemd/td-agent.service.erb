@@ -18,10 +18,10 @@ Environment=TD_AGENT_OPTIONS=
 RuntimeDirectory=<%= Shellwords.shellescape(project_name) %>
 Type=simple
 ExecStart=/opt/td-agent/embedded/bin/fluentd --log <%= Shellwords.shellescape(File.join(root_path, "var", "log", project_name, "#{project_name}.log")) %> $TD_AGENT_OPTIONS
-ExecStop=/bin/kill -TERM ${MAINPID}
 ExecReload=/bin/kill -HUP ${MAINPID}
 Restart=always
 TimeoutStopSec=120
+KillMode=mixed
 
 [Install]
 WantedBy=multi-user.target
