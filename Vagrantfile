@@ -27,6 +27,7 @@ Vagrant.configure('2') do |config|
     ubuntu-14.04-i386
     ubuntu-16.04
     ubuntu-16.04-i386
+    ubuntu-18.04
     debian-7.10
     debian-8.4
     debian-9.3
@@ -131,7 +132,7 @@ Vagrant.configure('2') do |config|
       UPDATE_AUTOCONF
       end
 
-      if platform.start_with?('debian-9')
+      if platform.start_with?('debian-9') || platform.start_with?('ubuntu-18')
         # https://github.com/chef/omnibus-toolchain/issues/73
         c.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_TAR
         rm /opt/omnibus-toolchain/bin/tar
