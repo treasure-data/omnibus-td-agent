@@ -7,7 +7,7 @@ else
   download "cool.io", "1.5.3"
 end
 download "http_parser.rb", "0.6.0"
-download "yajl-ruby", "1.3.1"
+download "yajl-ruby", "1.4.0"
 download "sigdump", "0.2.4"
 if td_agent_2?
   download "oj", "2.18.5"
@@ -15,7 +15,7 @@ else
   download "oj", "3.3.9"
 end
 download "tzinfo", "1.2.5"
-download "tzinfo-data", "1.2018.4"
+download "tzinfo-data", "1.2018.5"
 unless td_agent_2?
   download "dig_rb", "1.0.1"
   download 'serverengine', '2.0.6'
