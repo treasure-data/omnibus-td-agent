@@ -1,5 +1,5 @@
 dir 'core_gems'
-download "bundler", "1.16.1"
+download "bundler", "1.16.2"
 download "msgpack", "1.2.4"
 if td_agent_2?
   download "cool.io", "1.5.1"
@@ -21,7 +21,7 @@ unless td_agent_2?
   download 'serverengine', '2.0.6'
 end
 if windows?
-  download 'ffi', '1.9.23'
+  download 'ffi', '1.9.25'
   download 'ffi-win32-extensions', '1.0.3'
   download 'win32-ipc', '0.7.0'
   download 'win32-event', '0.6.3'
