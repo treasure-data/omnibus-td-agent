@@ -40,11 +40,11 @@ if td_agent_2?
 else
   download "fluent-plugin-rewrite-tag-filter", "2.1.0"
 end
-download "ruby-kafka", "0.6.3"
-download "fluent-plugin-kafka", "0.7.2"
+download "ruby-kafka", "0.6.5"
+download "fluent-plugin-kafka", "0.7.3"
 unless td_agent_2?
   download "elasticsearch", "6.0.2"
-  download "fluent-plugin-elasticsearch", "2.10.1"
+  download "fluent-plugin-elasticsearch", "2.10.3"
 end
 unless td_agent_2?
   download "fluent-plugin-record-modifier", "1.1.0"
