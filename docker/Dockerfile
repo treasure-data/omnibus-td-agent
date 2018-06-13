@@ -1,4 +1,4 @@
-FROM debian:stretch-20180312
+FROM debian:stretch-20180426
 
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
