@@ -13,7 +13,7 @@ else
   install_dir "#{default_root}/#{name}"
 end
 
-build_version   "3.1.1"
+build_version   "3.2.0"
 build_iteration 0
 
 # creates required build directories
