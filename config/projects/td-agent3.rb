@@ -13,18 +13,18 @@ else
   install_dir "#{default_root}/#{name}"
 end
 
-build_version   "3.1.1"
+build_version   "3.2.0"
 build_iteration 0
 
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.4.2'
-override :zlib, :version => '1.2.8'
+override :ruby, :version => '2.4.4'
+override :zlib, :version => '1.2.11'
 override :jemalloc, :version => '4.5.0'
-override :rubygems, :version => '2.6.7'
-override :postgresql, :version => '9.6.6'
-override :fluentd, :version => 'bc77372d0514964690e0e1a43c487e5cb7ef9033' # v1.0.2
+override :rubygems, :version => '2.6.14'
+override :postgresql, :version => '9.6.9'
+override :fluentd, :version => 'c49959c87e207afb8a75a116da9af9ad86beabf1' # v1.2.2
 
 # td-agent dependencies/components
 dependency "td-agent"
