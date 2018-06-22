@@ -7,6 +7,7 @@ version("3.6.0") { source :md5 => 'e76665b63a8fddf4c9f26d2fa67afdf2' }
 version("4.2.1") { source :md5 => '094b0a7b8c77c464d0dc8f0643fd3901' }
 version("4.5.0") { source :sha256 => '9409d85664b4f135b77518b0b118c549009dc10f6cba14557d170476611f6780' }
 version('5.0.1') { source :sha256 => '4814781d395b0ef093b21a08e8e6e0bd3dab8762f9935bbfb71679b0dea7c3e9' }
+version('5.1.0') { source :sha256 => '5396e61cc6103ac393136c309fae09e44d74743c86f90e266948c50f3dbb7268' }
 
 # On Mac, this file blocks package building at health check so add to whitelist
 whitelist_file "libjemalloc\.1\.dylib"
