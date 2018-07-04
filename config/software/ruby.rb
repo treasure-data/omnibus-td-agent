@@ -220,7 +220,7 @@ build do
     patch source: "prelude_25_el6_no_pragma.patch", plevel: 0, env: patch_env
   end
 
-  configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,ripper,sdbm,tk",
+  configure_command = ["--with-out-ext=dbm,gdbm,probe,racc,sdbm,tk",
                        "--enable-shared",
                        "--disable-install-doc",
                        "--without-gmp",
