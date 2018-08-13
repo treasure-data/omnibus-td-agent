@@ -11,7 +11,8 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && apt-get autoremove
 
-RUN curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20180726-1 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
+# Install google-fluentd at version 1.5.35-1.
+RUN curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20180810-1 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
     && apt-get autoremove \
     && find /var/log -name "*.log" -type f -delete \
