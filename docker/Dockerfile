@@ -6,6 +6,7 @@ RUN apt-get update \
         curl \
         gnupg2 \
         lsb-release \
+        build-essential \
         procps \
         systemd \
     && rm -rf /var/lib/apt/lists/* /tmp/* \
