@@ -20,6 +20,12 @@
   @type null
 </match>
 
+# Add a unique insertId to each log entry that doesn't already have it.
+# This helps guarantee the order and prevent log duplication.
+<filter **>
+  @type add_insert_ids
+</filter>
+
 # Configure all sources to output to Google Cloud Logging
 <match **>
   @type google_cloud
