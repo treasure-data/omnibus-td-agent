@@ -21,12 +21,7 @@ RUN apt-get update \
         gtk2.0 \
         adduser \
         libkrb5-3 \
-    && rm -rf /var/lib/apt/lists/* /tmp/* \
     && apt-get autoremove -y --purge \
-    && find /var/log -name "*.log" -type f -delete \
-    # Remove .a .c .cc .h files and include libraries
-    && rm -rf /opt/google-fluentd/embedded/include /opt/google-fluentd/embedded/lib/*.a \
-    && (find /opt/google-fluentd/embedded/ -name '*.c' -o -name '*.cc' -o -name '*.h'  | xargs rm) \
     # Remove docs.
     && rm -rf \
         /usr/share/doc \
@@ -52,6 +47,48 @@ RUN apt-get update \
         mixlib-log \
         mixlib-shellout \
         systemu \
+        # Gems for Mongo.
+        fluent-plugin-mongo \
+        mongo \
+    # Remove unused gem versions.
+    && /opt/google-fluentd/embedded/bin/gem uninstall httpclient -v 2.7.2 \
+    && rm -rf \
+        # Cache.
+        /var/cache \
+        # apt.
+        /usr/bin/apt-* \
+        /var/lib/apt/lists/* \
+        # dpkg.
+        /usr/bin/dpkg* \
+        /var/lib/dpkg \
+        # Temp files.
+        /tmp/* \
+        # LDAP.
+        /usr/lib/x86_64-linux-gnu/libldap* \
+        # IBM mainframe / EBCDIC specific encodings.
+        /usr/lib/x86_64-linux-gnu/gconv/IBM* \
+        /usr/lib/x86_64-linux-gnu/gconv/EBCDIC* \
+        # ecpg.
+        /opt/google-fluentd/embedded/bin/ecpg \
+        # OpenSSL.
+        /opt/google-fluentd/embedded/bin/openssl \
+        /usr/bin/openssl \
+        # Postgres.
+        /opt/google-fluentd/embedded/bin/pg_* \
+        /opt/google-fluentd/embedded/bin/postgre* \
+        /opt/google-fluentd/embedded/share/postgre* \
+        /opt/google-fluentd/embedded/lib/postgre* \
+        /opt/google-fluentd/embedded/bin/psql \
+        # libtool.
+        /opt/google-fluentd/embedded/share/libtool \
+        /opt/google-fluentd/embedded/bin/libtool \
+        # .a files and include libraries.
+        /opt/google-fluentd/embedded/include \
+        /opt/google-fluentd/embedded/lib/*.a \
+    # Log files.
+    && find /var/log -name "*.log" -type f -delete \
+    # Remove .c .cc .h files.
+    && (find /opt/google-fluentd/embedded/ -name '*.c' -o -name '*.cc' -o -name '*.h'  | xargs rm) \
     # Remove unused api client libraries.
     && (find /opt/google-fluentd/embedded/lib/ruby/gems/*/gems/google-api-client-*/generated/google/apis -mindepth 1 -maxdepth 1 \! -name 'logging*' | xargs rm -rf) \
     && sed -i "s/num_threads 8/num_threads 8\n  detect_json true\n  # Enable metadata agent lookups.\n  enable_metadata_agent true\n  metadata_agent_url \"http:\/\/local-metadata-agent.stackdriver.com:8000\"/" "/etc/google-fluentd/google-fluentd.conf"
