@@ -221,7 +221,7 @@ ruby 2.3.1p112 (2016-04-26 revision 54768) [x86_64-darwin15]
 Vagrant syncs current directory in each platform. Downloaded gems are also installed automatically.
 
 And you should not use `rbenv local` in project root because Ruby environment is built on top of rbenv in Vagrant.
-So if you set different Ruby verion in `.ruby-version`, running ruby code will fail during pacakging process. 
+So if you set different Ruby verion in `.ruby-version`, running ruby code will fail during pacakging process.
 
 ## Kitchen-based Build Environment
 
@@ -254,9 +254,11 @@ section:
 
 ```shell
 $ bundle exec kitchen login default-ubuntu-1204
-[vagrant@ubuntu...] $ cd td-agent
+[vagrant@ubuntu...] $ source load-omnibus-toolchain.sh
+[vagrant@ubuntu...] $ cd omnibus-td-agent
 [vagrant@ubuntu...] $ bundle install
 [vagrant@ubuntu...] $ ...
+[vagrant@ubuntu...] $ sudo install -d /opt/td-agent -o vagrant
 [vagrant@ubuntu...] $ ./bin/omnibus build td-agent3
 ```
 
