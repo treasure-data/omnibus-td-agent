@@ -11,8 +11,8 @@ RUN apt-get update \
         systemd \
         ca-certificates \
         adduser \
-    # Install google-fluentd at version 1.5.35-1.
-    && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20180810-1 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
+    # Install google-fluentd at version 1.5.36-1.
+    && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20180915-1 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
     # Clean up to reduce image size.
     && apt-get purge -y \
         curl \
