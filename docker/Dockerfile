@@ -1,4 +1,4 @@
-FROM debian:7.11-slim
+FROM debian:9.5-slim
 
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
@@ -19,7 +19,6 @@ RUN apt-get update \
         lsb-release \
         build-essential \
         gtk2.0 \
-        adduser \
         libkrb5-3 \
     && apt-get autoremove -y --purge \
     # Remove docs.
