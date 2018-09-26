@@ -45,6 +45,12 @@
 ; Absolute location of the fluentd config file.
 !define FLUENTD_CONFIG_LOCATION "${FLUENTD_CONFIG_DIRECTORY}\fluent.conf"
 
+; Directory where the fluentd log file will be written.
+!define FLUENTD_LOG_DIRECTORY "$INSTDIR"
+
+; Absolute location of the fluentd log file.
+!define FLUENTD_LOG_LOCATION "${FLUENTD_LOG_DIRECTORY}\fluentd.log"
+
 ; Name of the main zip file, this is bundled into the script.
 !define ZIP_FILE "${COMPRESSED_NAME}.zip"
 
@@ -263,7 +269,7 @@ Section "Install"
   ${Print} "Starting the ${DISPLAY_NAME}..."
   ${ExecuteCommand} "${MAIN_INSTDIR}\bin\fluentd.bat" \
       "--reg-winsvc i --reg-winsvc-auto-start \
-      --reg-winsvc-fluentdopt $\"-c $\'${FLUENTD_CONFIG_LOCATION}$\'$\" \
+      --reg-winsvc-fluentdopt $\"-c $\'${FLUENTD_CONFIG_LOCATION}$\' -o $\'${FLUENTD_LOG_LOCATION}$\'$\" \
       --winsvc-name $\"${PRODUCT}Logging$\" \
       --winsvc-display-name $\"${PRODUCT} Logging$\" \
       --winsvc-desc $\"A service that collects and reports logs to ${PRODUCT}$\""
