@@ -13,6 +13,9 @@ RUN apt-get update \
         adduser \
     # Install google-fluentd at version 1.5.36-1.
     && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20180915-1 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
+    # If any additional gems need to be installed, it should happen before the
+    # image cleanup.
+    # ==> INSTALL_ADDITIONAL_GEMS_HERE_IF_NEEDED <==
     # Clean up to reduce image size.
     && apt-get purge -y \
         curl \
