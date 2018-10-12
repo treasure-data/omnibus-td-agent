@@ -18,7 +18,7 @@ download "tzinfo", "1.2.5"
 download "tzinfo-data", "1.2018.5"
 unless td_agent_2?
   download "dig_rb", "1.0.1"
-  download 'serverengine', '2.0.6'
+  download 'serverengine', '2.0.7'
 end
 if windows?
   download 'ffi', '1.9.25'

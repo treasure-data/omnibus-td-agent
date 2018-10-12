@@ -14,13 +14,13 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.87.0"
-  download "aws-sigv4", "1.0.2"
-  download "aws-sdk-core", "3.21.2"
-  download "aws-sdk-kms", "1.5.0"
-  download "aws-sdk-sqs", "1.3.0"
-  download "aws-sdk-s3", "1.13.0"
-  download "fluent-plugin-s3", "1.1.3"
+  download "aws-partitions", "1.105.0"
+  download "aws-sigv4", "1.0.3"
+  download "aws-sdk-core", "3.30.0"
+  download "aws-sdk-kms", "1.9.0"
+  download "aws-sdk-sqs", "1.7.0"
+  download "aws-sdk-s3", "1.21.0"
+  download "fluent-plugin-s3", "1.1.6"
 end
 if td_agent_2?
   download "thrift", "0.8.0"
@@ -40,11 +40,11 @@ if td_agent_2?
 else
   download "fluent-plugin-rewrite-tag-filter", "2.1.0"
 end
-download "ruby-kafka", "0.6.7"
-download "fluent-plugin-kafka", "0.7.3"
+download "ruby-kafka", "0.6.8"
+download "fluent-plugin-kafka", "0.7.9"
 unless td_agent_2?
-  download "elasticsearch", "6.0.2"
-  download "fluent-plugin-elasticsearch", "2.10.3"
+  download "elasticsearch", "6.1.0"
+  download "fluent-plugin-elasticsearch", "2.11.11"
 end
 if td_agent_2?
   download "fluent-plugin-record-modifier", "0.6.2"
