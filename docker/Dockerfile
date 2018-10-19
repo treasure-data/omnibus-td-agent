@@ -1,5 +1,8 @@
 FROM debian:9.5-slim
 
+# Default google-fluentd at version 1.6.0-1.
+ARG REPO_SUFFIX=20181011-3
+
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -11,8 +14,7 @@ RUN apt-get update \
         systemd \
         ca-certificates \
         adduser \
-    # Install google-fluentd at version 1.6.0-1.
-    && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX=20181011-3 DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
+    && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX="$REPO_SUFFIX" DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
     # If any additional gems need to be installed, it should happen before the
     # image cleanup.
     # ==> INSTALL_ADDITIONAL_GEMS_HERE_IF_NEEDED <==
