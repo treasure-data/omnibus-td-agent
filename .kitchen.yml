@@ -12,7 +12,7 @@ provisioner:
   require_chef_omnibus: 12.4.1
 
 platforms:
-  - name: centos-7.1
+  - name: centos-7.5
     run_list: yum-epel::default
   - name: centos-6.6
     run_list: yum-epel::default
