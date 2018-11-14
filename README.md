@@ -46,20 +46,20 @@ where the `build project` command is invoked. So running this command on say a
 MacBook Pro will generate a Mac OS X specific package. After the build
 completes packages will be available in `pkg/`.
 
-#### Build td-agent 2
+#### Build td-agent 2.5
 
-Add `BUILD_TD_AGENT_VERSION=2` to each command.
+Add `BUILD_TD_AGENT_VERSION=2_5` to each command.
 
 ```shell
-$ BUILD_TD_AGENT_VERSION=2 bin/gem_downloader core_gems.rb
-$ BUILD_TD_AGENT_VERSION=2 bin/gem_downloader plugin_gems.rb
-$ BUILD_TD_AGENT_VERSION=2 bin/gem_downloader ui_gems.rb
+$ BUILD_TD_AGENT_VERSION=2_5 bin/gem_downloader core_gems.rb
+$ BUILD_TD_AGENT_VERSION=2_5 bin/gem_downloader plugin_gems.rb
+$ BUILD_TD_AGENT_VERSION=2_5 bin/gem_downloader ui_gems.rb
 ```
 
-And use `td-agent3` instead of `td-agent2` for omnibus command.
+And use `td-agent2_5` instead of `td-agent3` for omnibus command.
 
 ```shell
-$ bin/omnibus build td-agent2
+$ bin/omnibus build td-agent2_5
 ```
 
 #### Build on CentOS 5
