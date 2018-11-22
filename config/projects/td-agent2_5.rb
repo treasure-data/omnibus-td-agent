@@ -16,7 +16,7 @@ build_iteration 0
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.5.1' # This override version is used for gem_dir_version. See td-agent-files.rb
+override :ruby, :version => '2.5.3' # This override version is used for gem_dir_version. See td-agent-files.rb
 override :zlib, :version => '1.2.11'
 override :jemalloc, :version => '5.1.0'
 override :rubygems, :version => '2.6.14'
