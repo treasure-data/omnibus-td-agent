@@ -1,7 +1,7 @@
 FROM debian:9.5-slim
 
-# Default google-fluentd at version 1.6.0-1.
-ARG REPO_SUFFIX=20181011-3
+# Default google-fluentd at version 1.6.1-1.
+ARG REPO_SUFFIX=20181130-2
 
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
