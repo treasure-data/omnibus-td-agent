@@ -1,7 +1,11 @@
 FROM debian:9.5-slim
 
-# Default google-fluentd at version 1.6.1-1.
-ARG REPO_SUFFIX=20181130-2
+# Default google-fluentd at the unstable version.
+# Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to build
+# images with a specific version of the package.
+ARG REPO_SUFFIX=unstable
+
+COPY entrypoint.sh Dockerfile VERSION /
 
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
@@ -14,7 +18,12 @@ RUN apt-get update \
         systemd \
         ca-certificates \
         adduser \
+    # Install Logging Agent.
     && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX="$REPO_SUFFIX" DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
+    # Append versions to the VERSION file.
+    && echo REPO_SUFFIX=$REPO_SUFFIX >> /VERSION \
+    && dpkg -s google-fluentd | sed -n 's/^Version: /GOOGLE_FLUENTD_VERSION=/p' >> /VERSION \
+    && /opt/google-fluentd/embedded/bin/gem list fluent-plugin-google-cloud | sed 's/^fluent-plugin-google-cloud (\(.*\))$/FLUENT_PLUGIN_GOOGLE_CLOUD_VERSION=\1/' >> /VERSION \
     # If any additional gems need to be installed, it should happen before the
     # image cleanup.
     # ==> INSTALL_ADDITIONAL_GEMS_HERE_IF_NEEDED <==
@@ -98,8 +107,6 @@ RUN apt-get update \
     && sed -i "s/num_threads 8/num_threads 8\n  detect_json true\n  # Enable metadata agent lookups.\n  enable_metadata_agent true\n  metadata_agent_url \"http:\/\/local-metadata-agent.stackdriver.com:8000\"/" "/etc/google-fluentd/google-fluentd.conf"
 
 ENV LD_PRELOAD=/opt/google-fluentd/embedded/lib/libjemalloc.so
-
-COPY entrypoint.sh Dockerfile VERSION /
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/google-fluentd"]
