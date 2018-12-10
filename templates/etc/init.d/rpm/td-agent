@@ -14,6 +14,7 @@ export PATH=<%= xs="/sbin:/usr/sbin:/bin:/usr/bin".split(":"); Shellwords.shelle
 
 TD_AGENT_NAME=<%= Shellwords.shellescape(project_name) %>
 TD_AGENT_HOME=<%= Shellwords.shellescape(File.join(root_path, install_path)) %>
+TD_AGENT_DEB_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "default", project_name)) %>
 TD_AGENT_DEFAULT=<%= Shellwords.shellescape(File.join(root_path, "etc", "sysconfig", project_name)) %>
 TD_AGENT_NAME_AND_VERSION="$(head -1 ${TD_AGENT_HOME}/version-manifest.txt)"
 TD_AGENT_USER=root
@@ -29,6 +30,9 @@ TD_AGENT_OPTIONS="--use-v1-config --suppress-repeated-stacktrace"
 STOPTIMEOUT=120
 
 # Read configuration variable file if it is present
+if [ -f "${TD_AGENT_DEB_DEFAULT}" ]; then
+  . "${TD_AGENT_DEB_DEFAULT}"
+fi
 if [ -f "${TD_AGENT_DEFAULT}" ]; then
   . "${TD_AGENT_DEFAULT}"
 fi
