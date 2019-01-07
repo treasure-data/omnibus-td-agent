@@ -1,4 +1,5 @@
 dir 'plugin_gems'
+# The order of these dependencies matters due to how Ruby pulls dependencies.
 download "httpclient", "2.7.2"
 download "td-client", "1.0.5"
 download "td", "0.15.8"
@@ -17,6 +18,9 @@ download "webhdfs", "0.8.0"
 download "fluent-plugin-webhdfs", "0.4.2"
 download "string-scrub", "0.0.5"
 download "fluent-plugin-rewrite-tag-filter", "1.5.5"
+# Pin mixlib-cli to 1.7.0 until Ruby is upgraded to 2.5.
+# This is an indirect dependency of fluent-plugin-td-monitoring.
+download "mixlib-cli", "1.7.0"
 download "fluent-plugin-td-monitoring", "0.2.2"
 download "fluent-plugin-google-cloud", "0.7.3"
 download "fluent-plugin-detect-exceptions", "0.0.10"
