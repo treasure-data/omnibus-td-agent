@@ -148,7 +148,7 @@ if [ -n "${TD_AGENT_USER}" ]; then
 fi
 
 if [ -n "${TD_AGENT_GROUP}" ]; then
-  if ! getent group | grep -q "^${TD_AGENT_GROUP}:"; then
+  if ! getent group -s files | grep -q "^${TD_AGENT_GROUP}:"; then
     echo "$0: group for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_GROUP}" >&2
     exit 1
   fi
