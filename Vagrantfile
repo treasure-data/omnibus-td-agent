@@ -19,8 +19,6 @@ Vagrant.configure('2') do |config|
   chef_version = bootstrap_chef_version
 
   %w{
-    ubuntu-10.04
-    ubuntu-10.04-i386
     ubuntu-12.04
     ubuntu-12.04-i386
     ubuntu-14.04
@@ -28,11 +26,8 @@ Vagrant.configure('2') do |config|
     ubuntu-16.04
     ubuntu-16.04-i386
     ubuntu-18.04
-    debian-7.10
     debian-8.4
     debian-9.3
-    centos-5.11
-    centos-5.11-i386
     centos-6.9
     centos-6.9-i386
     centos-7.2
