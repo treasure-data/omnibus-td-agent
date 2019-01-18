@@ -14,7 +14,7 @@ else
 end
 
 build_version   "3.3.0"
-build_iteration 0
+build_iteration 1
 
 # creates required build directories
 dependency "preparation"
@@ -41,7 +41,7 @@ when "linux"
   case ohai["platform_family"]
   when "debian"
     runtime_dependency "lsb-base"
-  when "rhel"
+  when "rhel", "amazon"
     runtime_dependency "initscripts"
     if ohai["platform_version"][0] == "5"
       runtime_dependency "redhat-lsb"
