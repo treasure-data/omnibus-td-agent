@@ -1,5 +1,5 @@
 <#
- Script to pull down all needed dependencies and generate an unsigned 
+ Script to pull down all needed dependencies and generate an unsigned
  Stackdriver Logging Agent installer.
 
  This should be run on a clean GCE windows instance.
@@ -22,6 +22,13 @@ if ($version -eq "")
 }
 
 ##############################
+#  TRACING AND ERROR HANDLING
+##############################
+
+Set-PSDebug -Trace 1
+$ErrorActionPreference = 'Stop'
+
+##############################
 #  VARIABLES - DIRECTORIES
 ##############################
 
@@ -38,7 +45,7 @@ $SD_LOGGING_AGENT_DIR_BIN = $SD_LOGGING_AGENT_DIR + "\bin"
 # The ruby dev kit location.  This will add to the ruby install.
 $RUBY_DEV_DIR = $BASE_INSTALLER_DIR + "\rubydevkit"
 
-# The NSIS location.  Used to comiple the Stackdriver Logging Agent installer. 
+# The NSIS location.  Used to compile the Stackdriver Logging Agent installer.
 $NSIS_DIR = $BASE_INSTALLER_DIR + "\NSIS"
 
 # The location of the NSIS plugin to unzip files.
@@ -102,8 +109,8 @@ $STACKDRIVER_NSI = $PSScriptRoot + "\setup.nsi"
 #  STEP 1 - CREATE THE NEEDED DIRECTORIES.
 ##############################
 
-mkdir $SD_LOGGING_AGENT_DIR 
-mkdir $RUBY_DEV_DIR 
+mkdir $SD_LOGGING_AGENT_DIR
+mkdir $RUBY_DEV_DIR
 mkdir $NSIS_UNZU_DIR
 
 
@@ -141,7 +148,7 @@ rm $RUBY_INSTALLER
 rm $RUBY_DEV_INSTALLER
 
 # Initialize and install the ruby dev kit.
-& $RUBY_EXE $RUBY_DEV_KIT init 
+& $RUBY_EXE $RUBY_DEV_KIT init
 & $RUBY_EXE $RUBY_DEV_KIT install
 
 
@@ -169,14 +176,14 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 ##############################
 #  STEP 5.1 - TEMPORARY HACK TO UPDATE RUBY FILE
 ##############################
-# 
+#
 # TODO: Update $needle and eventlog_rb_replacement.txt when https://github.com/djberg96/win32-eventlog/pull/24 is released.
 # TODO: Remove this step when both https://github.com/djberg96/win32-eventlog/pull/24 and https://github.com/djberg96/win32-eventlog/pull/23 are merged and released.
 ##############################
 
 $eventlog_rb = $SD_LOGGING_AGENT_DIR + '\lib\ruby\gems\2.3.0\gems\win32-eventlog-0.6.6\lib\win32\eventlog.rb'
 $needle = 'max_insert = [num, buf.read_string.scan(/%(\d+)/).map{ |x| x[0].to_i }.max].compact.max'
-$replacement = (Get-Content eventlog_rb_replacement.txt) -join("`r`n")
+$replacement = (Get-Content $PSScriptRoot + "\eventlog_rb_replacement.txt") -join("`r`n")
 
 (Get-Content $eventlog_rb).replace($needle, $replacement) | Set-Content $eventlog_rb
 
