@@ -70,7 +70,7 @@ $NSIS_UNZU_ZIP = $BASE_INSTALLER_DIR + "\NSISunzU.zip"
 $RUBY_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.3.3.exe"
 $RUBY_DEV_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-32-4.7.2-20130224-1151-sfx.exe"
 $NSIS_INSTALLER_LINK = "http://downloads.sourceforge.net/project/nsis/NSIS%203/3.0/nsis-3.0-setup.exe"
-$NSIS_UNZU_INSTALLER_LINK = "https://nsis.sourceforge.io/mediawiki/images/5/5a/NSISunzU.zip"
+$NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/NSISunzU.zip"
 
 
 ##############################
@@ -118,11 +118,15 @@ mkdir $NSIS_UNZU_DIR
 #  STEP 2 - DOWNLOAD THE NEEDED DEPENDENCIES.
 ##############################
 
-$webClient = new-object System.Net.WebClient
-$webClient.DownloadFile($RUBY_INSTALLER_LINK, $RUBY_INSTALLER)
-$webClient.DownloadFile($RUBY_DEV_INSTALLER_LINK, $RUBY_DEV_INSTALLER)
-$webClient.DownloadFile($NSIS_INSTALLER_LINK, $NSIS_INSTALLER)
-$webClient.DownloadFile($NSIS_UNZU_INSTALLER_LINK, $NSIS_UNZU_ZIP)
+# No progress bars.
+$ProgressPreference = "silentlyContinue"
+# Handle SSL correctly.
+[Net.ServicePointManager]::SecurityProtocol = 'TLS12'
+# Pretend to be curl for Sourceforge redirects to work.
+Invoke-WebRequest "$RUBY_INSTALLER_LINK" -OutFile "$RUBY_INSTALLER" -UserAgent "curl/7.60.0"
+Invoke-WebRequest "$RUBY_DEV_INSTALLER_LINK" -OutFile "$RUBY_DEV_INSTALLER" -UserAgent "curl/7.60.0"
+Invoke-WebRequest "$NSIS_INSTALLER_LINK" -OutFile "$NSIS_INSTALLER" -UserAgent "curl/7.60.0"
+Invoke-WebRequest "$NSIS_UNZU_INSTALLER_LINK" -OutFile "$NSIS_UNZU_ZIP" -UserAgent "curl/7.60.0"
 
 
 ##############################
