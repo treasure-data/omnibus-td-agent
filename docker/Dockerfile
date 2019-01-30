@@ -1,4 +1,4 @@
-FROM debian:9.5-slim
+FROM debian:9.6-slim
 
 # Default google-fluentd at the unstable version.
 # Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to build
