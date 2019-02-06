@@ -1,9 +1,9 @@
 FROM debian:9.6-slim
 
-# Default google-fluentd at the unstable version.
-# Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to build
-# images with a specific version of the package.
-ARG REPO_SUFFIX=unstable
+# Default google-fluentd to the latest stable.
+# Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to override
+# the version.
+ARG REPO_SUFFIX=20181229-1
 
 COPY entrypoint.sh Dockerfile VERSION /
 
