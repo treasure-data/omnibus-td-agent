@@ -5,7 +5,7 @@ FROM debian:9.6-slim
 # the version.
 ARG REPO_SUFFIX=20190202-1
 
-COPY entrypoint.sh Dockerfile VERSION /
+COPY entrypoint.sh Dockerfile /
 
 # TODO: This may be a moving target, figure out how to pin.
 RUN apt-get update \
@@ -20,9 +20,9 @@ RUN apt-get update \
         adduser \
     # Install Logging Agent.
     && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX="$REPO_SUFFIX" DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
-    # Append versions to the VERSION file.
+    # Store versions in the VERSION file.
+    && dpkg -s google-fluentd | sed -nE 's/^Version: (.*)(-[^-]+)$/VERSION=\1\nGOOGLE_FLUENTD_VERSION=\1\2/p' >> /VERSION \
     && echo REPO_SUFFIX=$REPO_SUFFIX >> /VERSION \
-    && dpkg -s google-fluentd | sed -n 's/^Version: /GOOGLE_FLUENTD_VERSION=/p' >> /VERSION \
     && /opt/google-fluentd/embedded/bin/gem list fluent-plugin-google-cloud | sed 's/^fluent-plugin-google-cloud (\(.*\))$/FLUENT_PLUGIN_GOOGLE_CLOUD_VERSION=\1/' >> /VERSION \
     # If any additional gems need to be installed, it should happen before the
     # image cleanup.
