@@ -28,6 +28,8 @@ download "prometheus-client", "0.4.2"
 download "fluent-plugin-multi-format-parser", "0.1.1"
 download "fluent-plugin-prometheus", "0.3.0"
 download "fluent-plugin-record-reformer", "0.9.1"
+download "fluent-plugin-record-modifier", "2.0.1"
+download "fluent-plugin-kubernetes_metadata_filter", "2.1.6"
 # Pin systemd-journal to < 1.3.2 until
 # https://github.com/ledbettj/systemd-journal/issues/79 is fixed.
 download "systemd-journal", "1.3.0"
