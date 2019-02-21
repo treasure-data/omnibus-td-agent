@@ -45,6 +45,8 @@ download "fluent-plugin-kafka", "0.8.3"
 unless td_agent_2?
   download "elasticsearch", "6.1.0"
   download "fluent-plugin-elasticsearch", "3.0.1"
+  download "prometheus-client", "0.9.0"
+  download "fluent-plugin-prometheus", "1.3.0"
 end
 if td_agent_2?
   download "fluent-plugin-record-modifier", "0.6.2"
