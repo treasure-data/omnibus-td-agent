@@ -15,6 +15,7 @@ Environment=FLUENT_CONF=/etc/<%= project_name %>/<%= project_name %>.conf
 Environment=FLUENT_PLUGIN=/etc/<%= project_name %>/plugin
 Environment=FLUENT_SOCKET=/var/run/<%= project_name %>/<%= project_name %>.sock
 Environment=TD_AGENT_OPTIONS=
+EnvironmentFile=-/etc/sysconfig/td-agent
 PIDFile=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 RuntimeDirectory=<%= Shellwords.shellescape(project_name) %>
 Type=forking
