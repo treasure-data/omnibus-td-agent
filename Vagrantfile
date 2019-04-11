@@ -127,6 +127,13 @@ Vagrant.configure('2') do |config|
       UPDATE_AUTOCONF
       end
 
+      if platform.start_with?('centos-')
+        # Need sasl package for rdkafka with SASL
+        c.vm.provision :shell, :privileged => true, :inline => <<-INSTALL_SASL
+        yum install -y cyrus-sasl-devel cyrus-sasl-lib cyrus-sasl-gssapi
+      INSTALL_SASL
+      end
+
       if platform.start_with?('debian-9') || platform.start_with?('ubuntu-18')
         # https://github.com/chef/omnibus-toolchain/issues/73
         c.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_TAR
