@@ -13,8 +13,8 @@ else
   install_dir "#{default_root}/#{name}"
 end
 
-build_version   "3.3.0"
-build_iteration 1
+build_version   "3.4.0"
+build_iteration 0
 
 # creates required build directories
 dependency "preparation"
