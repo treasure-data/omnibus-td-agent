@@ -41,11 +41,13 @@ else
   download "fluent-plugin-rewrite-tag-filter", "2.1.1"
 end
 download "ruby-kafka", "0.7.6"
-download "rdkafka", "0.4.2"
+unless windows?
+  download "rdkafka", "0.4.2"
+end
 download "fluent-plugin-kafka", "0.9.2"
 unless td_agent_2?
   download "elasticsearch", "6.3.0"
-  download "fluent-plugin-elasticsearch", "3.4.2"
+  download "fluent-plugin-elasticsearch", "3.4.3"
   download "prometheus-client", "0.9.0"
   download "fluent-plugin-prometheus", "1.3.0"
 end
