@@ -19,7 +19,7 @@ build_iteration 0
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.4.5'
+override :ruby, :version => '2.4.6'
 override :zlib, :version => '1.2.11'
 override :jemalloc, :version => '4.5.0'
 override :rubygems, :version => '2.6.14'
