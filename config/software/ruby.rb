@@ -25,7 +25,7 @@ license_file "LEGAL"
 #   https://bugs.ruby-lang.org/issues/11869
 # - the current status of 2.3.x is that it downloads but fails to compile.
 # - verify that all ffi libs are available for your version on all platforms.
-default_version "2.4.5"
+default_version "2.4.6"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
@@ -46,6 +46,7 @@ version("2.5.3")      { source sha256: "9828d03852c37c20fa333a0264f2490f07338576
 version("2.5.1")      { source sha256: "dac81822325b79c3ba9532b048c2123357d3310b2b40024202f360251d9829b1" }
 version("2.5.0")      { source sha256: "46e6f3630f1888eb653b15fa811d77b5b1df6fd7a3af436b343cfe4f4503f2ab" }
 
+version("2.4.6")      { source sha256: "de0dc8097023716099f7c8a6ffc751511b90de7f5694f401b59f2d071db910be" }
 version("2.4.5")      { source sha256: "6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198" }
 version("2.4.4")      { source sha256: "254f1c1a79e4cc814d1e7320bc5bdd995dc57e08727d30a767664619a9c8ae5a" }
 version("2.4.3")      { source sha256: "fd0375582c92045aa7d31854e724471fb469e11a4b08ff334d39052ccaaa3a98" }
