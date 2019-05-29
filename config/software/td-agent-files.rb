@@ -14,7 +14,7 @@ build do
     install_path = project.install_dir # for ERB
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
-    gem_dir_version = "2.4.0"
+    gem_dir_version = "2.5.0"
 
     template = ->(*parts) { File.join('templates', *parts) }
     generate_from_template = ->(dst, src, erb_binding, opts={}) {

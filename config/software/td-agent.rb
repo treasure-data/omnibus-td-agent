@@ -17,6 +17,6 @@ build do
       # See: https://issues.apache.org/jira/browse/THRIFT-2219
       args << " -- --with-cppflags='-D_FORTIFY_SOURCE=0'"
     end
-    gem "install --no-ri --no-rdoc #{gem_path} #{args}", :env => env
+    gem "install --no-document #{gem_path} #{args}", :env => env
   }
 end

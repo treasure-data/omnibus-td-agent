@@ -1,5 +1,4 @@
 dir 'core_gems'
-download "bundler", "1.10.6"
 download "json", "2.1.0"
 download "msgpack", "1.2.2"
 download "cool.io", "1.5.3"
@@ -11,4 +10,4 @@ download "oj", "3.3.10"
 download "tzinfo", "1.2.2"
 download "tzinfo-data", "1.2016.5"
 fetch "google-protobuf", "3.7.1"
-fetch "grpc", "1.8.3"
+fetch "grpc", "1.20.0"

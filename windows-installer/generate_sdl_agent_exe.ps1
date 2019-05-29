@@ -67,8 +67,7 @@ $NSIS_UNZU_ZIP = $BASE_INSTALLER_DIR + "\NSISunzU.zip"
 
 
 # Links for each installer.
-$RUBY_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/rubyinstaller-2.3.3.exe"
-$RUBY_DEV_INSTALLER_LINK = "http://dl.bintray.com/oneclick/rubyinstaller/DevKit-mingw64-32-4.7.2-20130224-1151-sfx.exe"
+$RUBY_DEV_INSTALLER_LINK = "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.5.5-1/rubyinstaller-devkit-2.5.5-1-x86.exe"
 $NSIS_INSTALLER_LINK = "http://downloads.sourceforge.net/project/nsis/NSIS%203/3.0/nsis-3.0-setup.exe"
 $NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/NSISunzU.zip"
 
@@ -123,7 +122,6 @@ $ProgressPreference = "silentlyContinue"
 # Handle SSL correctly.
 [Net.ServicePointManager]::SecurityProtocol = 'TLS12'
 # Pretend to be curl for Sourceforge redirects to work.
-Invoke-WebRequest "$RUBY_INSTALLER_LINK" -OutFile "$RUBY_INSTALLER" -UserAgent "curl/7.60.0"
 Invoke-WebRequest "$RUBY_DEV_INSTALLER_LINK" -OutFile "$RUBY_DEV_INSTALLER" -UserAgent "curl/7.60.0"
 Invoke-WebRequest "$NSIS_INSTALLER_LINK" -OutFile "$NSIS_INSTALLER" -UserAgent "curl/7.60.0"
 Invoke-WebRequest "$NSIS_UNZU_INSTALLER_LINK" -OutFile "$NSIS_UNZU_ZIP" -UserAgent "curl/7.60.0"
@@ -169,13 +167,13 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # These are all a known set of versions which work together. Be sure things work if you
 # update any of them.
 #
-# We install all gems with '--no-ri --no-rdoc --no-document' so we don't pull in
+# We install all gems with '--no-document' so we don't pull in
 # unneeded docs that bloat the file size (and also seem to cause issues with unzipping).
 ###############################
 
-& $GEM_CMD install fluentd:0.14.15 --no-ri --no-rdoc --no-document
-& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-windows-eventlog:0.2.1 --no-ri --no-rdoc --no-document
-& $GEM_CMD install protobuf:3.6 google-protobuf:3.7.1 grpc:1.8.3 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.7.12 --no-ri --no-rdoc --no-document
+& $GEM_CMD install fluentd:0.14.15 --no-document
+& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-windows-eventlog:0.2.1 --no-document
+& $GEM_CMD install protobuf:3.6 google-protobuf:3.7.1 grpc:1.20.0 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.7.12 --no-document
 
 ##############################
 #  STEP 5.1 - TEMPORARY HACK TO UPDATE RUBY FILE

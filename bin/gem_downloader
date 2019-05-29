@@ -38,7 +38,7 @@ Dir.chdir(gp.target_dir) {
       else
         fail "Unsupported gem approach: #{approach}."
       end
-      `gem install --explain #{path} --no-ri --no-rdoc`
+      `gem install --explain #{path} --no-document`
       break if $?.success?
       sleep 1
     }
