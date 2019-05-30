@@ -39,12 +39,6 @@ $BASE_INSTALLER_DIR = "C:"
 # packaged and zipped up.
 $SD_LOGGING_AGENT_DIR = $BASE_INSTALLER_DIR + "\GoogleStackdriverLoggingAgent"
 
-# The bin of dir of the agent.
-$SD_LOGGING_AGENT_DIR_BIN = $SD_LOGGING_AGENT_DIR + "\bin"
-
-# The ruby dev kit location.  This will add to the ruby install.
-$RUBY_DEV_DIR = $BASE_INSTALLER_DIR + "\rubydevkit"
-
 # The NSIS location.  Used to compile the Stackdriver Logging Agent installer.
 $NSIS_DIR = $BASE_INSTALLER_DIR + "\NSIS"
 
@@ -61,13 +55,12 @@ $NSIS_UNICODE_PLUGIN_DIR = $NSIS_DIR + "\Plugins\x86-unicode"
 
 # Locations of the needed installers and dependencies.
 $RUBY_INSTALLER = $SD_LOGGING_AGENT_DIR + "\rubyinstaller.exe"
-$RUBY_DEV_INSTALLER = $RUBY_DEV_DIR + "\rubydevinstaller.exe"
 $NSIS_INSTALLER = $BASE_INSTALLER_DIR + "\nsisinstaller.exe"
 $NSIS_UNZU_ZIP = $BASE_INSTALLER_DIR + "\NSISunzU.zip"
 
 
 # Links for each installer.
-$RUBY_DEV_INSTALLER_LINK = "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.5.5-1/rubyinstaller-devkit-2.5.5-1-x86.exe"
+$RUBY_INSTALLER_LINK = "https://github.com/oneclick/rubyinstaller2/releases/download/RubyInstaller-2.5.5-1/rubyinstaller-devkit-2.5.5-1-x86.exe"
 $NSIS_INSTALLER_LINK = "http://downloads.sourceforge.net/project/nsis/NSIS%203/3.0/nsis-3.0-setup.exe"
 $NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/NSISunzU.zip"
 
@@ -81,13 +74,6 @@ $RUBY_EXE = $SD_LOGGING_AGENT_DIR + "\bin\ruby.exe"
 
 # The location of the gem batch file, used to download gems.
 $GEM_CMD = $SD_LOGGING_AGENT_DIR + "\bin\gem.cmd"
-
-# The location of the ruby dev kit.
-$RUBY_DEV_KIT = $RUBY_DEV_DIR + "\dk.rb"
-
-# The location of the libgcc dll.
-# See: https://github.com/google/protobuf/issues/2247.
-$LIB_GCC_DLL = $RUBY_DEV_DIR + "\mingw\bin\libgcc_s_sjlj-1.dll"
 
 # The location of the executable to compile an NSIS installer.
 $NSIS_MAKE = $NSIS_DIR + "\makensis.exe"
@@ -109,7 +95,6 @@ $STACKDRIVER_NSI = $PSScriptRoot + "\setup.nsi"
 ##############################
 
 mkdir $SD_LOGGING_AGENT_DIR
-mkdir $RUBY_DEV_DIR
 mkdir $NSIS_UNZU_DIR
 
 
@@ -122,13 +107,13 @@ $ProgressPreference = "silentlyContinue"
 # Handle SSL correctly.
 [Net.ServicePointManager]::SecurityProtocol = 'TLS12'
 # Pretend to be curl for Sourceforge redirects to work.
-Invoke-WebRequest "$RUBY_DEV_INSTALLER_LINK" -OutFile "$RUBY_DEV_INSTALLER" -UserAgent "curl/7.60.0"
+Invoke-WebRequest "$RUBY_INSTALLER_LINK" -OutFile "$RUBY_INSTALLER" -UserAgent "curl/7.60.0"
 Invoke-WebRequest "$NSIS_INSTALLER_LINK" -OutFile "$NSIS_INSTALLER" -UserAgent "curl/7.60.0"
 Invoke-WebRequest "$NSIS_UNZU_INSTALLER_LINK" -OutFile "$NSIS_UNZU_ZIP" -UserAgent "curl/7.60.0"
 
 
 ##############################
-#  STEP 3 - INSTALL RUBY.
+#  STEP 3 - INSTALL RUBY AND THE RUBY DEV KIT.
 ##############################
 
 # Install ruby to the main install location and wait for it to finish.
@@ -139,27 +124,12 @@ rm $SD_LOGGING_AGENT_DIR\unins*
 rm $RUBY_INSTALLER
 
 
-##############################
-#  STEP 4 - INSTALL THE RUBY DEV KIT.
-##############################
-
-# Install ruby dev kit and wait for it to finish.
-& $RUBY_DEV_INSTALLER -o $RUBY_DEV_DIR   -y | Out-Null
-
-# Remove the ruby dev kit installer.
-rm $RUBY_DEV_INSTALLER
-
-# Initialize and install the ruby dev kit.
-& $RUBY_EXE $RUBY_DEV_KIT init
-& $RUBY_EXE $RUBY_DEV_KIT install
-
-
 # Update the environment paths.
 $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path","User")
 
 
 ##############################
-#  STEP 5 - INSTALL THE GEMS
+#  STEP 4 - INSTALL THE GEMS
 ##############################
 #
 # Install the needed gems for google fleuntd to works.
@@ -171,12 +141,12 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # unneeded docs that bloat the file size (and also seem to cause issues with unzipping).
 ###############################
 
-& $GEM_CMD install fluentd:0.14.15 --no-document
-& $GEM_CMD install windows-pr:1.2.5 win32-ipc:0.6.6 win32-event:0.6.3 win32-eventlog:0.6.6 win32-service:0.8.9 fluent-plugin-windows-eventlog:0.2.1 --no-document
-& $GEM_CMD install protobuf:3.6 google-protobuf:3.7.1 grpc:1.20.0 googleapis-common-protos:1.3.4 fluent-plugin-google-cloud:0.7.13 --no-document
+& $GEM_CMD install fluentd:1.4.2 --no-document
+& $GEM_CMD install windows-pr:1.2.6 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.7 win32-service:2.1.4 fluent-plugin-windows-eventlog:0.2.2 --no-document
+& $GEM_CMD install google-protobuf:3.7.1 grpc:1.20.0 fluent-plugin-google-cloud:0.7.13 --no-document
 
 ##############################
-#  STEP 5.1 - TEMPORARY HACK TO UPDATE RUBY FILE
+#  STEP 4.1 - TEMPORARY HACK TO UPDATE RUBY FILE
 ##############################
 #
 # TODO: Update $needle and eventlog_rb_replacement.txt when https://github.com/djberg96/win32-eventlog/pull/24 is released.
@@ -192,7 +162,7 @@ $replacement = (Get-Content $replacement_file) -join("`r`n")
 
 
 ##############################
-#  STEP 6 - ZIP THE FILES.
+#  STEP 5 - ZIP THE FILES.
 ##############################
 
 Add-Type -Assembly System.IO.Compression.FileSystem
@@ -200,7 +170,7 @@ Add-Type -Assembly System.IO.Compression.FileSystem
 
 
 ##############################
-#  STEP 7 - INSTALL NSIS.
+#  STEP 6 - INSTALL NSIS.
 ##############################
 
 # Install NSIS and wait for it to finish.
@@ -214,7 +184,7 @@ cp $NSIS_UNZU_DLL $NSIS_UNICODE_PLUGIN_DIR
 
 
 ##############################
-#  STEP 8 - COMPILE THE NSIS SCRIPT.
+#  STEP 7 - COMPILE THE NSIS SCRIPT.
 ##############################
 
 & $NSIS_MAKE /DVERSION=$version $STACKDRIVER_NSI
