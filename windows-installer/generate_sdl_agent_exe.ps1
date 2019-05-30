@@ -153,7 +153,8 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # TODO: Remove this step when both https://github.com/djberg96/win32-eventlog/pull/24 and https://github.com/djberg96/win32-eventlog/pull/23 are merged and released.
 ##############################
 
-$eventlog_rb = $SD_LOGGING_AGENT_DIR + '\lib\ruby\gems\2.3.0\gems\win32-eventlog-0.6.6\lib\win32\eventlog.rb'
+$eventlog_gem_dir = (& $GEM_CMD which win32-eventlog | Split-Path -parent)
+$eventlog_rb = $eventlog_gem_dir + '\win32\eventlog.rb'
 $needle = 'max_insert = [num, buf.read_string.scan(/%(\d+)/).map{ |x| x[0].to_i }.max].compact.max'
 $replacement_file = $PSScriptRoot + "\eventlog_rb_replacement.txt"
 $replacement = (Get-Content $replacement_file) -join("`r`n")
