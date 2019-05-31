@@ -39,6 +39,9 @@ $BASE_INSTALLER_DIR = "C:"
 # packaged and zipped up.
 $SD_LOGGING_AGENT_DIR = $BASE_INSTALLER_DIR + "\GoogleStackdriverLoggingAgent"
 
+# The ruby dev kit location.  This is not needed in the final package.
+$RUBY_DEV_DIR = $SD_LOGGING_AGENT_DIR + "\msys32"
+
 # The NSIS location.  Used to compile the Stackdriver Logging Agent installer.
 $NSIS_DIR = $BASE_INSTALLER_DIR + "\NSIS"
 
@@ -163,7 +166,14 @@ $replacement = (Get-Content $replacement_file) -join("`r`n")
 
 
 ##############################
-#  STEP 5 - ZIP THE FILES.
+#  STEP 5 - REMOVE UNNECESSARY FILES.
+##############################
+
+rm -r -Force $RUBY_DEV_DIR
+
+
+##############################
+#  STEP 6 - ZIP THE FILES.
 ##############################
 
 Add-Type -Assembly System.IO.Compression.FileSystem
@@ -171,7 +181,7 @@ Add-Type -Assembly System.IO.Compression.FileSystem
 
 
 ##############################
-#  STEP 6 - INSTALL NSIS.
+#  STEP 7 - INSTALL NSIS.
 ##############################
 
 # Install NSIS and wait for it to finish.
@@ -185,7 +195,7 @@ cp $NSIS_UNZU_DLL $NSIS_UNICODE_PLUGIN_DIR
 
 
 ##############################
-#  STEP 7 - COMPILE THE NSIS SCRIPT.
+#  STEP 8 - COMPILE THE NSIS SCRIPT.
 ##############################
 
 & $NSIS_MAKE /DVERSION=$version $STACKDRIVER_NSI
