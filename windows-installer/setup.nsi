@@ -164,7 +164,9 @@ Section "Install"
   ${Print} "Generating an uninstaller..."
   WriteUninstaller "${UNINSTALLER_LOCATION}"
 
-  ; Extract the needed files and show status
+  ; Create a directory for the extracted files.
+  CreateDirectory ${MAIN_INSTDIR}
+  ; Extract the needed files and show status.
   ${Print} "Extracting files to $INSTDIR..."
   nsisunz::Unzip "$OUTDIR\${ZIP_FILE}" "${MAIN_INSTDIR}"
   Pop $0
