@@ -8,7 +8,7 @@ homepage "http://cloud.google.com/logging/docs/"
 description "Google Fluentd: A data collector for Google Cloud Logging"
 
 install_dir     "/opt/google-fluentd"
-build_version   "1.6.13"
+build_version   "1.6.14"
 build_iteration 1
 
 # creates required build directories
