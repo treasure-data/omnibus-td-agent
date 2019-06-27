@@ -29,6 +29,8 @@
 # Configure all sources to output to Google Cloud Logging
 <match **>
   @type google_cloud
+  buffer_type file
+  buffer_path /var/log/google-fluentd/buffers
   # Set the chunk limit conservatively to avoid exceeding the recommended
   # chunk size of 5MB per write request.
   buffer_chunk_limit 1M
