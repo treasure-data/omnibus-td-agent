@@ -1,20 +1,23 @@
 <%= project_name_snake %>_dir=/opt/<%= project_name %>
 
-echo "adding '<%= project_name %>' group..."
-getent group <%= project_name %> >/dev/null || /usr/sbin/groupadd -r <%= project_name %>
-echo "adding '<%= project_name %>' user..."
-getent passwd <%= project_name %> >/dev/null || \
-  /usr/sbin/useradd -r -g <%= project_name %> -d /var/lib/<%= project_name %> -s /sbin/nologin -c '<%= project_name %>' <%= project_name %>
+PROJECT_GROUP="${TD_AGENT_GROUP:-<%= project_name %>}"
+PROJECT_USER="${TD_AGENT_USER:-<%= project_name %>}"
+
+echo "adding \'${PROJECT_GROUP}\' group if needed..."
+getent group "${PROJECT_GROUP}" >/dev/null || /usr/sbin/groupadd -r "${PROJECT_GROUP}"
+echo "adding \'${PROJECT_USER}\' user if needed..."
+getent passwd ${PROJECT_USER} >/dev/null || \
+  /usr/sbin/useradd -r -g ${PROJECT_GROUP} -d /var/lib/${PROJECT_USER} -s /sbin/nologin -c '${PROJECT_USER}' ${PROJECT_USER}
 
 if [ ! -e "/var/log/<%= project_name %>/" ]; then
   mkdir -p /var/log/<%= project_name %>/
 fi
-chown -R <%= project_name %>:<%= project_name %> /var/log/<%= project_name %>/
+chown -R ${PROJECT_USER}:${PROJECT_GROUP} /var/log/<%= project_name %>/
 
 if [ ! -e "/var/run/<%= project_name %>/" ]; then
   mkdir -p /var/run/<%= project_name %>/
 fi
-chown -R <%= project_name %>:<%= project_name %> /var/run/<%= project_name %>/
+chown -R ${PROJECT_USER}:${PROJECT_GROUP} /var/run/<%= project_name %>/
 
 if [ ! -e "/etc/<%= project_name %>/" ]; then
   mkdir -p /etc/<%= project_name %>/
@@ -52,13 +55,13 @@ if [ ! -e "/var/log/<%= project_name %>/buffer/" ]; then
   mkdir -p /var/log/<%= project_name %>/buffer/
 fi
 if [ -d "/var/log/<%= project_name %>/buffer/" ]; then
-  chown -R <%= project_name %>:<%= project_name %> /var/log/<%= project_name %>/buffer/
+  chown -R ${PROJECT_USER}:${PROJECT_GROUP} /var/log/<%= project_name %>/buffer/
 fi
 if [ ! -e "/tmp/<%= project_name %>/" ]; then
   mkdir -p /tmp/<%= project_name %>/
 fi
 if [ -d "/tmp/<%= project_name %>/" ]; then
-  chown -R <%= project_name %>:<%= project_name %> /tmp/<%= project_name %>/
+  chown -R ${PROJECT_USER}:${PROJECT_GROUP} /tmp/<%= project_name %>/
 fi
 
 cp -f ${<%= project_name_snake %>_dir}/etc/init.d/<%= project_name %> /etc/init.d/<%= project_name %>
@@ -78,6 +81,16 @@ fi
 if [ -d "/usr/lib/systemd/system/" ]; then
   cp -f ${<%= project_name_snake %>_dir}/etc/systemd/<%= project_name %>.service /usr/lib/systemd/system/
   chmod 644 /usr/lib/systemd/system/<%= project_name %>.service
+fi
+
+if [ "${PROJECT_USER}:${PROJECT_NAME}" != "<%= project_name %>:<%= project_name %>" ]; then
+  # for systemd
+  sed -i "s/User=<%= project_name %>/User=${PROJECT_USER}/" /usr/lib/systemd/system/<%= project_name %>.service
+  sed -i "s/Group=<%= project_name %>/Group=${PROJECT_GROUP}/" /usr/lib/systemd/system/<%= project_name %>.service
+
+  # for init.d
+  sed -i "s/TD_AGENT_USER=<%= project_name %>/TD_AGENT_USER=${PROJECT_USER}/" /etc/init.d/<%= project_name %>
+  sed -i "s/TD_AGENT_GROUP=<%= project_name %>/TD_AGENT_GROUP=${PROJECT_GROUP}/" /etc/init.d/<%= project_name %>
 fi
 
 echo "Configure <%= project_name %> to start, when booting up the OS..."
