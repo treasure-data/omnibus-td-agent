@@ -16,9 +16,9 @@ Environment=FLUENT_PLUGIN=/etc/<%= project_name %>/plugin
 Environment=FLUENT_SOCKET=/var/run/<%= project_name %>/<%= project_name %>.sock
 Environment=TD_AGENT_OPTIONS=
 <% if pkg_type == 'deb' %>
-EnvironmentFile=-/etc/default/td-agent
+EnvironmentFile=-/etc/default/<%= project_name %>
 <% else %>
-EnvironmentFile=-/etc/sysconfig/td-agent
+EnvironmentFile=-/etc/sysconfig/<%= project_name %>
 <% end %>
 PIDFile=<%= Shellwords.shellescape(File.join(root_path, "var", "run", project_name, "#{project_name}.pid")) %>
 RuntimeDirectory=<%= Shellwords.shellescape(project_name) %>
