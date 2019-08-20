@@ -106,7 +106,7 @@ RUN apt-get update \
     && (find /opt/google-fluentd/embedded/lib/ruby/gems/*/gems/google-api-client-*/generated/google/apis -mindepth 1 -maxdepth 1 \! -name 'logging*' | xargs rm -rf) \
     && sed -i "s/num_threads 8/num_threads 8\n  detect_json true\n  # Enable metadata agent lookups.\n  enable_metadata_agent true\n  metadata_agent_url \"http:\/\/local-metadata-agent.stackdriver.com:8000\"/" "/etc/google-fluentd/google-fluentd.conf"
 
-ENV LD_PRELOAD=/opt/google-fluentd/embedded/lib/libjemalloc.so
+ENV MALLOC_ARENA_MAX=2
 
 ENTRYPOINT ["/entrypoint.sh"]
 CMD ["/usr/sbin/google-fluentd"]
