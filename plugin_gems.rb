@@ -40,7 +40,7 @@ if td_agent_2?
 else
   download "fluent-plugin-rewrite-tag-filter", "2.2.0"
 end
-download "ruby-kafka", "0.7.9"
+download "ruby-kafka", "0.7.10"
 unless windows?
   download "rdkafka", "0.6.0"
 end
