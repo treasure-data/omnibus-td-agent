@@ -8,7 +8,7 @@ dependency "postgresql" unless windows?
 dependency "fluentd"
 
 # rdkafka with SASL, healthcheck blocks this file so add it to whitelist.
-whitelist_file "/opt/td-agent/embedded/lib/ruby/gems/2\.4\.0/gems/rdkafka-0\.4\.2/ext/librdkafka\.so"
+whitelist_file "/opt/td-agent/embedded/lib/ruby/gems/2\.4\.0/gems/rdkafka-0\.6\.0/ext/librdkafka\.so"
 
 build do
   env = with_standard_compiler_flags(with_embedded_path)
