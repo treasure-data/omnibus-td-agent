@@ -28,6 +28,7 @@ Vagrant.configure('2') do |config|
     ubuntu-18.04
     debian-8.4
     debian-9.3
+    debian-10.0
     centos-6.9
     centos-6.9-i386
     centos-7.2
@@ -134,7 +135,7 @@ Vagrant.configure('2') do |config|
       INSTALL_SASL
       end
 
-      if platform.start_with?('debian-9') || platform.start_with?('ubuntu-18')
+      if platform.start_with?('debian-9') || platform.start_with?('ubuntu-18') || platform.start_with?('debian-10')
         # https://github.com/chef/omnibus-toolchain/issues/73
         c.vm.provision :shell, :privileged => true, :inline => <<-REMOVE_TAR
         rm /opt/omnibus-toolchain/bin/tar
