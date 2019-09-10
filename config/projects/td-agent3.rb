@@ -60,4 +60,8 @@ end
 
 package :msi do
   upgrade_code "76dcb0b2-81ad-4a07-bf3b-1db567594171"
+  parameters({
+    'InstallDir' => install_dir,
+    'TDAgentConfDir' => "#{install_dir}/etc/td-agent",
+  })
 end

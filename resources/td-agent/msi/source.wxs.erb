@@ -80,6 +80,21 @@
       </Directory>
     </Directory>
 
+    <DirectoryRef Id="<%= hierarchy.values.last %>">
+      <Directory Id="TDAgentEtcDir" Name="etc">
+        <Directory Id="TDAgentConfDir" Name="<%= hierarchy.keys.last %>">
+          <Component Id="TDAgentConf"
+                     Guid="534F3E10-B04E-4C17-9DAA-A390068BA8EB"
+                     Permanent="yes"
+                     NeverOverwrite="yes">
+            <File Id="TDAgentConf"
+                Name="td-agent.conf"
+                Source="$(var.TDAgentConfDir)\td-agent.conf"/>
+          </Component>
+        </Directory>
+      </Directory>
+    </DirectoryRef>
+
     <SetDirectory Id="WINDOWSVOLUME" Value="[WindowsVolume]" />
 
     <!-- Shortcut on Start Menu -->
