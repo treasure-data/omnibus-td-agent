@@ -78,7 +78,7 @@ Download [Windows SDK](https://developer.microsoft.com/windows/downloads/windows
 The installer does not set `PATH` environment variable.
 Therefore, you have to set `PATH` to `C:\Program Files (x86)\Windows Kits\10\bin\x64`
 
-
+If you got the `makeappex.exe` is nout found error, you should also have to set `PATH` to `C:\Program Files (x86)\Windows Kits\10\bin\10.0.<BUILD NUMBER>.0\x64`.
 
 Build td-agent-3
 ----------------
