@@ -146,7 +146,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 
 & $GEM_CMD install fluentd:1.4.2 --no-document
 & $GEM_CMD install windows-pr:1.2.6 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.7 win32-service:2.1.4 fluent-plugin-windows-eventlog:0.2.2 --no-document
-& $GEM_CMD install google-protobuf:3.7.1 grpc:1.20.0 fluent-plugin-google-cloud:0.7.18 --no-document
+& $GEM_CMD install google-protobuf:3.7.1 grpc:1.20.0 fluent-plugin-google-cloud:0.7.19 --no-document
 
 ##############################
 #  STEP 4.1 - TEMPORARY HACK TO UPDATE RUBY FILE
