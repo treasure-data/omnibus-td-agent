@@ -1,4 +1,4 @@
-FROM opensuse:42.3
+FROM opensuse:leap:42.3
 
 RUN zypper -n refresh \
  && zypper -n install \
