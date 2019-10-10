@@ -15,7 +15,9 @@ download "fluent-plugin-webhdfs", "1.2.3"
 download "fluent-plugin-rewrite-tag-filter", "2.2.0"
 download "fluent-plugin-google-cloud", "0.7.19"
 download "fluent-plugin-detect-exceptions", "0.0.12"
-download "prometheus-client", "0.10.0"
+# Keep this version compatible with
+# https://github.com/fluent/fluent-plugin-prometheus/blob/master/fluent-plugin-prometheus.gemspec
+download "prometheus-client", "0.9.0"
 download "fluent-plugin-prometheus", "1.4.0"
 download "fluent-plugin-multi-format-parser", "1.0.0"
 download "fluent-plugin-record-reformer", "0.9.1"
