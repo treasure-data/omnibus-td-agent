@@ -14,4 +14,4 @@ RUN apt-get update -y \
   && git config --global user.email "stackdriver-github-reader@google.com" \
   && git config --global user.name "stackdriverreader" \
   && (curl -sSL https://get.rvm.io | /bin/bash -s stable) \
-  && /bin/bash -l -c "rvm requirements && rvm install 2.4 && gem install bundler --no-ri --no-rdoc && gem update"
+  && /bin/bash -l -c "rvm requirements && rvm install 2.5.3 && gem install bundler --no-ri --no-rdoc && gem update"
