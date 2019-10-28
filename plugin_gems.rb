@@ -6,7 +6,7 @@ if td_agent_2?
   download "fluent-plugin-td", "0.10.29"
 else
   download "td-client", "1.0.7"
-  download "td", "0.16.4"
+  download "td", "0.16.5"
   download "fluent-plugin-td", "1.0.0"
 end
 if td_agent_2?
