@@ -44,7 +44,7 @@ download "ruby-kafka", "0.7.10"
 unless windows?
   download "rdkafka", "0.7.0"
 end
-download "fluent-plugin-kafka", "0.11.1"
+download "fluent-plugin-kafka", "0.12.1"
 unless td_agent_2?
   download "elasticsearch", "6.8.0"
   download "fluent-plugin-elasticsearch", "3.5.5"
