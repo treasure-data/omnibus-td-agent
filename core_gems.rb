@@ -15,7 +15,7 @@ else
   download "oj", "3.7.12"
 end
 download "tzinfo", "2.0.0"
-download "tzinfo-data", "1.2019.2"
+download "tzinfo-data", "1.2019.3"
 unless td_agent_2?
   download "dig_rb", "1.0.1"
   download 'serverengine', '2.1.1'
