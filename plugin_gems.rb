@@ -14,12 +14,12 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.195.0"
+  download "aws-partitions", "1.230.0"
   download "aws-sigv4", "1.1.0"
-  download "aws-sdk-core", "3.61.2"
-  download "aws-sdk-kms", "1.24.0"
-  download "aws-sdk-sqs", "1.20.0"
-  download "aws-sdk-s3", "1.46.0"
+  download "aws-sdk-core", "3.72.0"
+  download "aws-sdk-kms", "1.25.0"
+  download "aws-sdk-sqs", "1.23.0"
+  download "aws-sdk-s3", "1.52.0"
   download "fluent-plugin-s3", "1.2.0"
 end
 if td_agent_2?
