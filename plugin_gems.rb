@@ -60,5 +60,5 @@ download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
   download 'winevt_c', '0.6.1'
-  download 'fluent-plugin-windows-eventlog', '0.4.2'
+  download 'fluent-plugin-windows-eventlog', '0.4.3'
 end
