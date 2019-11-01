@@ -25,7 +25,7 @@ license_file "LEGAL"
 #   https://bugs.ruby-lang.org/issues/11869
 # - the current status of 2.3.x is that it downloads but fails to compile.
 # - verify that all ffi libs are available for your version on all platforms.
-default_version "2.4.6"
+default_version "2.4.9"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
@@ -42,10 +42,21 @@ dependency "libyaml"
 # and that's the only one we will ever use.
 dependency "libiconv"
 
+version("2.6.5")      { source sha256: "66976b716ecc1fd34f9b7c3c2b07bbd37631815377a2e3e85a5b194cfdcbed7d" }
+version("2.6.4")      { source sha256: "4fc1d8ba75505b3797020a6ffc85a8bcff6adc4dabae343b6572bf281ee17937" }
+version("2.6.3")      { source sha256: "577fd3795f22b8d91c1d4e6733637b0394d4082db659fccf224c774a2b1c82fb" }
+version("2.6.2")      { source sha256: "a0405d2bf2c2d2f332033b70dff354d224a864ab0edd462b7a413420453b49ab" }
+version("2.6.1")      { source sha256: "17024fb7bb203d9cf7a5a42c78ff6ce77140f9d083676044a7db67f1e5191cb8" }
+
+version("2.5.7")      { source sha256: "0b2d0d5e3451b6ab454f81b1bfca007407c0548dea403f1eba2e429da4add6d4" }
+version("2.5.6")      { source sha256: "1d7ed06c673020cd12a737ed686470552e8e99d72b82cd3c26daa3115c36bea7" }
+version("2.5.5")      { source sha256: "28a945fdf340e6ba04fc890b98648342e3cccfd6d223a48f3810572f11b2514c" }
+version("2.5.4")      { source sha256: "0e4042bce749352dfcf1b9e3013ba7c078b728f51f8adaf6470ce37675e3cb1f" }
 version("2.5.3")      { source sha256: "9828d03852c37c20fa333a0264f2490f07338576734d910ee3fd538c9520846c" }
 version("2.5.1")      { source sha256: "dac81822325b79c3ba9532b048c2123357d3310b2b40024202f360251d9829b1" }
 version("2.5.0")      { source sha256: "46e6f3630f1888eb653b15fa811d77b5b1df6fd7a3af436b343cfe4f4503f2ab" }
 
+version("2.4.9")      { source sha256: "f99b6b5e3aa53d579a49eb719dd0d3834d59124159a6d4351d1e039156b1c6ae" }
 version("2.4.6")      { source sha256: "de0dc8097023716099f7c8a6ffc751511b90de7f5694f401b59f2d071db910be" }
 version("2.4.5")      { source sha256: "6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198" }
 version("2.4.4")      { source sha256: "254f1c1a79e4cc814d1e7320bc5bdd995dc57e08727d30a767664619a9c8ae5a" }
@@ -230,13 +241,21 @@ build do
                        "--without-gdbm",
                        "--without-tk",
                        "--disable-dtrace"]
-  configure_command << "--with-ext=psych" if version.satisfies?("< 2.3")
   configure_command << "--with-bundled-md5" if fips_enabled
   configure_command << "--enable-libedit" unless windows?
+  # jit doesn't compile on all platforms in 2.6.0  # we should evaluate this when new releases come out to see if we can turn it back on
+  configure_command << "--disable-jit-support" if version.satisfies?(">= 2.6")
 
   if aix?
     # need to patch ruby's configure file so it knows how to find shared libraries
-    patch source: "ruby-aix-configure.patch", plevel: 1, env: patch_env
+    if version.satisfies?(">= 2.6")
+      patch source: "ruby-aix-configure_26_and_later.patch", plevel: 1, env: patch_env
+      if version == "2.6.4" || version == "2.6.5" # we may need this in 2.6.6 as well. :shrug:
+        patch source: "ruby-2.6.4-bug14834.patch", plevel: 1, env: patch_env
+      end
+    else
+      patch source: "ruby-aix-configure_pre26.patch", plevel: 1, env: patch_env
+    end
     # have ruby use zlib on AIX correctly
     patch source: "ruby_aix_openssl.patch", plevel: 1, env: patch_env
     # AIX has issues with ssl retries, need to patch to have it retry
@@ -269,7 +288,7 @@ build do
     configure_command << "ac_cv_func_dl_iterate_phdr=no"
     configure_command << "--with-opt-dir=#{install_dir}/embedded"
   elsif windows?
-    if version.satisfies?(">= 2.3")
+    if version.satisfies?(">= 2.3") && version.satisfies?("< 2.5")
       # Windows Nano Server COM libraries do not support Apartment threading
       # instead COINIT_MULTITHREADED must be used
       patch source: "ruby_nano.patch", plevel: 1, env: patch_env
