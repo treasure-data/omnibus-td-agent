@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+
+require 'fileutils'
+$LOAD_PATH << File.expand_path(File.join(File.dirname(__FILE__), '..', 'lib'))
+require 'gems_parser'
+
+if ARGV.empty?
+  puts "Invalid usage!"
+  puts "./bin/gem_installer gems.rb"
+  exit 0
+end
+
+gp = GemsParser.parse(File.read(ARGV[0]))
+FileUtils.remove_dir(gp.target_dir, true)
+Dir.mkdir(gp.target_dir)
+Dir.chdir(gp.target_dir) {
+  gp.target_files.each { |n, v, an|
+    loop {
+      `gem install #{n} --version #{v} --no-document`
+      break if $?.success?
+      sleep 1
+    }
+  }
+}

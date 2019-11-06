@@ -72,6 +72,8 @@ $NSIS_UNZU_INSTALLER_LINK = "http://nsis.sourceforge.net/mediawiki/images/5/5a/N
 #  VARIABLES - FILE LOCATIONS
 ##############################
 
+$SRC_ROOT = $PSScriptRoot + "\.."
+
 # The location of the ruby executable, used to set up the ruby dev kit.
 $RUBY_EXE = $SD_LOGGING_AGENT_DIR + "\bin\ruby.exe"
 
@@ -97,7 +99,9 @@ $STACKDRIVER_NSI = $PSScriptRoot + "\setup.nsi"
 #  STEP 1 - CREATE THE NEEDED DIRECTORIES.
 ##############################
 
+rm -r -Force $SD_LOGGING_AGENT_DIR -ErrorAction Ignore
 mkdir $SD_LOGGING_AGENT_DIR
+rm -r -Force $NSIS_UNZU_DIR -ErrorAction Ignore
 mkdir $NSIS_UNZU_DIR
 
 
@@ -135,7 +139,7 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 #  STEP 4 - INSTALL THE GEMS
 ##############################
 #
-# Install the needed gems for google fleuntd to works.
+# Install the needed gems for google fluentd to work.
 #
 # These are all a known set of versions which work together. Be sure things work if you
 # update any of them.
@@ -144,9 +148,12 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 # unneeded docs that bloat the file size (and also seem to cause issues with unzipping).
 ###############################
 
+$gem_installer = $SRC_ROOT + '\bin\gem_installer'
+$core_gems_rb = $SRC_ROOT + '\core_gems.rb'
+$plugin_gems_rb = $SRC_ROOT + '\plugin_gems.rb'
 & $GEM_CMD install fluentd:1.4.2 --no-document
-& $GEM_CMD install windows-pr:1.2.6 win32-ipc:0.7.0 win32-event:0.6.3 win32-eventlog:0.6.7 win32-service:2.1.4 fluent-plugin-windows-eventlog:0.2.2 --no-document
-& $GEM_CMD install google-protobuf:3.7.1 grpc:1.20.0 fluent-plugin-google-cloud:0.7.23 --no-document
+& $RUBY_EXE $gem_installer $core_gems_rb
+& $RUBY_EXE $gem_installer $plugin_gems_rb
 
 ##############################
 #  STEP 4.1 - TEMPORARY HACK TO UPDATE RUBY FILE
@@ -176,6 +183,7 @@ rm -r -Force $RUBY_DEV_DIR
 #  STEP 6 - ZIP THE FILES.
 ##############################
 
+rm -Force $STACKDRIVER_ZIP -ErrorAction Ignore
 Add-Type -Assembly System.IO.Compression.FileSystem
 [System.IO.Compression.ZipFile]::CreateFromDirectory($SD_LOGGING_AGENT_DIR, $STACKDRIVER_ZIP)
 
@@ -199,3 +207,5 @@ cp $NSIS_UNZU_DLL $NSIS_UNICODE_PLUGIN_DIR
 ##############################
 
 & $NSIS_MAKE /DVERSION=$version $STACKDRIVER_NSI
+
+Set-PSDebug -Trace 0
