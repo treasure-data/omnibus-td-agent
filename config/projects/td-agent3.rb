@@ -42,11 +42,9 @@ when "linux"
   when "debian"
     runtime_dependency "lsb-base"
   when "rhel", "amazon"
-    runtime_dependency "initscripts"
     runtime_dependency "cyrus-sasl-lib" # for rdkafka
-    if ohai["platform_version"][0] == "5"
-      runtime_dependency "redhat-lsb"
-    else
+    if ohai["platform_version"][0].to_i <= 7
+      runtime_dependency "initscripts"
       runtime_dependency "redhat-lsb-core"
     end
   end
