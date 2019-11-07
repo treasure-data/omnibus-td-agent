@@ -121,16 +121,15 @@ NOTE: edit `project_name` in Vagrantfile if required.
 td-agent omnibus ships will a project-specific [Berksfile](http://berkshelf.com/) and [Vagrantfile](http://www.vagrantup.com/)
 that will allow you to build your projects on the following platforms:
 
-* CentOS 6 64-bit
-* CentOS 6 32-bit
-* CentOS 7 64-bit
-* Ubuntu 12.04 64-bit
-* Ubuntu 12.04 32-bit
+* CentOS 6.9 64-bit
+* CentOS 7.2 64-bit
 * Ubuntu 14.04 64-bit
 * Ubuntu 16.04 64-bit
-* Debian 7.10 64-bit
-* Debian 8.4 64-bit
-* Amazon Linux 2016.03 64-bit
+* Ubuntu 18.04 64-bit
+* Debian 9.3 64-bit
+* Debian 10.0 64-bit
+
+NOTE: CentOS 8.0 is not supported because chef client has a problem. For CentOS8, need to build the package on CentOS8 environment.
 
 Please note this build-lab is only meant to get you up and running quickly;
 there's nothing inherent in Omnibus that restricts you to just building CentOS
