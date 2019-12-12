@@ -81,11 +81,14 @@ if [ -n "${TD_AGENT_PID_FILE}" ]; then
   TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 
-# 2012/04/17 Kazuki Ohta <k@treasure-data.com>
-# Use jemalloc to avoid memory fragmentation
-if [ -f "${TD_AGENT_HOME}/embedded/lib/libjemalloc.so" ]; then
-  export LD_PRELOAD="${TD_AGENT_HOME}/embedded/lib/libjemalloc.so"
-fi
+# This brings the memory usage down which is a good tradeoff for a daemon
+# deployed widely. It may slow the program down by increasing lock contention,
+# but that seems unlikely in a low-thread application, and we haven't seen CPU
+# increase in our load tests.
+#
+# More details about this change:
+# https://www.speedshop.co/2017/12/04/malloc-doubles-ruby-memory.html
+export MALLOC_ARENA_MAX=2
 
 kill_by_file() {
   local sig="$1"
