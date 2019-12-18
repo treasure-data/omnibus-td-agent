@@ -6,8 +6,8 @@ if td_agent_2?
   download "fluent-plugin-td", "0.10.29"
 else
   download "td-client", "1.0.7"
-  download "td", "0.16.5"
-  download "fluent-plugin-td", "1.0.0"
+  download "td", "0.16.7"
+  download "fluent-plugin-td", "1.1.0"
 end
 if td_agent_2?
   download "aws-sdk", "2.11.68"
