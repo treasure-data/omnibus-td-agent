@@ -45,7 +45,7 @@ if [ -n "${DAEMON_ARGS}" ]; then
 fi
 
 # Arguments to run the daemon with
-TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} --no-supervisor ${TD_AGENT_OPTIONS}}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
 START_STOP_DAEMON_ARGS=""
 
 # Exit if the package is not installed
@@ -130,7 +130,7 @@ do_start() {
     fi
 
     start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
+      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} --no-supervisor \
       || return 2
   fi
   # Add code here, if necessary, that waits for the process to be ready

@@ -127,7 +127,7 @@ if [ -n "${TD_AGENT_ARGS}" ]; then
 fi
 
 # Arguments to run the daemon with
-TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} --no-supervisor ${TD_AGENT_OPTIONS}}"
+TD_AGENT_ARGS="${TD_AGENT_ARGS:-${TD_AGENT_BIN_FILE} --log ${TD_AGENT_LOG_FILE} ${TD_AGENT_OPTIONS}}"
 START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
 
 # Exit if the package is not installed
@@ -218,7 +218,7 @@ do_start() {
   # The initial sleep 0 is needed to give the background command time to fail
   # fast (e.g., if the executable is not available).
   daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} \
-    "${TD_AGENT_RUBY} ${TD_AGENT_ARGS} & sleep 0 && kill -0 \$! && echo \$! > ${TD_AGENT_PID_FILE} || wait \$!"
+    "${TD_AGENT_RUBY} ${TD_AGENT_ARGS} --no-supervisor & sleep 0 && kill -0 \$! && echo \$! > ${TD_AGENT_PID_FILE} || wait \$!"
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
