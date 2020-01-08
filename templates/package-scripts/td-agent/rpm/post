@@ -7,7 +7,7 @@ echo "adding \'${PROJECT_GROUP}\' group if needed..."
 getent group "${PROJECT_GROUP}" >/dev/null || /usr/sbin/groupadd -r "${PROJECT_GROUP}"
 echo "adding \'${PROJECT_USER}\' user if needed..."
 getent passwd ${PROJECT_USER} >/dev/null || \
-  /usr/sbin/useradd -r -g ${PROJECT_GROUP} -d /var/lib/${PROJECT_USER} -s /sbin/nologin -c '${PROJECT_USER}' ${PROJECT_USER}
+  /usr/sbin/useradd -r -g ${PROJECT_GROUP} -d /var/lib/${PROJECT_USER} -s /sbin/nologin -c "${PROJECT_USER}" ${PROJECT_USER}
 
 if [ ! -e "/var/log/<%= project_name %>/" ]; then
   mkdir -p /var/log/<%= project_name %>/
