@@ -55,8 +55,10 @@ if td_agent_2?
   download "fluent-plugin-record-modifier", "0.6.2"
 else
   download "fluent-plugin-record-modifier", "2.0.1"
-  download "systemd-journal", "1.3.3"
-  download "fluent-plugin-systemd", "1.0.2"
+  unless windows?
+    download "systemd-journal", "1.3.3"
+    download "fluent-plugin-systemd", "1.0.2"
+  end
 end
 download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
