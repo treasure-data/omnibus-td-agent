@@ -141,6 +141,10 @@ elsif solaris_10?
   end
 elsif windows?
   env["CFLAGS"] = "-I#{install_dir}/embedded/include -DFD_SETSIZE=2048"
+  if version.satisfies?(">= 2.4")
+    env["CFLAGS"] << " -fstack-protector-strong"
+    env["LDFLAGS"] << " -fstack-protector-strong"
+  end
   if windows_arch_i386?
     # 32-bit windows can't compile ruby with -O2 due to compiler bugs.
     env["CFLAGS"] << " -m32 -march=i686 -O"
@@ -316,6 +320,9 @@ build do
         "libwinpthread-1",
         "libstdc++-6",
       ]
+      if version.satisfies?(">= 2.4")
+        dlls << "libssp-0"
+      end
       if windows_arch_i386?
         dlls << "libgcc_s_dw2-1"
       else
