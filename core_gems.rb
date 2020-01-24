@@ -1,6 +1,6 @@
 dir 'core_gems'
 download "bundler", "1.16.6"
-download "msgpack", "1.2.9"
+download "msgpack", "1.3.1"
 if td_agent_2?
   download "cool.io", "1.5.1"
 else
@@ -14,14 +14,13 @@ if td_agent_2?
 else
   download "oj", "3.7.12"
 end
-download "tzinfo", "2.0.0"
+download "tzinfo", "2.0.1"
 download "tzinfo-data", "1.2019.3"
 unless td_agent_2?
-  download "dig_rb", "1.0.1"
   download 'serverengine', '2.1.1'
 end
 if windows?
-  download 'ffi', '1.11.1'
+  download 'ffi', '1.12.1'
   download 'ffi-win32-extensions', '1.0.3'
   download 'win32-ipc', '0.7.0'
   download 'win32-event', '0.6.3'
