@@ -17,7 +17,7 @@ end
 download "tzinfo", "2.0.1"
 download "tzinfo-data", "1.2019.3"
 unless td_agent_2?
-  download 'serverengine', '2.1.1'
+  download 'serverengine', '2.2.1'
 end
 if windows?
   download 'ffi', '1.12.1'
