@@ -26,7 +26,7 @@ download "fluent-plugin-kubernetes_metadata_filter", "2.4.1"
 download "systemd-journal", "1.3.3"
 download "fluent-plugin-systemd", "1.0.2"
 download "opencensus", "0.5.0"
-download "opencensus-stackdriver", "0.3.0"
+download "opencensus-stackdriver", "0.3.1"
 if windows?
   download "windows-pr", "1.2.6"
   download "win32-ipc", "0.7.0"
