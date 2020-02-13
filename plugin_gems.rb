@@ -49,7 +49,8 @@ unless td_agent_2?
   download "elasticsearch", "6.8.1"
   download "fluent-plugin-elasticsearch", "3.8.0"
   download "prometheus-client", "0.9.0"
-  download "fluent-plugin-prometheus", "1.7.0"
+  download "fluent-plugin-prometheus", "1.7.2"
+  download "fluent-plugin-prometheus_pushgateway", "0.0.1"
 end
 if td_agent_2?
   download "fluent-plugin-record-modifier", "0.6.2"
