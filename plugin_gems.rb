@@ -14,13 +14,13 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.268.0"
+  download "aws-partitions", "1.273.0"
   download "aws-sigv4", "1.1.0"
-  download "aws-sdk-core", "3.89.1"
-  download "aws-sdk-kms", "1.28.0"
+  download "aws-sdk-core", "3.90.0"
+  download "aws-sdk-kms", "1.29.0"
   download "aws-sdk-sqs", "1.23.1"
-  download "aws-sdk-s3", "1.60.1"
-  download "fluent-plugin-s3", "1.2.1"
+  download "aws-sdk-s3", "1.60.2"
+  download "fluent-plugin-s3", "1.3.0"
 end
 if td_agent_2?
   download "thrift", "0.8.0"
@@ -44,10 +44,10 @@ download "ruby-kafka", "0.7.10"
 unless windows?
   download "rdkafka", "0.7.0"
 end
-download "fluent-plugin-kafka", "0.12.2"
+download "fluent-plugin-kafka", "0.12.3"
 unless td_agent_2?
   download "elasticsearch", "6.8.1"
-  download "fluent-plugin-elasticsearch", "3.8.0"
+  download "fluent-plugin-elasticsearch", "4.0.3"
   download "prometheus-client", "0.9.0"
   download "fluent-plugin-prometheus", "1.7.2"
   download "fluent-plugin-prometheus_pushgateway", "0.0.1"
@@ -65,5 +65,5 @@ download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
   download 'winevt_c', '0.6.1'
-  download 'fluent-plugin-windows-eventlog', '0.4.4'
+  download 'fluent-plugin-windows-eventlog', '0.4.5'
 end
