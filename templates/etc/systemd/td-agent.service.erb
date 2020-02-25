@@ -5,6 +5,7 @@ After=network-online.target
 Wants=network-online.target
 
 [Service]
+UMask=027
 User=<%= Shellwords.shellescape(project_name) %>
 Group=<%= Shellwords.shellescape(project_name) %>
 LimitNOFILE=65536
