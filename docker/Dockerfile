@@ -44,27 +44,6 @@ RUN apt-get update \
         /opt/google-fluentd/embedded/share/gtk-doc \
         /opt/google-fluentd/embedded/share/man \
         /opt/google-fluentd/embedded/share/terminfo \
-    # Remove unused gems.
-    && /opt/google-fluentd/embedded/bin/gem uninstall -ax --force \
-        # Gems for ingesting logs to Treasure Data Cloud.
-        td \
-        td-client \
-        td-logger \
-        fluent-plugin-td \
-        fluent-plugin-td-monitoring \
-        hirb \
-        parallel \
-        ohai \
-        mixlib-cli \
-        mixlib-config \
-        mixlib-log \
-        mixlib-shellout \
-        systemu \
-        # Gems for Mongo.
-        fluent-plugin-mongo \
-        mongo \
-    # Remove unused gem versions.
-    && /opt/google-fluentd/embedded/bin/gem uninstall httpclient -v 2.7.2 \
     && rm -rf \
         # Cache.
         /var/cache \
