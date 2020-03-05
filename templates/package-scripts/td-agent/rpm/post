@@ -82,3 +82,5 @@ echo "Configure <%= project_name %> to start, when booting up the OS..."
 if [ "$1" = "2" ]; then
   /sbin/service <%= project_name %> condrestart >/dev/null 2>&1 || :
 fi
+
+systemctl daemon-reload
