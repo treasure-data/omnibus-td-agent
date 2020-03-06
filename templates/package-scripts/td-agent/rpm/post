@@ -83,6 +83,6 @@ if [ "$1" = "2" ]; then
   /sbin/service <%= project_name %> condrestart >/dev/null 2>&1 || :
 fi
 
-if [ <%= use_systemd %>]; then
+if [ <%= use_systemd %> ]; then
   systemctl daemon-reload
 fi
