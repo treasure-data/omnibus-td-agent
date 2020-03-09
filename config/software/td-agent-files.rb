@@ -15,6 +15,7 @@ build do
     project_name = project.name # for ERB
     project_name_snake = project.name.gsub('-', '_') # for variable names in ERB
     gem_dir_version = "2.6.0"
+    use_systemd = ohai["os"] == "linux" && ohai["platform_family"] == "suse"
 
     template = ->(*parts) { File.join('templates', *parts) }
     generate_from_template = ->(dst, src, erb_binding, opts={}) {
