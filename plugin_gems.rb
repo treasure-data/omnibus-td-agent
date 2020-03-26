@@ -14,12 +14,12 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.273.0"
-  download "aws-sigv4", "1.1.0"
-  download "aws-sdk-core", "3.90.0"
-  download "aws-sdk-kms", "1.29.0"
-  download "aws-sdk-sqs", "1.23.1"
-  download "aws-sdk-s3", "1.60.2"
+  download "aws-partitions", "1.288.0"
+  download "aws-sigv4", "1.1.1"
+  download "aws-sdk-core", "3.92.0"
+  download "aws-sdk-kms", "1.30.0"
+  download "aws-sdk-sqs", "1.24.0"
+  download "aws-sdk-s3", "1.61.1"
   download "fluent-plugin-s3", "1.3.0"
 end
 if td_agent_2?
@@ -40,17 +40,17 @@ if td_agent_2?
 else
   download "fluent-plugin-rewrite-tag-filter", "2.2.0"
 end
-download "ruby-kafka", "0.7.10"
+download "ruby-kafka", "1.0.0"
 unless windows?
   download "rdkafka", "0.7.0"
 end
-download "fluent-plugin-kafka", "0.12.3"
+download "fluent-plugin-kafka", "0.13.0"
 unless td_agent_2?
   download "elasticsearch", "6.8.1"
-  download "fluent-plugin-elasticsearch", "4.0.3"
+  download "fluent-plugin-elasticsearch", "4.0.7"
   download "prometheus-client", "0.9.0"
   download "fluent-plugin-prometheus", "1.7.3"
-  download "fluent-plugin-prometheus_pushgateway", "0.0.1"
+  download "fluent-plugin-prometheus_pushgateway", "0.0.2"
 end
 if td_agent_2?
   download "fluent-plugin-record-modifier", "0.6.2"
@@ -64,6 +64,6 @@ end
 download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
-  download 'winevt_c', '0.7.0'
-  download 'fluent-plugin-windows-eventlog', '0.5.0'
+  download 'winevt_c', '0.7.3'
+  download 'fluent-plugin-windows-eventlog', '0.5.3'
 end
