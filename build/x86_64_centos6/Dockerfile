@@ -19,6 +19,9 @@ RUN yum -y update \
         ruby \
         which \
         zlib-devel \
+ # CentOS 6 comes with git 1.7.1, and omnibus requires at least 1.7.2.
+ && rpm -ivh http://ftp.tu-chemnitz.de/pub/linux/dag/redhat/el6/en/x86_64/rpmforge/RPMS/rpmforge-release-0.5.3-1.el6.rf.x86_64.rpm \
+ && yum --enablerepo=rpmforge-extras -y upgrade git \
  # RVM GPG keys.
  && mkdir -p ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
  && gpg2 --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB \
