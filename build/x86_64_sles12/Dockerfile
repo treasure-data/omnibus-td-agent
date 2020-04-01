@@ -2,9 +2,11 @@ FROM opensuse/leap:42.3
 
 RUN zypper -n refresh \
  && zypper -n install \
+        # Needed for gpg2 and rvm installation.
+        curl \
+        # Needed for agent build.
         autoconf \
         bzip2 \
-        curl \
         expect \
         gcc-c++ \
         git \

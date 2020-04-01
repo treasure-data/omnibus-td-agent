@@ -2,9 +2,11 @@ FROM centos:8
 
 RUN yum -y update \
  && yum -y install \
+        # Needed for gpg2 and rvm installation.
+        curl \
+        # Needed for agent build.
         autoconf \
         bzip2 \
-        curl \
         expect \
         gcc-c++ \
         git \
