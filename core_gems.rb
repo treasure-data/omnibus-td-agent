@@ -8,7 +8,7 @@ else
   download "cool.io", "1.6.0"
   download 'serverengine', '2.2.1'
   download "oj", "3.8.1"
-  download "async-http", "0.50.2"
+  download "async-http", "0.50.7"
 end
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.4.1"

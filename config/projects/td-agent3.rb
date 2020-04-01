@@ -13,7 +13,7 @@ else
   install_dir "#{default_root}/#{name}"
 end
 
-build_version   "3.6.0"
+build_version   "3.7.0"
 build_iteration 0
 
 # creates required build directories
@@ -24,7 +24,7 @@ override :zlib, :version => '1.2.11'
 override :jemalloc, :version => '4.5.0'
 override :rubygems, :version => '2.6.14'
 override :postgresql, :version => '9.6.9'
-override :fluentd, :version => '9d113029d4550ce576d8825bfa9612aa3e55bff0' # v1.9.2
+override :fluentd, :version => '7e3022efbb972d1a46fb66d1a6e2698abb46564e' # v1.10.0
 
 # td-agent dependencies/components
 dependency "td-agent"
