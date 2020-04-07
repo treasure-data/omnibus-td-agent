@@ -32,6 +32,16 @@ default_version "2.6.5"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
+# Workaround for broken Omnibus OpenSSL config.  The OpenSSL URL
+# changed, but the Omnibus config still has the wrong URL.  See
+# https://github.com/chef/omnibus-software/issues/833.
+#
+# TODO(davidbtucker): Remove once
+# https://github.com/chef/omnibus-software/pull/1178 is merged.
+project.override :openssl,
+                 source: {url: "https://www.openssl.org/source/old/1.0.2/openssl-1.0.2t.tar.gz", extract: :lax_tar},
+                 relative_path: "openssl-1.0.2t"
+
 dependency "patch" if solaris_10?
 dependency "ncurses" unless windows? || version.satisfies?(">= 2.1")
 dependency "zlib"
