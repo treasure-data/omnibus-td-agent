@@ -56,6 +56,7 @@ version("2.5.3")      { source sha256: "9828d03852c37c20fa333a0264f2490f07338576
 version("2.5.1")      { source sha256: "dac81822325b79c3ba9532b048c2123357d3310b2b40024202f360251d9829b1" }
 version("2.5.0")      { source sha256: "46e6f3630f1888eb653b15fa811d77b5b1df6fd7a3af436b343cfe4f4503f2ab" }
 
+version("2.4.10")     { source sha256: "93d06711795bfb76dbe7e765e82cdff3ddf9d82eff2a1f24dead9bb506eaf2d0" }
 version("2.4.9")      { source sha256: "f99b6b5e3aa53d579a49eb719dd0d3834d59124159a6d4351d1e039156b1c6ae" }
 version("2.4.6")      { source sha256: "de0dc8097023716099f7c8a6ffc751511b90de7f5694f401b59f2d071db910be" }
 version("2.4.5")      { source sha256: "6737741ae6ffa61174c8a3dcdd8ba92bc38827827ab1d7ea1ec78bc3cefc5198" }
@@ -65,18 +66,6 @@ version("2.4.2")      { source sha256: "93b9e75e00b262bc4def6b26b7ae8717efc252c4
 version("2.4.1")      { source sha256: "a330e10d5cb5e53b3a0078326c5731888bb55e32c4abfeb27d9e7f8e5d000250" }
 version("2.4.0")      { source sha256: "152fd0bd15a90b4a18213448f485d4b53e9f7662e1508190aa5b702446b29e3d" }
 
-version("2.3.7")      { source sha256: "35cd349cddf78e4a0640d28ec8c7e88a2ae0db51ebd8926cd232bb70db2c7d7f" }
-version("2.3.6")      { source sha256: "8322513279f9edfa612d445bc111a87894fac1128eaa539301cebfc0dd51571e" }
-version("2.3.3")      { source sha256: "241408c8c555b258846368830a06146e4849a1d58dcaf6b14a3b6a73058115b7" }
-version("2.3.1")      { source sha256: "b87c738cb2032bf4920fef8e3864dc5cf8eae9d89d8d523ce0236945c5797dcd" }
-version("2.3.0")      { source md5: "e81740ac7b14a9f837e9573601db3162" }
-
-version("2.2.5")      { source md5: "bd8e349d4fb2c75d90817649674f94be" }
-version("2.2.4")      { source md5: "9a5e15f9d5255ba37ace18771b0a8dd2" }
-version("2.2.3")      { source md5: "150a5efc5f5d8a8011f30aa2594a7654" }
-version("2.2.2")      { source md5: "326e99ddc75381c7b50c85f7089f3260" }
-version("2.2.1")      { source md5: "b49fc67a834e4f77249eb73eecffb1c9" }
-version("2.2.0")      { source md5: "cd03b28fd0b555970f5c4fd481700852" }
 
 version("2.1.10")     { source sha256: "fb2e454d7a5e5a39eb54db0ec666f53eeb6edc593d1d2b970ae4d150b831dd20" }
 version("2.1.9")      { source sha256: "034cb9c50676d2c09b3b6cf5c8003585acea05008d9a29fa737c54d52c1eb70c" }
@@ -88,14 +77,6 @@ version("2.1.4")      { source md5: "89b2f4a197621346f6724a3c35535b19" }
 version("2.1.3")      { source md5: "74a37b9ad90e4ea63c0eed32b9d5b18f" }
 version("2.1.2")      { source md5: "a5b5c83565f8bd954ee522bd287d2ca1" }
 version("2.1.1")      { source md5: "e57fdbb8ed56e70c43f39c79da1654b2" }
-
-version("2.0.0-p645") { source md5: "49919bba0c855eaf8e247108c7933a62" }
-version("2.0.0-p594") { source md5: "a9caa406da5d72f190e28344e747ee74" }
-version("2.0.0-p576") { source md5: "2e1f4355981b754d92f7e2cc456f843d" }
-
-version("1.9.3-p550") { source md5: "e05135be8f109b2845229c4f47f980fd" }
-version("1.9.3-p547") { source md5: "7531f9b1b35b16f3eb3d7bea786babfd" }
-version("1.9.3-p484") { source md5: "8ac0dee72fe12d75c8b2d0ef5d0c2968" }
 
 source url: "https://cache.ruby-lang.org/pub/ruby/#{version.match(/^(\d+\.\d+)/)[0]}/ruby-#{version}.tar.gz"
 
