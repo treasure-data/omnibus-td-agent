@@ -2,11 +2,13 @@
 
 [![Build Status](https://travis-ci.org/treasure-data/omnibus-td-agent.svg)](https://travis-ci.org/treasure-data/omnibus-td-agent)
 
-The event collector daemon, for Treasure Data. This daemon collects various types of logs/events via various way, and transfer them to the cloud. For more about Treasure Data, see the [homepage](http://treasuredata.com/), and the [documentation](http://docs.treasuredata.com/).
+The event collector daemon, for Treasure Data. This daemon collects various types of logs/events via various way, and transfer them to the cloud. For more about Treasure Data, see the [official website](https://www.treasuredata.com/), and the [documentation](https://tddocs.atlassian.net/wiki/spaces/PD/overview).
 
-td-agent is open sourced as [Fluentd project](http://github.com/fluent/). In other words, td-agent is a distribution package of Fluentd.
+td-agent is open sourced as [Fluentd project](https://github.com/fluent/). In other words, td-agent is a distribution package of Fluentd.
 
-td-agent package is based on [Omnibus-ruby](https://github.com/opscode/omnibus-ruby)
+td-agent package is based on [Omnibus](https://github.com/chef/omnibus)
+
+If you want to know the td-agent changelog, check [td-agent changelog article](https://support.treasuredata.com/hc/en-us/articles/360001479187-The-td-agent-ChangeLog).
 
 ## Installation
 
