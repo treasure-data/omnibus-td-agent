@@ -4,8 +4,8 @@ source 'https://rubygems.org'
 gem 'berkshelf', '~> 3.0'
 
 # Install omnibus software
-gem 'omnibus', '6.1.7'
-gem 'omnibus-software', :github => 'opscode/omnibus-software' #, :branch => 'omnibus/3.2-stable'
+gem 'omnibus', :github => 'chef/omnibus', :branch => '7.0.9'
+gem 'omnibus-software', :github => 'chef/omnibus-software' #, :branch => 'omnibus/3.2-stable'
 
 # Use open_uri_redirections to allow HTTPS -> HTTP redirections in omnibus
 gem 'open_uri_redirections', '0.2.1'
