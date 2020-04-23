@@ -19,7 +19,7 @@ else
   download "aws-sdk-core", "3.94.0"
   download "aws-sdk-kms", "1.30.0"
   download "aws-sdk-sqs", "1.24.0"
-  download "aws-sdk-s3", "1.61.2"
+  download "aws-sdk-s3", "1.63.0"
   download "fluent-plugin-s3", "1.3.1"
 end
 if td_agent_2?
