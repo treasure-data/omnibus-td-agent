@@ -8,12 +8,15 @@ else
   download "cool.io", "1.6.0"
   download 'serverengine', '2.2.1'
   download "oj", "3.8.1"
-  download "async-http", "0.50.7"
+  download "async", "1.24.2"
+  download "async-io", "1.27.7"
+  download "async-pool", "0.2.0"
+  download "async-http", "0.50.8"
 end
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.4.1"
 download "sigdump", "0.2.4"
-download "tzinfo", "2.0.1"
+download "tzinfo", "2.0.2"
 download "tzinfo-data", "1.2019.3"
 if windows?
   download 'ffi', '1.12.2'

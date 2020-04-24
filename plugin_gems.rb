@@ -14,13 +14,13 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.288.0"
+  download "aws-partitions", "1.297.0"
   download "aws-sigv4", "1.1.1"
-  download "aws-sdk-core", "3.92.0"
+  download "aws-sdk-core", "3.94.0"
   download "aws-sdk-kms", "1.30.0"
   download "aws-sdk-sqs", "1.24.0"
-  download "aws-sdk-s3", "1.61.1"
-  download "fluent-plugin-s3", "1.3.0"
+  download "aws-sdk-s3", "1.63.0"
+  download "fluent-plugin-s3", "1.3.1"
 end
 if td_agent_2?
   download "thrift", "0.8.0"
@@ -65,5 +65,5 @@ download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
   download 'winevt_c', '0.7.3'
-  download 'fluent-plugin-windows-eventlog', '0.5.3'
+  download 'fluent-plugin-windows-eventlog', '0.5.4'
 end
