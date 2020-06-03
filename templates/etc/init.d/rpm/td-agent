@@ -138,7 +138,7 @@ START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
 
 # Check the user
 if [ -n "${TD_AGENT_USER}" ]; then
-  if ! getent passwd | grep -q "^${TD_AGENT_USER}:"; then
+  if ! getent passwd "${TD_AGENT_USER}" > /dev/null 2>&1; then
     echo "$0: user for running ${TD_AGENT_NAME} doesn't exist: ${TD_AGENT_USER}" >&2
     exit 1
   fi
