@@ -132,9 +132,29 @@ START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
 # Source function library.
 . <%= File.join(root_path, "etc/init.d/functions") %>
 
-# Define LSB log_* functions.
-# Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
-. <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %>
+# Check log_* functions definitions existence.
+if [ -f <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %> ]; then
+  # Depend on lsb-base (>= 3.0-6) to use original implementation
+  . <%= Shellwords.shellescape(File.join(root_path, "lib/lsb/init-functions")) %>
+else
+  killproc() {
+    LSB=LSB-1.1 killproc $*
+  }
+
+  log_success_msg() {
+    echo -n "$*"
+    $MOVE_TO_COL
+    echo -ne "[  OK  ]\r"
+    echo
+  }
+
+  log_failure_msg() {
+    echo -n "$*"
+    $MOVE_TO_COL
+    echo -ne "[FAILED]\r"
+    echo
+  }
+fi
 
 # Check the user
 if [ -n "${TD_AGENT_USER}" ]; then
