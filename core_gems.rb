@@ -17,9 +17,9 @@ download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.4.1"
 download "sigdump", "0.2.4"
 download "tzinfo", "2.0.2"
-download "tzinfo-data", "1.2019.3"
+download "tzinfo-data", "1.2020.1"
 if windows?
-  download 'ffi', '1.12.2'
+  download 'ffi', '1.13.1'
   download 'ffi-win32-extensions', '1.0.3'
   download 'win32-ipc', '0.7.0'
   download 'win32-event', '0.6.3'
