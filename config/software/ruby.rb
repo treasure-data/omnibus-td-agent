@@ -123,8 +123,10 @@ elsif solaris_10?
 elsif windows?
   env["CFLAGS"] = "-I#{install_dir}/embedded/include -DFD_SETSIZE=2048"
   if version.satisfies?(">= 2.4")
-    env["CFLAGS"] << " -fstack-protector-strong"
-    env["LDFLAGS"] << " -fstack-protector-strong"
+    # For gcc 10, it needs to specify -fcommon explicitly.
+    # see: https://gcc.gnu.org/gcc-10/changes.html#c
+    env["CFLAGS"] << " -fstack-protector-strong -fcommon"
+    env["LDFLAGS"] << " -fstack-protector-strong -fcommon"
   end
   if windows_arch_i386?
     # 32-bit windows can't compile ruby with -O2 due to compiler bugs.
