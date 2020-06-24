@@ -281,6 +281,10 @@ build do
       patch source: "ruby_nano.patch", plevel: 1, env: patch_env
     end
 
+    if version == '2.4.10'
+      patch source: 'ruby-2.4.10-build-with-gcc10.patch', plevel: 1, env: patch_env
+    end
+
     configure_command << " debugflags=-g"
   else
     configure_command << "--with-opt-dir=#{install_dir}/embedded"
