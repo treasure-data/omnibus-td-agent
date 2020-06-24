@@ -311,10 +311,14 @@ build do
       end
 
       dlls.each do |dll|
-        mingw = ENV["MSYSTEM"].downcase
-        msys_path = ENV["MSYS2_INSTALL_DIR"] ? "#{ENV["MSYS2_INSTALL_DIR"]}" : "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin"
-        #msys_path = ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"] ? "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin" : "C:/msys2"
-        windows_path = "#{msys_path}/#{mingw}/bin/#{dll}.dll"
+        windows_path = if defined?(RubyInstaller::Runtime)
+                         mingw_bin_path = RubyInstaller::Runtime.msys2_installation.mingw_bin_path
+                         "#{mingw_bin_path}/#{dll}.dll"
+                       else
+                         mingw = ENV["MSYSTEM"].downcase
+                         msys_path = ENV["MSYS2_INSTALL_DIR"] ? "#{ENV["MSYS2_INSTALL_DIR"]}" : "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin"
+                         "#{msys_path}/#{mingw}/bin/#{dll}.dll"
+                       end
         if File.exist?(windows_path)
           copy windows_path, "#{install_dir}/embedded/bin/#{dll}.dll"
         else
