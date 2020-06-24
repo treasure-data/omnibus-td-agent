@@ -80,6 +80,13 @@ version("2.1.1")      { source md5: "e57fdbb8ed56e70c43f39c79da1654b2" }
 
 source url: "https://cache.ruby-lang.org/pub/ruby/#{version.match(/^(\d+\.\d+)/)[0]}/ruby-#{version}.tar.gz"
 
+semver = Gem::Version.create(version).segments
+ruby_mmv = "#{semver[0..1].join(".")}.0"
+ruby_dir = "#{install_dir}/embedded/lib/ruby/#{ruby_mmv}"
+gem_dir = "#{install_dir}/embedded/lib/ruby/gems/#{ruby_mmv}"
+bin_dirs bin_dirs.concat ["#{gem_dir}/gems/*/bin/**"]
+lib_dirs ["#{ruby_dir}/**", "#{gem_dir}/extensions/**", "#{gem_dir}/gems/*", "#{gem_dir}/gems/*/lib/**", "#{gem_dir}/gems/*/ext/**"]
+
 relative_path "ruby-#{version}"
 
 env = with_standard_compiler_flags(with_embedded_path)
@@ -172,36 +179,7 @@ build do
   # and ruby trying to set LD_LIBRARY_PATH itself gets it wrong.
   #
   # Also, fix paths emitted in the makefile on windows on both msys and msys2.
-  if version.satisfies?(">= 2.1")
-    patch source: "ruby-mkmf.patch", plevel: 1, env: patch_env
-    # should intentionally break and fail to apply on 2.2, patch will need to
-    # be fixed.
-  end
-
-   # Fix find_proxy with IP format proxy and domain format uri raises an exception.
-  # This only affects 2.4 and the fix is expected to be included in 2.4.2  # https://github.com/ruby/ruby/pull/1513
-  if version == "2.4.0" || version == "2.4.1"
-    patch source: "2.4_no_proxy_exception.patch", plevel: 1, env: patch_env
-  end
-
-  # Fix reserve stack segmentation fault when building on RHEL5 or below
-  # Currently only affects 2.1.7 and 2.2.3. This patch taken from the fix
-  # in Ruby trunk and expected to be included in future point releases.
-  # https://redmine.ruby-lang.org/issues/11602
-  if rhel? &&
-      platform_version.satisfies?("< 6") &&
-      (version == "2.1.7" || version == "2.2.3")
-
-    patch source: "ruby-fix-reserve-stack-segfault.patch", plevel: 1, env: patch_env
-  end
-
-  if version.start_with?('2.1')
-    patch source: 'ruby-2.1-openssl-mode-patch.patch', plevel: 1, env: patch_env
-  end
-
-  if version == '2.4.2'
-    patch source: 'ruby-2.4.2-configure-patch.patch', plevel: 1, env: patch_env
-  end
+  patch source: "ruby-mkmf.patch", plevel: 1, env: patch_env
 
   if rhel? &&
      platform_version.satisfies?("< 6") &&
