@@ -8,22 +8,14 @@ Prerequisite
 
 Download [RubyInstaller](http://rubyinstaller.org/downloads/) and install it.
 You have to choice the x64 package.
-I strongly recommend you to choice Ruby 2.3.1.
+I strongly recommend you to choice Ruby 2.5.7 or 2.6.6 with devkit installer.
 
-Ruby 2.3.1 has a problem about the SSL certification of RubyGems.
-You have to install [a certficate file](https://raw.githubusercontent.com/ruby/ruby/ruby_2_3/lib/rubygems/ssl_certs/GlobalSignRootCA.pem) into `lib/ruby/2.3.0/rubygems/ssl_certs` subdirectory of your Ruby installation as `GlobalSignRootCA.pem`.
+You have to run this command (e.g. Ruby 2.6.6 case):
+    C:\> ruby -e "puts RubyInstaller::Runtime.msys2_installation.msys_path + '\usr\bin'"
+    C:\Ruby26-x64\msys64\usr\bin
+    C:\> cd C:\Ruby26-x64\msys64\usr\bin
+    C:\Ruby26-x64\msys64\usr\bin> copy bsdtar.exe tar.exe
 
-You have to also download DevKit and install it from same page.
-You have to choice mingw64-64 package.
-The installation path should be `C:\DevKit`.
-After installation, you have to set `PATH` environment variable to `bin` and `mingw\bin` subdirectroes of your DevKit installtion.
-
-You have to run this command:
-
-    C:\> cd \DevKit\mingw\bin
-
-    C:\DevKit\mingw\bin> copy bsdtar.exe tar.exe
-    
 
 ### Git
 
@@ -32,9 +24,9 @@ Download [Git for Windows](https://git-for-windows.github.io/) and install it.
 Set your email and name to git config.
 
     C:\> git config --global user.email "you@example.com"
-    
+
     C:\> git config --global user.name "Your Name"
-    
+
 
 ### MSYS2
 
@@ -45,7 +37,7 @@ Set `PATH` to `C:\msys64\usr\bin`.
 And, you also have to set `SSL_CERT_FILE` environment variable to the path of `cert.pem` included in MSYS2 package.
 
     C:\> set SSL_CERT_FILE=C:\msys64\usr\ssl\cert.pem
-    
+
 
 ### patch
 
@@ -56,6 +48,8 @@ After installtion of MSYS2, do as below:
 And answer `Y` when you are asked to install.
 
 ### Bundler
+
+If you use the latest bundler, use the following command to install bundler:
 
     gem install bundler
 
@@ -92,9 +86,9 @@ The build process is a little difference from `README.me`.
 1. Download gems as below:
 
        C:\[your work dir]> bundle exec ruby bin\gem_downloader core_gems.rb
-       
+
        C:\[your work dir]> bundle exec ruby bin\gem_downloader plugin_gems.rb
-       
+
 
 2. You don't have to create cache directory of omnibus on Windows.
    It'll be automatically made by Omnibus at `C:\omnibus-ruby`.
@@ -102,13 +96,12 @@ The build process is a little difference from `README.me`.
    But you have to create install directory as a symbolic link as an administrator.
 
        C:\> mkdir C:\DevKit\opt
-       
+
        C:\> mklink /D \opt C:\DevKit\opt
-       
+
 
 3. Build
 
    Do as below:
 
-       C:\[your work dir]> bundle exec ruby bin\omnibus build td-agent3 -o windows_arch:x64
-       
+       C:\[your work dir]> ridk exec bundle exec ruby bin\omnibus build td-agent3 -o windows_arch:x64
