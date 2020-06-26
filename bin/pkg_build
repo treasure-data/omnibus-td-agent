@@ -11,9 +11,10 @@ platforms = []
 
 unless ARGV.include?('--without-rpm')
   platforms += [
-    "centos-7.2",
-    "centos-6.9",
-    "centos-6.9-i386",
+    "centos-8.1"
+    "centos-7.6",
+    #"centos-6.9",
+    #"centos-6.9-i386",
   ]
 end
 
@@ -21,18 +22,19 @@ unless ARGV.include?('--without-deb')
   platforms += [
     "ubuntu-18.04",
     "ubuntu-16.04",
-    "ubuntu-14.04",
+    #"ubuntu-14.04",
     #"ubuntu-12.04",
-    "ubuntu-16.04-i386",
-    "ubuntu-14.04-i386",
+    #"ubuntu-16.04-i386",
+    #"ubuntu-14.04-i386",
     #"ubuntu-12.04-i386",
   ]
 end
 
 unless ARGV.include?('--without-debian')
   platforms += [
-    "debian-9.3",
-    "debian-8.4",
+    "debian-10.0",
+    #"debian-9.3",
+    #"debian-8.4",
   ]
 end
 

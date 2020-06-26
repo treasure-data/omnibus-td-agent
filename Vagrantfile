@@ -11,7 +11,7 @@ td_agent_version = (ENV["BUILD_TD_AGENT_VERSION"] || 3).to_s
 host_project_path = File.expand_path('..', __FILE__)
 project_name = 'td-agent'
 host_name = "#{project_name}-omnibus-build-lab"
-bootstrap_chef_version = '12.14.89'
+bootstrap_chef_version = :latest #'16.1.16'
 
 Vagrant.configure('2') do |config|
   #config.vm.hostname = "#{project_name}-omnibus-build-lab"
@@ -29,9 +29,10 @@ Vagrant.configure('2') do |config|
     debian-8.4
     debian-9.3
     debian-10.0
-    centos-6.9
+    centos-6.10
     centos-6.9-i386
-    centos-7.2
+    centos-7.6
+    centos-8.1
   }.each_with_index do |platform, index|
     project_build_user = 'vagrant'
     guest_project_path = "/home/#{project_build_user}/#{File.basename(host_project_path)}"
@@ -79,6 +80,7 @@ Vagrant.configure('2') do |config|
 
       c.vm.provision :chef_solo do |chef|
         chef.synced_folder_type = "nfs" if use_nfs
+        chef.arguments = "--chef-license accept"
         chef.json = {
           'omnibus' => {
             'build_user' => project_build_user,
@@ -111,6 +113,19 @@ Vagrant.configure('2') do |config|
         export_gcc = <<-GCC_EXPORT
         export CC="gcc44"
         export CXX="g++44"
+      GCC_EXPORT
+      else
+        export_gcc = ''
+      end
+
+      if platform.start_with?('centos-6.10')
+        c.vm.provision :shell, :privileged => true, :inline => <<-UPDATE_GCC
+        yum install -y centos-release-scl
+        yum install -y devtoolset-8
+      UPDATE_GCC
+        export_gcc = <<-GCC_EXPORT
+        scl enable devtoolset-8 bash
+        source /opt/rh/devtoolset-8/enable
       GCC_EXPORT
       else
         export_gcc = ''
