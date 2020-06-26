@@ -130,8 +130,10 @@ elsif solaris_10?
 elsif windows?
   env["CFLAGS"] = "-I#{install_dir}/embedded/include -DFD_SETSIZE=2048"
   if version.satisfies?(">= 2.4")
-    env["CFLAGS"] << " -fstack-protector-strong"
-    env["LDFLAGS"] << " -fstack-protector-strong"
+    # For gcc 10, it needs to specify -fcommon explicitly.
+    # see: https://gcc.gnu.org/gcc-10/changes.html#c
+    env["CFLAGS"] << " -fstack-protector-strong -fcommon"
+    env["LDFLAGS"] << " -fstack-protector-strong -fcommon"
   end
   if windows_arch_i386?
     # 32-bit windows can't compile ruby with -O2 due to compiler bugs.
@@ -257,6 +259,10 @@ build do
       patch source: "ruby_nano.patch", plevel: 1, env: patch_env
     end
 
+    if version == '2.4.10'
+      patch source: 'ruby-2.4.10-build-with-gcc10.patch', plevel: 1, env: patch_env
+    end
+
     configure_command << " debugflags=-g"
   else
     configure_command << "--with-opt-dir=#{install_dir}/embedded"
@@ -289,10 +295,14 @@ build do
       end
 
       dlls.each do |dll|
-        mingw = ENV["MSYSTEM"].downcase
-        msys_path = ENV["MSYS2_INSTALL_DIR"] ? "#{ENV["MSYS2_INSTALL_DIR"]}" : "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin"
-        #msys_path = ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"] ? "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin" : "C:/msys2"
-        windows_path = "#{msys_path}/#{mingw}/bin/#{dll}.dll"
+        windows_path = if defined?(RubyInstaller::Runtime)
+                         mingw_bin_path = RubyInstaller::Runtime.msys2_installation.mingw_bin_path
+                         "#{mingw_bin_path}/#{dll}.dll"
+                       else
+                         mingw = ENV["MSYSTEM"].downcase
+                         msys_path = ENV["MSYS2_INSTALL_DIR"] ? "#{ENV["MSYS2_INSTALL_DIR"]}" : "#{ENV["OMNIBUS_TOOLCHAIN_INSTALL_DIR"]}/embedded/bin"
+                         "#{msys_path}/#{mingw}/bin/#{dll}.dll"
+                       end
         if File.exist?(windows_path)
           copy windows_path, "#{install_dir}/embedded/bin/#{dll}.dll"
         else
