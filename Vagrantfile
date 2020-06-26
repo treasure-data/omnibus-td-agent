@@ -29,7 +29,7 @@ Vagrant.configure('2') do |config|
     debian-8.4
     debian-9.3
     debian-10.0
-    centos-6.9
+    centos-6.10
     centos-6.9-i386
     centos-7.6
     centos-8.1
@@ -113,6 +113,19 @@ Vagrant.configure('2') do |config|
         export_gcc = <<-GCC_EXPORT
         export CC="gcc44"
         export CXX="g++44"
+      GCC_EXPORT
+      else
+        export_gcc = ''
+      end
+
+      if platform.start_with?('centos-6.10')
+        c.vm.provision :shell, :privileged => true, :inline => <<-UPDATE_GCC
+        yum install -y centos-release-scl
+        yum install -y devtoolset-8
+      UPDATE_GCC
+        export_gcc = <<-GCC_EXPORT
+        scl enable devtoolset-8 bash
+        source /opt/rh/devtoolset-8/enable
       GCC_EXPORT
       else
         export_gcc = ''
