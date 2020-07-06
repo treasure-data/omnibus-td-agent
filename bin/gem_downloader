@@ -34,7 +34,7 @@ Dir.chdir(gp.target_dir) {
         `mv #{gem_name_version_platform}.gem #{path}`
       when :download
         # Download the native extension code and build from source.
-        `curl -o #{path} -L http://rubygems.org/downloads/#{name}-#{version}.gem`
+        `curl -f -o #{path} -L http://rubygems.org/downloads/#{name}-#{version}.gem`
       else
         fail "Unsupported gem approach: #{approach}."
       end
