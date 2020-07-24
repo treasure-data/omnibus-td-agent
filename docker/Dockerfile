@@ -1,4 +1,4 @@
-FROM debian:9.9-slim
+FROM debian:9.13-slim
 
 # Default google-fluentd to the latest stable.
 # Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to override
