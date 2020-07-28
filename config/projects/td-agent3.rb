@@ -45,9 +45,6 @@ when "linux"
     runtime_dependency "cyrus-sasl-lib" # for rdkafka
     if ohai["platform_version"][0].to_i <= 7
       runtime_dependency "initscripts"
-      if ohai["platform_version"][0].to_i <= 6
-        runtime_dependency "redhat-lsb-core"
-      end
     end
   end
 end
