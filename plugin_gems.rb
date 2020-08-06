@@ -47,7 +47,7 @@ end
 download "fluent-plugin-kafka", "0.13.0"
 unless td_agent_2?
   download "elasticsearch", "6.8.2"
-  download "fluent-plugin-elasticsearch", "4.0.9"
+  download "fluent-plugin-elasticsearch", "4.1.1"
   download "prometheus-client", "0.9.0"
   download "fluent-plugin-prometheus", "1.8.0"
   download "fluent-plugin-prometheus_pushgateway", "0.0.2"
