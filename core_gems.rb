@@ -8,6 +8,7 @@ else
   download "cool.io", "1.6.0"
   download 'serverengine', '2.2.1'
   download "oj", "3.8.1"
+  download "console", "1.8.2"
   download "async", "1.24.2"
   download "async-io", "1.27.7"
   download "async-pool", "0.2.0"
