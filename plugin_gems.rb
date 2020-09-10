@@ -14,13 +14,13 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.332.0"
-  download "aws-sigv4", "1.2.0"
-  download "aws-sdk-core", "3.100.0"
-  download "aws-sdk-kms", "1.34.1"
-  download "aws-sdk-sqs", "1.28.0"
-  download "aws-sdk-s3", "1.69.1"
-  download "fluent-plugin-s3", "1.3.2"
+  download "aws-partitions", "1.366.0"
+  download "aws-sigv4", "1.2.2"
+  download "aws-sdk-core", "3.105.0"
+  download "aws-sdk-kms", "1.37.0"
+  download "aws-sdk-sqs", "1.32.0"
+  download "aws-sdk-s3", "1.79.1"
+  download "fluent-plugin-s3", "1.4.0"
 end
 if td_agent_2?
   download "thrift", "0.8.0"
@@ -40,16 +40,16 @@ if td_agent_2?
 else
   download "fluent-plugin-rewrite-tag-filter", "2.3.0"
 end
-download "ruby-kafka", "1.1.0"
+download "ruby-kafka", "1.2.0"
 unless windows?
   download "rdkafka", "0.8.0"
 end
-download "fluent-plugin-kafka", "0.13.0"
+download "fluent-plugin-kafka", "0.14.2"
 unless td_agent_2?
   download "elasticsearch", "6.8.2"
-  download "fluent-plugin-elasticsearch", "4.0.9"
+  download "fluent-plugin-elasticsearch", "4.1.3"
   download "prometheus-client", "0.9.0"
-  download "fluent-plugin-prometheus", "1.8.0"
+  download "fluent-plugin-prometheus", "1.8.3"
   download "fluent-plugin-prometheus_pushgateway", "0.0.2"
 end
 if td_agent_2?
