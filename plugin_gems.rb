@@ -1,5 +1,6 @@
 dir 'plugin_gems'
 download "httpclient", "2.8.2.4"
+download "fluent-diagtool", "0.1.9"
 if td_agent_2?
   download "td-client", "0.8.85"
   download "td", "0.15.2"
