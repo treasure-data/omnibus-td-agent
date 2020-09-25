@@ -62,6 +62,7 @@ else
     download "fluent-plugin-systemd", "1.0.2"
   end
 end
+download "fluent-plugin-sd-dns", "0.1.0"
 download "fluent-plugin-td-monitoring", "0.2.4"
 if windows?
   download 'win32-eventlog', '0.6.7'
