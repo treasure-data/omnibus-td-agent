@@ -24,7 +24,7 @@ override :zlib, :version => '1.2.11'
 override :jemalloc, :version => '4.5.0'
 override :rubygems, :version => '2.6.14'
 override :postgresql, :version => '9.6.9'
-override :fluentd, :version => '6beca80f6467fd2e12ea25b21e0474d978007b08' # v1.11.1 with windows patch
+override :fluentd, :version => '91706653523ff4b99ca3fdeb09c44eb233897c28' # v1.11.3 with windows patch
 
 # td-agent dependencies/components
 dependency "td-agent"
