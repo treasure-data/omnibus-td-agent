@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          <%= project_name %>
 # Required-Start:    $network $local_fs
@@ -134,27 +134,7 @@ START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS}"
 [ -x "${TD_AGENT_RUBY}" ] || exit 0
 
 # Source function library.
-if [ -f <%= File.join(root_path, "etc/init.d/functions") %> ]; then
-  . <%= File.join(root_path, "etc/init.d/functions") %>
-else
-  daemon () {
-    local -a start_daemon_args
-    while [ "$1" != "${1#[-+]}" ]; do
-      case $1 in
-        --force) start_daemon_args+=(-f); shift;;
-        --pidfile) start_daemon_args+=(-p "$2"); shift 2;;
-        --pidfile=*) start_daemon_args+=(-p "${1#*=}"); shift;;
-        --user) start_daemon_args+=(-u "$2"); shift 2;;
-        --user=*) start_daemon_args+=(-u "${1#*=}"); shift;;
-        --check) start_daemon_args+=(-c "$2"); shift 2;;
-        --check=*) start_daemon_args+=(-c "${1#*=}"); shift;;
-        [-+][0-9]*) start_daemon_args+=(-n "$1"); shift;;
-        *) return 1;;
-      esac
-    done
-    start_daemon "${start_daemon_args[@]}" /bin/bash -c "$@"
-  }
-fi
+. <%= File.join(root_path, "etc/init.d/functions") %>
 
 # Define LSB log_* functions.
 # Depend on lsb-base (>= 3.0-6) to ensure that this file is present.
@@ -182,8 +162,7 @@ fi
 if [ -n "${TD_AGENT_PID_FILE}" ]; then
   mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
   chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
-  # Work around https://github.com/fluent/fluentd/issues/2735
-  # TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
+  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
 fi
 
 # This brings the memory usage down which is a good tradeoff for a daemon
@@ -230,15 +209,7 @@ do_start() {
   fi
 
   local RETVAL=0
-  # daemon uses the return code of the underlying bash process as its return
-  # code. So, if we just background the first command, the return code will
-  # always be that of the echo command (even if, e.g., ${TD_AGENT_RUBY} is
-  # not found or is not executable). So the only reason it would return a
-  # non-zero exit code is if it fails to write the PID file.
-  # The initial sleep 0 is needed to give the background command time to fail
-  # fast (e.g., if the executable is not available).
-  daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} \
-    "${TD_AGENT_RUBY} ${TD_AGENT_ARGS} --no-supervisor & sleep 0 && kill -0 \$! && echo \$! > ${TD_AGENT_PID_FILE} || wait \$!" || RETVAL="$?"
+  daemon --pidfile="${TD_AGENT_PID_FILE}" ${START_STOP_DAEMON_ARGS} "${TD_AGENT_RUBY}" ${TD_AGENT_ARGS} || RETVAL="$?"
   [ $RETVAL -eq 0 ] && touch "${TD_AGENT_LOCK_FILE}"
   return $RETVAL
 }
@@ -309,7 +280,7 @@ do_restart() {
 }
 
 do_configtest() {
-  eval "${TD_AGENT_ARGS} --dry-run -q"
+  eval "${TD_AGENT_ARGS} ${START_STOP_DAEMON_ARGS} --dry-run -q"
 }
 
 RETVAL=0
