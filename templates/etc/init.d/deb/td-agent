@@ -78,7 +78,9 @@ fi
 if [ -n "${TD_AGENT_PID_FILE}" ]; then
   mkdir -p "$(dirname "${TD_AGENT_PID_FILE}")"
   chown -R "${TD_AGENT_USER}" "$(dirname "${TD_AGENT_PID_FILE}")"
-  TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
+  # Work around https://github.com/fluent/fluentd/issues/2735
+  # TD_AGENT_ARGS="${TD_AGENT_ARGS} --daemon ${TD_AGENT_PID_FILE}"
+  START_STOP_DAEMON_ARGS="${START_STOP_DAEMON_ARGS} --background --make-pidfile"
 fi
 
 # This brings the memory usage down which is a good tradeoff for a daemon
@@ -128,7 +130,7 @@ do_start() {
     fi
 
     start-stop-daemon --start --quiet --pidfile "${TD_AGENT_PID_FILE}" --exec "${TD_AGENT_RUBY}" \
-      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} \
+      ${START_STOP_DAEMON_ARGS} -- ${TD_AGENT_ARGS} --no-supervisor \
       || return 2
   fi
   # Add code here, if necessary, that waits for the process to be ready
