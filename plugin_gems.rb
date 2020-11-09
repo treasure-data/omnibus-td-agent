@@ -1,6 +1,6 @@
 dir 'plugin_gems'
 download "httpclient", "2.8.2.4"
-download "fluent-diagtool", "0.1.9"
+download "fluent-diagtool", "1.0.1"
 if td_agent_2?
   download "td-client", "0.8.85"
   download "td", "0.15.2"
@@ -15,12 +15,12 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.366.0"
+  download "aws-partitions", "1.390.0"
   download "aws-sigv4", "1.2.2"
-  download "aws-sdk-core", "3.109.0"
+  download "aws-sdk-core", "3.109.2"
   download "aws-sdk-kms", "1.39.0"
   download "aws-sdk-sqs", "1.34.0"
-  download "aws-sdk-s3", "1.82.0"
+  download "aws-sdk-s3", "1.83.2"
   download "fluent-plugin-s3", "1.4.0"
 end
 if td_agent_2?
@@ -34,21 +34,21 @@ download "webhdfs", "0.9.0"
 if td_agent_2?
   download "fluent-plugin-webhdfs", "0.7.1"
 else
-  download "fluent-plugin-webhdfs", "1.2.5"
+  download "fluent-plugin-webhdfs", "1.3.1"
 end
 if td_agent_2?
   download "fluent-plugin-rewrite-tag-filter", "1.6.0"
 else
   download "fluent-plugin-rewrite-tag-filter", "2.3.0"
 end
-download "ruby-kafka", "1.2.0"
+download "ruby-kafka", "1.3.0"
 unless windows?
   download "rdkafka", "0.8.0"
 end
 download "fluent-plugin-kafka", "0.15.2"
 unless td_agent_2?
   download "elasticsearch", "6.8.2"
-  download "fluent-plugin-elasticsearch", "4.2.0"
+  download "fluent-plugin-elasticsearch", "4.2.2"
   download "prometheus-client", "0.9.0"
   download "fluent-plugin-prometheus", "1.8.4"
   download "fluent-plugin-prometheus_pushgateway", "0.0.2"
