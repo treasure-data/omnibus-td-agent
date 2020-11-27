@@ -6,6 +6,7 @@ if td_agent_2?
   download "td", "0.15.2"
   download "fluent-plugin-td", "0.10.29"
 else
+  download "parallel", "1.19.2"
   download "td-client", "1.0.7"
   download "td", "0.16.9"
   download "fluent-plugin-td", "1.1.0"
@@ -15,12 +16,12 @@ if td_agent_2?
   download "fluent-plugin-s3", "0.8.7"
 else
   download "jmespath", "1.4.0"
-  download "aws-partitions", "1.390.0"
+  download "aws-partitions", "1.399.0"
   download "aws-sigv4", "1.2.2"
-  download "aws-sdk-core", "3.109.2"
+  download "aws-sdk-core", "3.109.3"
   download "aws-sdk-kms", "1.39.0"
   download "aws-sdk-sqs", "1.34.0"
-  download "aws-sdk-s3", "1.83.2"
+  download "aws-sdk-s3", "1.85.0"
   download "fluent-plugin-s3", "1.4.0"
 end
 if td_agent_2?
@@ -50,7 +51,7 @@ unless td_agent_2?
   download "elasticsearch", "6.8.2"
   download "fluent-plugin-elasticsearch", "4.2.2"
   download "prometheus-client", "0.9.0"
-  download "fluent-plugin-prometheus", "1.8.4"
+  download "fluent-plugin-prometheus", "1.8.5"
   download "fluent-plugin-prometheus_pushgateway", "0.0.2"
 end
 if td_agent_2?
