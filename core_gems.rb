@@ -6,8 +6,9 @@ if td_agent_2?
   download "oj", "2.18.5"
 else
   download "cool.io", "1.6.0"
-  download 'serverengine', '2.2.1'
+  download 'serverengine', '2.2.2'
   download "oj", "3.8.1"
+  download "console", "1.8.2"
   download "async", "1.24.2"
   download "async-io", "1.27.7"
   download "async-pool", "0.2.0"
@@ -16,8 +17,8 @@ end
 download "http_parser.rb", "0.6.0"
 download "yajl-ruby", "1.4.1"
 download "sigdump", "0.2.4"
-download "tzinfo", "2.0.2"
-download "tzinfo-data", "1.2020.1"
+download "tzinfo", "2.0.3"
+download "tzinfo-data", "1.2020.4"
 if windows?
   download 'ffi', '1.13.1'
   download 'ffi-win32-extensions', '1.0.3'
