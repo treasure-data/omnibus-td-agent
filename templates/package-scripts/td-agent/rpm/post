@@ -19,10 +19,14 @@ chown -R <%= project_name %>:<%= project_name %> /var/run/<%= project_name %>/
 if [ ! -e "/etc/<%= project_name %>/" ]; then
   mkdir -p /etc/<%= project_name %>/
   mkdir -p /etc/<%= project_name %>/plugin
+  mkdir -p /etc/<%= project_name %>/baseline
 fi
 if [ ! -e "/etc/<%= project_name %>/<%= project_name %>.conf" ]; then
   echo "Installing default conffile..."
   cp -f ${<%= project_name_snake %>_dir}/etc/<%= project_name %>/<%= project_name %>.conf.tmpl /etc/<%= project_name %>/<%= project_name %>.conf
+  echo "Installing baseline conffile..."
+  cp -f ${<%= project_name_snake %>_dir}/etc/<%= project_name %>/<%= project_name %>.conf.tmpl /etc/<%= project_name %>/baseline/<%= project_name %>.conf
+  sed -i 's/@include config\.d\/\*\.conf/@include config.d\/baseline\/*.conf/g' /etc/<%= project_name %>/baseline/<%= project_name %>.conf
 fi
 
 # 2011/11/13 Kazuki Ohta <k@treasure-data.com>
