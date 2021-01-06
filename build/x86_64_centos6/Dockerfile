@@ -1,5 +1,11 @@
 FROM centos:6
 
+# CentOS 6 is EOL, so we have to switch to the vault repos.
+RUN sed -i \
+        -e 's%^mirrorlist%#mirrorlist%' \
+        -e 's%^# *baseurl=http://mirror%baseurl=http://vault%' \
+        /etc/yum.repos.d/CentOS-*.repo
+
 RUN yum -y update \
  && yum -y install \
         # Needed for gpg2 and rvm installation.
