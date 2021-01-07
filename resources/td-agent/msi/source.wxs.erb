@@ -70,6 +70,20 @@
       <Directory Id="WINDOWSVOLUME">
 <% hierarchy.each.with_index do |(name, id), index| -%>
         <%= '  '*index %><Directory Id="<%= id %>" Name="<%= name %>">
+  <% if name == "td-agent" %>
+        <%= '  '*index %><Component Id="TDAgentAcl" Guid="b0504030-258a-0139-ba33-7085c2f4281d">
+        <%= '  '*index %>  <CreateFolder>
+        <%= '  '*index %>  <!--
+        <%= '  '*index %>    Read/Execute: Builtin Users
+        <%= '  '*index %>    All:: Builtin Administrators, Service, System account(by default)
+        <%= '  '*index %>  -->
+        <%= '  '*index %>  <Permission User="Users" GenericExecute="yes" GenericRead="yes" Traverse="yes"/>
+        <%= '  '*index %>  <Permission User="Administrators" GenericAll="yes" Traverse="yes"/>
+        <%= '  '*index %>  <Permission User="NT SERVICE\TrustedInstaller" GenericAll="yes" Traverse="yes"/>
+        <%= '  '*index %>  <Permission User="CREATOR OWNER" GenericAll="yes" Traverse="yes"/>
+        <%= '  '*index %>  </CreateFolder>
+        <%= '  '*index %></Component>
+  <% end %>
 <% end -%>
 <% hierarchy.keys.each.with_index do |_, index| -%>
         <%= '  '*(hierarchy.size - index-1) %></Directory>
@@ -111,6 +125,7 @@
       <ComponentGroupRef Id="ProjectDir" />
       <ComponentRef Id="ApplicationShortcut" />
       <ComponentRef Id="TDAgentConf" />
+      <ComponentRef Id="TDAgentAcl" />
     </Feature>
 
     <!-- UI Stuff -->
