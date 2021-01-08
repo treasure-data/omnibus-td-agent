@@ -12,6 +12,10 @@ else
   # To stay on Ruby 2.4.
   download "protocol-http", "0.15.1"
   download "protocol-http2", "0.11.6"
+  # To prevent nio4r's native extension building error
+  # due to devkit requiring forcibly.
+  # ref: https://github.com/socketry/nio4r/blob/master/ext/nio4r/extconf.rb#L7
+  download "nio4r", "2.5.2"
   download "async", "1.24.2"
   download "async-io", "1.27.7"
   download "async-pool", "0.2.0"
