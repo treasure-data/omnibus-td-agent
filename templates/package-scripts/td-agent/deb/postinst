@@ -72,7 +72,6 @@ case "$1" in
         fixperms
         update_conffile /etc/<%= project_name %>/<%= project_name %>.conf ${<%= project_name_snake %>_dir}/etc/<%= project_name %>/<%= project_name %>.conf.tmpl
         update_conffile /etc/<%= project_name %>/baseline/<%= project_name %>.conf ${<%= project_name_snake %>_dir}/etc/<%= project_name %>/<%= project_name %>.conf.tmpl
-        sed -i 's/@include config\.d\/\*\.conf/@include config.d\/baseline\/*.conf/g' /etc/<%= project_name %>/baseline/<%= project_name %>.conf
         ;;
     abort-upgrade|abort-deconfigure|abort-remove)
         :
