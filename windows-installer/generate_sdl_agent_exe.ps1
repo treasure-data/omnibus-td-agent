@@ -145,6 +145,8 @@ $env:Path = [System.Environment]::GetEnvironmentVariable("Path","Machine") + ";"
 $gem_installer = $SRC_ROOT + '\bin\gem_installer'
 $core_gems_rb = $SRC_ROOT + '\core_gems.rb'
 $plugin_gems_rb = $SRC_ROOT + '\plugin_gems.rb'
+# Pin ffi version until https://github.com/ffi/ffi/issues/868 is resolved.
+& $GEM_CMD install ffi:1.14.1 --no-document
 & $GEM_CMD install fluentd:1.11.2 --no-document
 & $RUBY_EXE $gem_installer $core_gems_rb
 & $RUBY_EXE $gem_installer $plugin_gems_rb
