@@ -1,0 +1,3 @@
+%define _build_id_links none
+<%# pull in the default spec.erb from omnibus %>
+<%= ERB.new(File.read(Omnibus.source_root.join("resources/rpm/spec.erb").to_s), nil, "-", eoutvar="_tmp").result(binding) %>
