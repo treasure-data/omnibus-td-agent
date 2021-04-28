@@ -3,7 +3,7 @@ FROM debian:9.13-slim
 # Default google-fluentd to the latest stable.
 # Use `docker build --build-arg REPO_SUFFIX=<CUSTOM_REPO_SUFFIX>` to override
 # the version.
-ARG REPO_SUFFIX=20210409-1
+ARG REPO_SUFFIX=20210428-2
 
 COPY entrypoint.sh Dockerfile /
 
