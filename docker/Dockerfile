@@ -19,7 +19,7 @@ RUN apt-get update \
         ca-certificates \
         adduser \
     # Install Logging Agent.
-    && curl -sS https://dl.google.com/cloudagents/add-logging-agent-repo.sh | REPO_SUFFIX="$REPO_SUFFIX" DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash /dev/stdin --also-install \
+    && curl -sS https://dl.google.com/cloudagents/install-logging-agent.sh | REPO_SUFFIX="$REPO_SUFFIX" DO_NOT_INSTALL_CATCH_ALL_CONFIG=true bash \
     # Store versions in the VERSION file.
     && dpkg -s google-fluentd | sed -nE 's/^Version: (.*)(-[^-]+)$/VERSION=\1\nGOOGLE_FLUENTD_VERSION=\1\2/p' >> /VERSION \
     && echo REPO_SUFFIX=$REPO_SUFFIX >> /VERSION \
