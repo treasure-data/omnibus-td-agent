@@ -1,6 +1,9 @@
 name "fluentd"
-# fluentd v1.12.3.
-default_version 'b6e76c09d60ee866de6470f2bdd2551e7c8591d3'
+
+# Note: In order to update the Fluentd version, please update both here and also the fluentd version in
+# https://github.com/GoogleCloudPlatform/fluent-plugin-google-cloud/blob/master/fluent-plugin-google-cloud.gemspec.
+# fluentd v1.11.2.
+default_version '3dde9396ee30263980ad2655fc78197b41d2b3fd'
 
 dependency "ruby"
 #dependency "bundler"
