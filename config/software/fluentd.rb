@@ -1,7 +1,10 @@
 name "fluentd"
 
-# Note: In order to update the Fluentd version, please update both here and also the fluentd version in
-# https://github.com/GoogleCloudPlatform/fluent-plugin-google-cloud/blob/master/fluent-plugin-google-cloud.gemspec.
+# Note: In order to update the Fluentd version, please update both here and also the fluentd versions in
+# https://github.com/GoogleCloudPlatform/fluent-plugin-google-cloud/blob/master/fluent-plugin-google-cloud.gemspec
+# and
+# https://github.com/GoogleCloudPlatform/google-fluentd/blob/master/windows-installer/generate_sdl_agent_exe.ps1
+#
 # fluentd v1.11.2.
 default_version '3dde9396ee30263980ad2655fc78197b41d2b3fd'
 
