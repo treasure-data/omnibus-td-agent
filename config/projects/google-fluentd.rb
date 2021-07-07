@@ -44,6 +44,8 @@ when "linux"
   when "suse"
     runtime_dependency "lsb-release"
     runtime_dependency "insserv-compat"
+    # sysvinit-tools is required for insserv-compat, but isn't a dependency
+    runtime_dependency "sysvinit-tools"
   end
 end
 
