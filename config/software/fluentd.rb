@@ -5,8 +5,8 @@ name "fluentd"
 # and
 # https://github.com/GoogleCloudPlatform/google-fluentd/blob/master/windows-installer/generate_sdl_agent_exe.ps1
 #
-# fluentd v1.11.2.
-default_version '3dde9396ee30263980ad2655fc78197b41d2b3fd'
+# fluentd v1.13.3.
+default_version '12de3b5a260a174fe4a419036d6e2b2e18fe7497'
 
 dependency "ruby"
 #dependency "bundler"
