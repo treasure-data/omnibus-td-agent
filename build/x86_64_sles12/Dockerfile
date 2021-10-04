@@ -22,7 +22,7 @@ RUN zypper -n refresh \
  && mv /var/lib/ca-certificates/pem/DST_Root_CA_X3.pem /etc/pki/trust/blacklist/ \
  && update-ca-certificates \
  && curl -sSL -o get-rvm-io.sh https://get.rvm.io \
- && (echo "fea24461e98d41528d6e28684aa4c216dbe903869bc3fcdb3493b6518fae2e7e get-rvm-io.sh" | sha256sum --check) \
+ && (echo "fea24461e98d41528d6e28684aa4c216dbe903869bc3fcdb3493b6518fae2e7e  get-rvm-io.sh" | sha256sum --check) \
  && /bin/bash get-rvm-io.sh stable \
  && rm -f get-rvm-io.sh \
  # RVM requires running in a login shell.
