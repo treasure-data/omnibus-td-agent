@@ -36,6 +36,12 @@
 ; Directory where the fluentd config will be placed.
 !define FLUENTD_CONFIG_DIRECTORY "$INSTDIR"
 
+; Directory under which the buffer files will be stored.
+!define BUFFER_FILE_DIRECTORY "$INSTDIR\buffers"
+
+; Directory under which the pos files will be stored.
+!define POS_FILE_DIRECTORY "$INSTDIR\pos"
+
 ; Directory for the user to add custom configs.
 !define CUSTOM_CONFIG_DIR "config.d"
 
@@ -167,7 +173,7 @@ Section "Install"
   ; Create a directory for the extracted files.
   CreateDirectory ${MAIN_INSTDIR}
   ; Extract the needed files and show status.
-  ${Print} "Extracting files to $INSTDIR..."
+  ${Print} "Extracting files to $MAIN_INSTDIR..."
   nsisunz::Unzip "$OUTDIR\${ZIP_FILE}" "${MAIN_INSTDIR}"
   Pop $0
 
@@ -182,8 +188,10 @@ Section "Install"
   ; Delete the zip file after extraction.
   Delete "$OUTDIR\${ZIP_FILE}"
 
+  ; Create a directory to store buffer files.
+  CreateDirectory ${BUFFER_FILE_DIRECTORY}
   ; Create a directory to store position files.
-  CreateDirectory ${MAIN_INSTDIR}\pos
+  CreateDirectory ${POS_FILE_DIRECTORY}
   ; Create a directory for custom configs.
   CreateDirectory "${FLUENTD_CONFIG_DIRECTORY}\${CUSTOM_CONFIG_DIR}"
 
@@ -213,12 +221,20 @@ Section "Install"
     ; Trim out newlines as WordFind cannot handle them.
     ${StrTrimNewLines} $3 "$2"
 
+    ; Look for 'BUFFER_PATH_PLACE_HOLDER', if found replace it with the
+    ; proper path.
+    ${WordFind} "$3" "BUFFER_PATH_PLACE_HOLDER" "#" $4
+    ${If} $4 == "1"
+      ; Replace the whole line instead of using "StrRep" to avoid unicode issues.
+      StrCpy $2 "  buffer_path '${BUFFER_FILE_DIRECTORY}'$\r$\n"
+    ${EndIf}
+
     ; Look for 'WIN_EVT_POS_FILE_PLACE_HOLDER', if found replace it with the
     ; proper pos_file.
     ${WordFind} "$3" "WIN_EVT_POS_FILE_PLACE_HOLDER" "#" $4
     ${If} $4 == "1"
       ; Replace the whole line instead of using "StrRep" to avoid unicode issues.
-      StrCpy $2 "    path '${MAIN_INSTDIR}\pos\winevtlog.pos'$\r$\n"
+      StrCpy $2 "    path '${POS_FILE_DIRECTORY}\winevtlog.pos'$\r$\n"
     ${EndIf}
 
     ; Look for 'CUSTOM_CONFIG_PLACE_HOLDER', if found replace it with the
