@@ -1,6 +1,8 @@
 FROM opensuse/leap:42.3
 
-RUN zypper -n refresh \
+RUN zypper modifyrepo -d 'OSS Update' \
+ && zypper ar http://opensuse.ucom.am/update/leap/42.3/oss/ 'OSS Update Mirror' \
+ && zypper -n refresh \
  && zypper -n install \
         # Needed for gpg2 and rvm installation.
         curl \
