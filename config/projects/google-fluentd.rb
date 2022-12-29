@@ -14,7 +14,7 @@ build_iteration 1
 # creates required build directories
 dependency "preparation"
 
-override :ruby, :version => '2.6.10'
+override :ruby, :version => '2.7.6'
 override :zlib, :version => '1.2.8'
 override :rubygems, :version => '3.0.0'
 override :postgresql, :version => '9.6.24'

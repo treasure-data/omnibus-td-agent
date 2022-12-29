@@ -25,14 +25,18 @@ license_file "LEGAL"
 #   https://bugs.ruby-lang.org/issues/11869
 # - the current status of 2.3.x is that it downloads but fails to compile.
 # - verify that all ffi libs are available for your version on all platforms.
-# - Note: When updating major version (i.e. 2.2 -> 2.3), gem_dir_version must be
-#   updated to 2.X.0 in td.rb, td-agent-cleanup.rb, td-agent-files.rb, and
-#   td-agent-ui.rb.
-default_version "2.6.10"
+
+# Note: When updating Ruby minor version (i.e. 2.2 -> 2.3), gem_dir_version must be
+# updated to 2.X.0 in the following file paths:
+#   config/software/td.rb
+#   config/software/td-agent-cleanup.rb
+#   config/software/td-agent-files.rb
+#   config/software/td-agent-ui.rb
+default_version "2.7.6"
 
 fips_enabled = (project.overrides[:fips] && project.overrides[:fips][:enabled]) || false
 
-dependency "patch" if solaris_10?
+dependency "patch" if solaris2? && platform_version.satisfies?("= 5.10")
 dependency "ncurses" unless windows? || version.satisfies?(">= 2.1")
 dependency "zlib"
 dependency "openssl"
@@ -45,7 +49,9 @@ dependency "libyaml"
 # and that's the only one we will ever use.
 dependency "libiconv"
 
-# The checksums below are for the *.tar.gz packages from https://www.ruby-lang.org/en/downloads/releases.
+# The SHA256 checksums below are for the *.tar.gz packages from https://www.ruby-lang.org/en/downloads/releases.
+version("2.7.6")      { source sha256: "e7203b0cc09442ed2c08936d483f8ac140ec1c72e37bb5c401646b7866cb5d10" }
+
 version("2.6.10")     { source sha256: "0dc609f263d49c4176d5725deefc337273676395985b5e017789373e8cadf16e" }
 version("2.6.9")      { source sha256: "eb7bae7aac64bf9eb2153710a4cafae450ccbb62ae6f63d573e1786178b0efbb" }
 version("2.6.8")      { source sha256: "1807b78577bc08596a390e8a41aede37b8512190e05c133b17d0501791a8ca6d" }
@@ -140,7 +146,7 @@ elsif aix?
   env["SOLIBS"] = "-lm -lc"
   # need to use GNU m4, default m4 doesn't work
   env["M4"] = "/opt/freeware/bin/m4"
-elsif solaris_10?
+elsif solaris2? && platform_version.satisfies?("= 5.10")
   if sparc?
     # Known issue with rubby where too much GCC optimization blows up miniruby on sparc
     env["CFLAGS"] << " -std=c99 -O0 -g -pipe -mcpu=v9"
@@ -164,18 +170,18 @@ build do
   patch_env = env.dup
   patch_env["PATH"] = "/opt/freeware/bin:#{env['PATH']}" if aix?
 
-  if solaris_10? && version.satisfies?(">= 2.1")
+  if solaris2? && platform_version.satisfies?("= 5.10") && version.satisfies?(">= 2.1")
     patch source: "ruby-no-stack-protector.patch", plevel: 1, env: patch_env
-  elsif solaris_10? && version =~ /^1.9/
+  elsif solaris2? && platform_version.satisfies?("= 5.10") && version =~ /^1.9/
     patch source: "ruby-sparc-1.9.3-c99.patch", plevel: 1, env: patch_env
-  elsif solaris_11? && version =~ /^2.1/
+  elsif solaris2? && platform_version.satisfies?("= 5.11") && version =~ /^2.1/
     patch source: "ruby-solaris-linux-socket-compat.patch", plevel: 1, env: patch_env
   end
 
   # wrlinux7/ios_xr build boxes from Cisco include libssp and there is no way to
   # disable ruby from linking against it, but Cisco switches will not have the
   # library.  Disabling it as we do for Solaris.
-  if ios_xr? && version.satisfies?(">= 2.1")
+  if RUBY_PLATFORM.match("ios_xr") && version.satisfies?(">= 2.1")
     patch source: "ruby-no-stack-protector.patch", plevel: 1, env: patch_env
   end
 
