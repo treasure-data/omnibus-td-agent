@@ -37,12 +37,13 @@ RUN yum -y install \
  # RVM GPG keys.
  && mkdir -p ~/.gnupg && echo "disable-ipv6" >> ~/.gnupg/dirmngr.conf \
  && gpg2 --keyserver hkp://keyserver.ubuntu.com --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB \
+ # Install RVM.
  && curl -sSL -o get-rvm-io.sh https://get.rvm.io \
  && (echo "7bbf79be95e516f72945e558a4290b40ff8714158140a00991d42172ff78e209  get-rvm-io.sh" | sha256sum --check) \
  && /bin/bash get-rvm-io.sh stable \
  && rm -f get-rvm-io.sh \
  # RVM requires running in a login shell.
  # Force RVM to link in a newer openssl version.
- && /bin/bash -l -c 'sed -i "/openssl_version/s/1.0.1i/1.0.1n/" $rvm_path/config/db && rvm pkg install openssl' \
- && /bin/bash -l -c 'rvm requirements && rvm install 3.1.3 --with-openssl-dir=$rvm_path/usr && gem install bundler --no-document && gem update' \
+ && /bin/bash -l -c 'sed -i "/openssl_version/s/1.0.1i/1.1.1t/" $rvm_path/config/db && sed -i "s/ no-krb5//" $rvm_path/scripts/functions/pkg && rvm pkg install openssl' \
+ && /bin/bash -l -c 'rvm requirements && rvm install 3.1.2 --with-openssl-dir=$rvm_path/usr && gem install bundler --no-document && gem update --no-document' \
  && yum -y clean all
