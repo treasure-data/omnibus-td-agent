@@ -207,8 +207,9 @@ GEM
     progressbar (1.10.1)
     proxifier (1.0.3)
     public_suffix (4.0.5)
-    rack (2.2.3)
+    rack (2.2.7)
     rainbow (3.0.0)
+    rake (12.3.3)
     retryable (3.0.5)
     ruby-progressbar (1.10.1)
     rubyntlm (0.6.2)
@@ -284,6 +285,7 @@ DEPENDENCIES
   berkshelf (~> 7.0)
   omnibus!
   omnibus-software!
+  rake (~> 12.3)
 
 BUNDLED WITH
    1.17.2
