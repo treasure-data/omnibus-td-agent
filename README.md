@@ -1,8 +1,11 @@
+# Notice: This repository is deprecated
+
+**`omnibus-td-agent` is for td-agent 2 and td-agent 3, no longer be updated.**  
+**For td-agent 4 or later, check [fluent-package-builder](https://github.com/fluent/fluent-package-builder) repository.**
+
 # About
 
 [![Build Status](https://travis-ci.org/treasure-data/omnibus-td-agent.svg)](https://travis-ci.org/treasure-data/omnibus-td-agent)
-
-`omnibus-td-agent` is for td-agent 2 and td-agent 3. For td-agent 4, check [td-agent-builder](https://github.com/fluent-plugins-nursery/td-agent-builder) repository.
 
 The event collector daemon, for Treasure Data. This daemon collects various types of logs/events via various way, and transfer them to the cloud. For more about Treasure Data, see the [official website](https://www.treasuredata.com/), and the [documentation](https://docs.treasuredata.com/display/public/PD/About+Treasure+Data%27s+Server-Side+Agent).
 
