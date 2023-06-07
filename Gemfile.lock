@@ -25,8 +25,8 @@ GIT
 GEM
   remote: https://rubygems.org/
   specs:
-    addressable (2.7.0)
-      public_suffix (>= 2.0.2, < 5.0)
+    addressable (2.8.4)
+      public_suffix (>= 2.0.2, < 6.0)
     awesome_print (1.8.0)
     aws-eventstream (1.1.0)
     aws-partitions (1.332.0)
@@ -206,9 +206,10 @@ GEM
     plist (3.5.0)
     progressbar (1.10.1)
     proxifier (1.0.3)
-    public_suffix (4.0.5)
+    public_suffix (5.0.1)
     rack (2.2.3)
     rainbow (3.0.0)
+    rake (12.3.3)
     retryable (3.0.5)
     ruby-progressbar (1.10.1)
     rubyntlm (0.6.2)
@@ -284,6 +285,7 @@ DEPENDENCIES
   berkshelf (~> 7.0)
   omnibus!
   omnibus-software!
+  rake (~> 12.3)
 
 BUNDLED WITH
    1.17.2
